@@ -1,0 +1,39 @@
+server:
+  port: 8081
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+      enabled: true
+
+spring:
+  application:
+    name: kurung_backend
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
+      enabled: true
+
+  datasource:
+    url: jdbc:oracle:thin:@127.0.0.1:21521:XE
+    username: c##kurung
+    password: kurung2025
+    #    username: system
+    #    password: oracle
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show_sql: true
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        id:
+          new_generator_mappings: false
+        format_sql: true
+    database-platform: org.hibernate.dialect.OracleDialect
