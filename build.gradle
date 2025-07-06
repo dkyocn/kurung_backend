@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.3'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
     id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
@@ -15,6 +15,7 @@ java {
 }
 
 configurations {
+    asciidoctorExt
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -22,10 +23,6 @@ configurations {
 
 repositories {
     mavenCentral()
-}
-
-configurations {
-    asciidoctorExt
 }
 
 ext {
@@ -97,7 +94,7 @@ asciidoctor.doFirst {
 }
 
 bootJar {
-    dependsOn asciidoctor
+    dependsOn 'asciidoctor', 'copyDocument'
     from ("${asciidoctor.outputDir}") {
         into 'static/docs'
     }
