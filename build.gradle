@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.3'
     id 'io.spring.dependency-management' version '1.1.7'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'com.kurung'
@@ -23,8 +24,13 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    asciidoctorExt
+}
+
 ext {
     querydslVersion = "5.0.0"
+    snippetsDir = file('build/generated-snippets')
 }
 
 dependencies {
@@ -46,6 +52,13 @@ dependencies {
 
     //오라클 db 사용 라이브러리 의존성 추가 (21C xe)
     runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+    //docs
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor:3.0.0'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc:3.0.0'
 
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -72,6 +85,36 @@ clean {
     delete file(querydslSrcDir)
 }
 
+//docs 설정
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
+}
+
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}") {
+        into 'static/docs'
+    }
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("${asciidoctor.outputDir}")
+    into file("src/main/resources/static/docs")
+}
+
 tasks.named('test') {
     useJUnitPlatform()
+    outputs.dir snippetsDir
+}
+
+
+build {
+    dependsOn copyDocument
 }
