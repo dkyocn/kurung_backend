@@ -1,0 +1,19 @@
+= KURUNG API Server Rest API Document
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:operation-curl-request-title: Example request
+:operation-http-response-title: Example response
+
+[[overview]]
+= 식단 관련 API
+식단 관련한 API입니다.
+
+[[get_diet_by_id]]
+== Get Diet By Id
+식단 아이디로 조회하는 API
+
+operation::getDietById[snippets='http-request,path-parameters,http-response,response-fields']
