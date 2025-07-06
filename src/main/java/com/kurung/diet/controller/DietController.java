@@ -4,7 +4,8 @@ import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.service.DietService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/kurung/diet")
 public class DietController {
 
-    private final DietService dietService;
+  private final DietService dietService;
 
-    @GetMapping("/{id}")
-    @Operation(summary = "식단 단일 조회", description = "하나의 식단을 조회할 때 사용하는 API")
-    @Parameter(name = "id", description = "식단 아이디", example = "1")
-    public ResponseEntity<DietDTO> getDietById(@PathVariable int id) {
-        return new ResponseEntity<>(dietService.getDietById(id), HttpStatus.OK);
-    }
+  @GetMapping("/{id}")
+  @Operation(summary = "식단 단일 조회", description = "하나의 식단을 조회할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  @Parameter(name = "id", description = "식단 아이디", example = "1")
+  public ResponseEntity<DietDTO> getDietById(@PathVariable int id) {
+    return new ResponseEntity<>(dietService.getDietById(id), HttpStatus.OK);
+  }
 
 //    @Parameters({
 //            @Parameter(name = "email", description = "이메일", example = "chrome123@naver.com"),
