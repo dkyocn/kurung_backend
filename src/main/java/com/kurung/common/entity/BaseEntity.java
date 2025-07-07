@@ -21,10 +21,10 @@ import java.sql.Date;
 public class BaseEntity {
 
     @CreatedDate
-    @Column(name = "CREATE_DATE", updatable = false)
-    protected Date createDate;
+    @Column(name = "CREATED_AT", updatable = false)
+    protected Date createdAt;
 
     @LastModifiedDate
-    @Column(name = "LAST_MODIFIED_DATE")
-    protected Date modifyDate;
+    @Column(name = "UPDATED_AT")
+    protected Date updatedAt;
 }

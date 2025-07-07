@@ -1,5 +1,6 @@
 package com.kurung.diet.dto;
 
+import com.kurung.common.dto.BaseDTO;
 import com.kurung.diet.entity.DietEntity;
 import com.kurung.diet.enumeration.MEAL;
 import com.kurung.user.dto.UserDTO;
@@ -19,7 +20,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DietDTO {
+public class DietDTO extends BaseDTO {
 
     @Schema(description = "식단 아이디", example = "1")
     protected int dietId;
