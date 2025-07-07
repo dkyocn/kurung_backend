@@ -19,9 +19,9 @@ public class QBaseEntity extends EntityPathBase<BaseEntity> {
 
     public static final QBaseEntity baseEntity = new QBaseEntity("baseEntity");
 
-    public final DatePath<java.sql.Date> createDate = createDate("createDate", java.sql.Date.class);
+    public final DatePath<java.sql.Date> createdAt = createDate("createdAt", java.sql.Date.class);
 
-    public final DatePath<java.sql.Date> modifyDate = createDate("modifyDate", java.sql.Date.class);
+    public final DatePath<java.sql.Date> updatedAt = createDate("updatedAt", java.sql.Date.class);
 
     public QBaseEntity(String variable) {
         super(BaseEntity.class, forVariable(variable));
