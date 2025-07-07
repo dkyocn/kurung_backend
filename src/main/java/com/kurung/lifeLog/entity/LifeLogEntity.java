@@ -27,7 +27,7 @@ public class LifeLogEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "LIFELOG_ID")
-  private Long lifelogId;
+  private int lifelogId;
   @Column(name = "LL_IMAGE_PATH", length = 300)
   private String llImagePath;
   @Column(name = "EMOTION", length = 50, nullable = false)

@@ -30,7 +30,7 @@ public class QLifeLogEntity extends EntityPathBase<LifeLogEntity> {
 
     public final StringPath emotionWrite = createString("emotionWrite");
 
-    public final NumberPath<Long> lifelogId = createNumber("lifelogId", Long.class);
+    public final NumberPath<Integer> lifelogId = createNumber("lifelogId", Integer.class);
 
     public final StringPath llImagePath = createString("llImagePath");
 

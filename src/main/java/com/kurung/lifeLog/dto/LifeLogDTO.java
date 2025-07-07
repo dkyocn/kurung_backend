@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 public class LifeLogDTO extends BaseDTO {
 
   @Schema(description = "라이프 로그 아이디", example = "1")
-  protected Long lifelogId;
+  protected int lifelogId;
   @Schema(description = "라이프 로그 이미지 경로", example = "1")
   protected String llImagePath;
   @Schema(description = "라이프 로그 감정", example = "1")
@@ -36,7 +36,7 @@ public class LifeLogDTO extends BaseDTO {
   @Schema(description = "라이프 로그 아이디", example = "1")
   protected String llPdfPath;
   @Schema(description = "라이프 로그 아이디", example = "1")
-  private UserDTO user;
+  protected UserDTO user;
 
   @Builder(builderMethodName = "toLifeLogBuilder", builderClassName = "toLifeLogBuilder")
   public LifeLogDTO(LifeLogEntity lifeLogEntity) {
