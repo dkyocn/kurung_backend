@@ -24,6 +24,10 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     public final ListPath<com.kurung.diet.entity.DietEntity, com.kurung.diet.entity.QDietEntity> diet = this.<com.kurung.diet.entity.DietEntity, com.kurung.diet.entity.QDietEntity>createList("diet", com.kurung.diet.entity.DietEntity.class, com.kurung.diet.entity.QDietEntity.class, PathInits.DIRECT2);
 
+    public final ListPath<com.kurung.diagnosis.entity.HealthAnswerEntity, com.kurung.diagnosis.entity.QHealthAnswerEntity> healthAnswer = this.<com.kurung.diagnosis.entity.HealthAnswerEntity, com.kurung.diagnosis.entity.QHealthAnswerEntity>createList("healthAnswer", com.kurung.diagnosis.entity.HealthAnswerEntity.class, com.kurung.diagnosis.entity.QHealthAnswerEntity.class, PathInits.DIRECT2);
+
+    public final ListPath<com.kurung.diagnosis.entity.HealthDiagnosisEntity, com.kurung.diagnosis.entity.QHealthDiagnosisEntity> healthDiagnosis = this.<com.kurung.diagnosis.entity.HealthDiagnosisEntity, com.kurung.diagnosis.entity.QHealthDiagnosisEntity>createList("healthDiagnosis", com.kurung.diagnosis.entity.HealthDiagnosisEntity.class, com.kurung.diagnosis.entity.QHealthDiagnosisEntity.class, PathInits.DIRECT2);
+
     public final BooleanPath isActive = createBoolean("isActive");
 
     public final ListPath<com.kurung.lifeLog.entity.LifeLogEntity, com.kurung.lifeLog.entity.QLifeLogEntity> lifelog = this.<com.kurung.lifeLog.entity.LifeLogEntity, com.kurung.lifeLog.entity.QLifeLogEntity>createList("lifelog", com.kurung.lifeLog.entity.LifeLogEntity.class, com.kurung.lifeLog.entity.QLifeLogEntity.class, PathInits.DIRECT2);
