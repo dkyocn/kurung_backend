@@ -30,6 +30,10 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     public final BooleanPath isActive = createBoolean("isActive");
 
+    public final ListPath<com.kurung.lifeLog.entity.LifeLogEntity, com.kurung.lifeLog.entity.QLifeLogEntity> lifelog = this.<com.kurung.lifeLog.entity.LifeLogEntity, com.kurung.lifeLog.entity.QLifeLogEntity>createList("lifelog", com.kurung.lifeLog.entity.LifeLogEntity.class, com.kurung.lifeLog.entity.QLifeLogEntity.class, PathInits.DIRECT2);
+
+    public final ListPath<com.kurung.lifeLog.entity.MonthlyLifeLogEntity, com.kurung.lifeLog.entity.QMonthlyLifeLogEntity> monthlyLifelog = this.<com.kurung.lifeLog.entity.MonthlyLifeLogEntity, com.kurung.lifeLog.entity.QMonthlyLifeLogEntity>createList("monthlyLifelog", com.kurung.lifeLog.entity.MonthlyLifeLogEntity.class, com.kurung.lifeLog.entity.QMonthlyLifeLogEntity.class, PathInits.DIRECT2);
+
     public final StringPath profileImg = createString("profileImg");
 
     public final DatePath<java.sql.Date> userAge = createDate("userAge", java.sql.Date.class);
