@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum CustomHttpStatus {
 
     // 4XX client Error 418 ~ 421, 452 ~ 499
-    DIET_NOT_FOUND(418, "해당 id의 식단이 없습니다.");
+    DIET_NOT_FOUND(418, "해당 id의 식단이 없습니다."),
+    SCORE_NOT_FOUND(498, "해당 id의 식단 점수가 없습니다.");
     // 5XX Server Error 506, 512 ~ 599
 
     private final int value;

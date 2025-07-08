@@ -24,6 +24,8 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     public final ListPath<com.kurung.diet.entity.DietEntity, com.kurung.diet.entity.QDietEntity> diet = this.<com.kurung.diet.entity.DietEntity, com.kurung.diet.entity.QDietEntity>createList("diet", com.kurung.diet.entity.DietEntity.class, com.kurung.diet.entity.QDietEntity.class, PathInits.DIRECT2);
 
+    public final ListPath<com.kurung.diet.entity.DietScoreEntity, com.kurung.diet.entity.QDietScoreEntity> dietScore = this.<com.kurung.diet.entity.DietScoreEntity, com.kurung.diet.entity.QDietScoreEntity>createList("dietScore", com.kurung.diet.entity.DietScoreEntity.class, com.kurung.diet.entity.QDietScoreEntity.class, PathInits.DIRECT2);
+
     public final BooleanPath isActive = createBoolean("isActive");
 
     public final StringPath profileImg = createString("profileImg");
