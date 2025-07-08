@@ -26,6 +26,8 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     public final BooleanPath isActive = createBoolean("isActive");
 
+    public final ListPath<com.kurung.medicine.entity.MedicineInteractionEntity, com.kurung.medicine.entity.QMedicineInteractionEntity> medicineInteraction = this.<com.kurung.medicine.entity.MedicineInteractionEntity, com.kurung.medicine.entity.QMedicineInteractionEntity>createList("medicineInteraction", com.kurung.medicine.entity.MedicineInteractionEntity.class, com.kurung.medicine.entity.QMedicineInteractionEntity.class, PathInits.DIRECT2);
+
     public final StringPath profileImg = createString("profileImg");
 
     public final DatePath<java.sql.Date> userAge = createDate("userAge", java.sql.Date.class);
