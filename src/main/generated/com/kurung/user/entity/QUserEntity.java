@@ -22,6 +22,10 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     public final BooleanPath adminYN = createBoolean("adminYN");
 
+    public final ListPath<com.kurung.community.entity.CommentEntity, com.kurung.community.entity.QCommentEntity> comment = this.<com.kurung.community.entity.CommentEntity, com.kurung.community.entity.QCommentEntity>createList("comment", com.kurung.community.entity.CommentEntity.class, com.kurung.community.entity.QCommentEntity.class, PathInits.DIRECT2);
+
+    public final ListPath<com.kurung.community.entity.CommunityEntity, com.kurung.community.entity.QCommunityEntity> community = this.<com.kurung.community.entity.CommunityEntity, com.kurung.community.entity.QCommunityEntity>createList("community", com.kurung.community.entity.CommunityEntity.class, com.kurung.community.entity.QCommunityEntity.class, PathInits.DIRECT2);
+
     public final ListPath<com.kurung.diet.entity.DietEntity, com.kurung.diet.entity.QDietEntity> diet = this.<com.kurung.diet.entity.DietEntity, com.kurung.diet.entity.QDietEntity>createList("diet", com.kurung.diet.entity.DietEntity.class, com.kurung.diet.entity.QDietEntity.class, PathInits.DIRECT2);
 
     public final BooleanPath isActive = createBoolean("isActive");
