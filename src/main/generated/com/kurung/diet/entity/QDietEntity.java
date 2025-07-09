@@ -50,7 +50,7 @@ public class QDietEntity extends EntityPathBase<DietEntity> {
 
     public QDietEntity(Class<? extends DietEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.kurung.user.entity.QUserEntity(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.kurung.user.entity.QUserEntity(forProperty("user"), inits.get("user")) : null;
     }
 
 }

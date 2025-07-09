@@ -2,6 +2,9 @@ package com.kurung.user.entity;
 
 import com.kurung.common.config.BooleanToInteger;
 import com.kurung.diet.entity.DietEntity;
+import com.kurung.exercise.entity.ExerciseLogEntity;
+import com.kurung.exercise.entity.ObjectiveEntity;
+import com.kurung.exercise.entity.RoutinesEntity;
 import com.kurung.user.enumeration.Gender;
 import com.kurung.user.enumeration.UserPath;
 import jakarta.persistence.*;
@@ -15,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "TB_USER")
-public class UserEntity {
+public class    UserEntity {
 
     @Id
     @Column(name = "USER_UUID")
@@ -59,4 +62,13 @@ public class UserEntity {
     // cascade : 모든 cascade 적용
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<DietEntity> diet;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
+    private List<ExerciseLogEntity> exerciseLogs;
+
+    @OneToOne(mappedBy = "user")
+    private ObjectiveEntity Objective;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
+    private List<RoutinesEntity> Routine;
 }
