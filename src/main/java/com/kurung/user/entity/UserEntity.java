@@ -1,6 +1,8 @@
 package com.kurung.user.entity;
 
 import com.kurung.common.config.BooleanToInteger;
+import com.kurung.community.entity.CommentEntity;
+import com.kurung.community.entity.CommunityEntity;
 import com.kurung.diagnosis.entity.HealthAnswerEntity;
 import com.kurung.diagnosis.entity.HealthDiagnosisEntity;
 import com.kurung.diet.entity.DietEntity;
@@ -65,6 +67,12 @@ public class UserEntity {
     // cascade : 모든 cascade 적용
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<DietEntity> diet;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<CommunityEntity> community;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<CommentEntity> comment;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<MedicineInteractionEntity> medicineInteraction;
     private List<LifeLogEntity> lifelog;
