@@ -6,6 +6,7 @@ import com.kurung.community.entity.CommunityEntity;
 import com.kurung.diagnosis.entity.HealthAnswerEntity;
 import com.kurung.diagnosis.entity.HealthDiagnosisEntity;
 import com.kurung.diet.entity.DietEntity;
+import com.kurung.diet.entity.DietScoreEntity;
 import com.kurung.medicine.entity.MedicineInteractionEntity;
 import com.kurung.healthReport.entity.HealthReportEntity;
 import com.kurung.lifeLog.entity.LifeLogEntity;
@@ -67,6 +68,8 @@ public class UserEntity {
     // cascade : 모든 cascade 적용
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<DietEntity> diet;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<DietScoreEntity>  dietScore;
     @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CommunityEntity> community;

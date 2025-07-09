@@ -1,6 +1,7 @@
 package com.kurung.diet.controller;
 
 import com.kurung.diet.dto.DietDTO;
+import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.service.DietService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,6 +36,11 @@ public class DietController {
   @Parameter(name = "id", description = "식단 아이디", example = "1")
   public ResponseEntity<DietDTO> getDietById(@PathVariable int id) {
     return new ResponseEntity<>(dietService.getDietById(id), HttpStatus.OK);
+  }
+
+  @GetMapping("/score/{id}")
+  public ResponseEntity<DietScoreDTO> getDietScoreById(@PathVariable int id) {
+    return new ResponseEntity<>(dietService.getDietScoreById(id), HttpStatus.OK);
   }
 
 //    @Parameters({
