@@ -20,10 +20,10 @@ public class ChatbotDTO {
   private String userUuid;
 
   @Schema(description = "질문 여부 (true = 질문, false = 응답)", example = "true")
-  private boolean question;
+  private String  question;
 
   @Schema(description = "응답 여부 (true = 응답, false = 질문)", example = "true")
-  private boolean answer;
+  private String  answer;
 
   @Schema(description = "대화 시간", example = "2025-07-07 13:00:00")
   private Date conversationTime;
@@ -31,9 +31,10 @@ public class ChatbotDTO {
   @Builder(builderMethodName = "toChatbotBuilder", builderClassName = "toChatbotBuilder")
   public ChatbotDTO(ChatbotEntity chatbotEntity) {
     this.chatbotId = chatbotEntity.getChatbotId();
-    this.userUuid = chatbotEntity.getUserUuid();
-    this.question = chatbotEntity.isQuestion();
-    this.answer = chatbotEntity.isAnswer();
+//    this.userUuid = chatbotEntity.getUserUuid();
+    this.userUuid = chatbotEntity.getUser().getUserUuid();
+    this.question = chatbotEntity.getQuestion();
+    this.answer = chatbotEntity.getAnswer();
     this.conversationTime = chatbotEntity.getConversationTime();
   }
 }

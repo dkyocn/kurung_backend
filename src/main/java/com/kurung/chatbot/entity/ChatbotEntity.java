@@ -1,5 +1,6 @@
 package com.kurung.chatbot.entity;
 
+import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.persistence.Column;
@@ -25,15 +26,24 @@ public class ChatbotEntity {
   @Column(name = "CHATBOT_ID", nullable = false)
   private int chatbotId;
 
-  @Column(name = "USER_UUID", nullable = false)
-  private String userUuid;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "USER_UUID", nullable = false)
+  private UserEntity user;
+
+//  @Column(name = "USER_UUID", nullable = false)
+//  private String userUuid;
 
   @Column(name = "QUESTION", nullable = false)
-  private boolean question;
+  private String  question;
 
   @Column(name = "ANSWER", nullable = false)
-  private boolean answer;
+  private String  answer;
 
   @Column(name = "CONVERSATION_TIME", nullable = false)
   private Date conversationTime;
+
+  @PrePersist
+  protected void onCreate() {
+    this.conversationTime = new Date();
+  }
 }

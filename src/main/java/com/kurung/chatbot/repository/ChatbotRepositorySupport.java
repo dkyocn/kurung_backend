@@ -7,4 +7,5 @@ public interface ChatbotRepositorySupport {
 
   List<ChatbotEntity> getChatbotById(int id);
 
+  ChatbotEntity getLatestChatbot(String uuid);
 }

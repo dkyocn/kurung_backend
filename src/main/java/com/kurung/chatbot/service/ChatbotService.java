@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface ChatbotService {
 
-  List<ChatbotDTO> getChatbotById(int chatbotId);
+  List<ChatbotDTO> getChatbotById(int id);
 }

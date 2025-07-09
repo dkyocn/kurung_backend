@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,28 +18,39 @@ public class QChatbotEntity extends EntityPathBase<ChatbotEntity> {
 
     private static final long serialVersionUID = 156564929L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QChatbotEntity chatbotEntity = new QChatbotEntity("chatbotEntity");
 
-    public final BooleanPath answer = createBoolean("answer");
+    public final StringPath answer = createString("answer");
 
     public final NumberPath<Integer> chatbotId = createNumber("chatbotId", Integer.class);
 
     public final DateTimePath<java.util.Date> conversationTime = createDateTime("conversationTime", java.util.Date.class);
 
-    public final BooleanPath question = createBoolean("question");
+    public final StringPath question = createString("question");
 
-    public final StringPath userUuid = createString("userUuid");
+    public final com.kurung.user.entity.QUserEntity user;
 
     public QChatbotEntity(String variable) {
-        super(ChatbotEntity.class, forVariable(variable));
+        this(ChatbotEntity.class, forVariable(variable), INITS);
     }
 
     public QChatbotEntity(Path<? extends ChatbotEntity> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QChatbotEntity(PathMetadata metadata) {
-        super(ChatbotEntity.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QChatbotEntity(PathMetadata metadata, PathInits inits) {
+        this(ChatbotEntity.class, metadata, inits);
+    }
+
+    public QChatbotEntity(Class<? extends ChatbotEntity> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.user = inits.isInitialized("user") ? new com.kurung.user.entity.QUserEntity(forProperty("user")) : null;
     }
 
 }

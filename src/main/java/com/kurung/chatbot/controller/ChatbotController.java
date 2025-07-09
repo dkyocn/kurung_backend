@@ -34,4 +34,5 @@ public class ChatbotController {
   public ResponseEntity<List<ChatbotDTO>> getChatbotById(@PathVariable int id) {
     return new ResponseEntity<>(chatbotService.getChatbotById(id), HttpStatus.OK);
   }
+
 }
