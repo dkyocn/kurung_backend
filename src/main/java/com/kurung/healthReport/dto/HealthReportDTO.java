@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HealthReportDTO extends BaseDTO {
+public class HealthReportDTO {
   @Schema(description = "건강 리포트 아이디", example = "1")
   protected int reportId;
   @Schema(description = "건강상태 요약", example = "블라블라블라블라")

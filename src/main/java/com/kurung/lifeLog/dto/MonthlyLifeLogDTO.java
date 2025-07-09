@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MonthlyLifeLogDTO extends BaseDTO {
+public class MonthlyLifeLogDTO {
   private int monthlyLifeLogId;           	// 월간 라이프로그 고유 ID
   private int month;                      	// 해당 월 (예: 7)
   private String monthlySummary;         // 월간 요약 텍스트

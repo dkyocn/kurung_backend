@@ -1,4 +1,4 @@
-package com.kurung.healthReport.entity;
+package com.kurung.diet.entity;
 
 import com.kurung.common.entity.BaseEntity;
 import com.kurung.user.entity.UserEntity;
@@ -20,23 +20,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "TB_HEALTH_REPORT")
-public class HealthReportEntity {
+@Entity(name = "TB_DIET_SCORE")
+public class DietScoreEntity {
+
   @Id
-  @Column(name = "REPORT_ID")
+  @Column(name = "SCORE_ID")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int reportId;
-  @Column(name = "HEALTH_STATUS")
-  private String healthStatus;
-  @Column(name = "REPORT_MONTH")
-  private Date reportMonth;
-  @Column(name = "PROGRESS_RATE")
-  private float progressRate;
-  @Column(name = "MONTHLY_SCORE")
-  private int monthlyScore;
-  @Column(name = "PDF_PATH")
-  private String reportPdfPath;
+  private int scoreId;
+  @Column(name = "DIET_DATE", nullable = false)
+  private Date date;
+  @Column(name = "DIET_SCORE")
+  private float dietScore;
+  @JoinColumn(name = "USER_UUID")
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "USER_UUID", nullable = false)
   private UserEntity user;
 }

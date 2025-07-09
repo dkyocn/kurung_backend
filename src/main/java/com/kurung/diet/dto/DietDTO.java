@@ -13,14 +13,13 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.util.CollectionUtils;
 
 import java.sql.Date;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DietDTO extends BaseDTO {
+public class DietDTO {
 
     @Schema(description = "식단 아이디", example = "1")
     protected int dietId;
@@ -32,6 +31,8 @@ public class DietDTO extends BaseDTO {
     protected List<FoodDTO> foodList;
     @Schema(description = "사용자 정보")
     protected UserDTO user;
+    @Schema(description = "영양 성분")
+    protected NutritionDTO nutrition;
 
 
     @Builder(builderMethodName = "toDietBuilder", builderClassName = "toDietBuilder")
@@ -45,5 +46,6 @@ public class DietDTO extends BaseDTO {
         this.user = UserDTO.toUserBuilder()
                 .userEntity(dietEntity.getUser())
                 .build();
+        this.nutrition = dietEntity.getNutritional() != null ? NutritionDTO.toNutritionalBuilder().nutritionalEntity(dietEntity.getNutritional()).build() :  null;
     }
 }
