@@ -1,10 +1,25 @@
 package com.kurung.user.entity;
 
+//import com.kurung.chatbot.entity.ChatbotEntity;
+import com.kurung.chatbot.entity.ChatbotEntity;
 import com.kurung.common.config.BooleanToInteger;
+import com.kurung.community.entity.CommentEntity;
+import com.kurung.community.entity.CommunityEntity;
+import com.kurung.diagnosis.entity.HealthAnswerEntity;
+import com.kurung.diagnosis.entity.HealthDiagnosisEntity;
 import com.kurung.diet.entity.DietEntity;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.exercise.entity.RoutinesEntity;
+import com.kurung.favorites.entity.FavoritesEntity;
+import com.kurung.diet.entity.DietScoreEntity;
+import com.kurung.medicine.entity.MedicineInteractionEntity;
+import com.kurung.healthReport.entity.HealthReportEntity;
+import com.kurung.lifeLog.entity.LifeLogEntity;
+import com.kurung.lifeLog.entity.MonthlyLifeLogEntity;
+//import com.kurung.favorites.entity.FavoritesEntity;
+//import com.kurung.missions.entity.MissionsEntity;
+import com.kurung.missions.entity.MissionsEntity;
 import com.kurung.user.enumeration.Gender;
 import com.kurung.user.enumeration.UserPath;
 import jakarta.persistence.*;
@@ -62,7 +77,6 @@ public class    UserEntity {
     // cascade : 모든 cascade 적용
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<DietEntity> diet;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
     private List<ExerciseLogEntity> exerciseLogs;
 
@@ -71,4 +85,31 @@ public class    UserEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
     private List<RoutinesEntity> Routine;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<MissionsEntity> missions;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<FavoritesEntity> favorites;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<ChatbotEntity> chatbotList;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<DietScoreEntity>  dietScore;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<CommunityEntity> community;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<CommentEntity> comment;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<MedicineInteractionEntity> medicineInteraction;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<LifeLogEntity> lifelog;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<MonthlyLifeLogEntity> monthlyLifelog;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<HealthDiagnosisEntity> healthDiagnosis;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<HealthAnswerEntity> healthAnswer;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<HealthReportEntity> healthReport;
 }

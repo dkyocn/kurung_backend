@@ -1,0 +1,31 @@
+package com.kurung.favorites.service;
+
+import com.kurung.common.enumeration.CustomHttpStatus;
+import com.kurung.common.exception.CustomIllegalArgumentException;
+import com.kurung.favorites.dto.FavoritesDTO;
+import com.kurung.favorites.entity.FavoritesEntity;
+import com.kurung.favorites.repository.FavoritesRepository;
+import java.util.List;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+
+
+@Service
+@RequiredArgsConstructor
+public class FavoritesServiceImpl implements FavoritesService {
+
+  private final FavoritesRepository favoritesRepository;
+
+  @Override
+  public List<FavoritesDTO> getFavoriteList() {
+    List<FavoritesEntity> favoritesById = favoritesRepository.getFavoritesById();
+
+    if(favoritesById.isEmpty()){
+      throw new CustomIllegalArgumentException(CustomHttpStatus.FAVORITE_NOT_FOUND);
+    }
+
+    return favoritesById.stream().map(favoritesEntity -> FavoritesDTO.toFavoritesBuilder().favoritesEntity(favoritesEntity).build()).collect(Collectors.toList());
+  }
+}
