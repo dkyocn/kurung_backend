@@ -25,7 +25,7 @@ public class MonthlyLifeLogEntity {
   @Column(name = "MONTHLY_LIFELOG_ID")
   private Integer monthlyLifeLogId;
 
-  @Column(name = "MONTH", nullable = false)
+  @Column(name = "REPORT_MONTH", nullable = false)
   private Integer month;
 
   @Column(name = "MONTHLY_SUMMARY", length = 1000, nullable = false)

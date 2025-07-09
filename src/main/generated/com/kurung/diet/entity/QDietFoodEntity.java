@@ -47,7 +47,7 @@ public class QDietFoodEntity extends EntityPathBase<DietFoodEntity> {
     public QDietFoodEntity(Class<? extends DietFoodEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.diet = inits.isInitialized("diet") ? new QDietEntity(forProperty("diet"), inits.get("diet")) : null;
-        this.food = inits.isInitialized("food") ? new QFoodEntity(forProperty("food")) : null;
+        this.food = inits.isInitialized("food") ? new QFoodEntity(forProperty("food"), inits.get("food")) : null;
     }
 
 }

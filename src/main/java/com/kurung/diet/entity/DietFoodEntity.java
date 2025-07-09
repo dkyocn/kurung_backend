@@ -1,5 +1,6 @@
 package com.kurung.diet.entity;
 
+import com.kurung.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
