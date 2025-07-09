@@ -1,5 +1,6 @@
 package com.kurung.lifeLog.entity;
 
+import com.kurung.common.entity.BaseEntity;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "TB_LIFELOG")
-public class LifeLogEntity {
+public class LifeLogEntity extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

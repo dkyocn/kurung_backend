@@ -11,7 +11,6 @@ public enum CustomHttpStatus {
     USER_NOT_FOUND(499, "해당 id의 사용자가 없습니다."),
     STRESSRELIEF_NOT_FOUND(421, "해당 id의 사용자가 없습니다."),
     SCORE_NOT_FOUND(498, "해당 id의 식단 점수가 없습니다."),
-    USER_NOT_FOUND(499, "해당 id의 사용자가 없습니다."),
     COMMUNITY_NOT_FOUND(452, "해당 id의 커뮤니티가 없습니다.");
     // 5XX Server Error 506, 512 ~ 599
 

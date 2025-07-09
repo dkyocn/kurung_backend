@@ -78,6 +78,7 @@ public class UserEntity {
     private List<CommentEntity> comment;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<MedicineInteractionEntity> medicineInteraction;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<LifeLogEntity> lifelog;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<MonthlyLifeLogEntity> monthlyLifelog;
@@ -85,5 +86,6 @@ public class UserEntity {
     private List<HealthDiagnosisEntity> healthDiagnosis;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<HealthAnswerEntity> healthAnswer;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<HealthReportEntity> healthReport;
 }

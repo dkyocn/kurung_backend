@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "TB_HEALTH_REPORT")
-public class HealthReportEntity extends BaseEntity {
+public class HealthReportEntity {
   @Id
   @Column(name = "REPORT_ID")
   @GeneratedValue(strategy = GenerationType.IDENTITY)

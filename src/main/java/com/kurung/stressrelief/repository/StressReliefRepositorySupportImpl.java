@@ -1,11 +1,12 @@
 package com.kurung.stressrelief.repository;
 
+import static com.kurung.stressrelief.entity.QStressReliefEntity.stressReliefEntity;
+
 import com.kurung.stressrelief.entity.StressReliefEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import static com.kurung.stressrelief.entity.QStressReliefEntity.stressReliefEntity;
 
 
 @Repository
