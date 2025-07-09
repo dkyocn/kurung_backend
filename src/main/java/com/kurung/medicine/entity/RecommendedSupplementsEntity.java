@@ -1,6 +1,5 @@
-package com.kurung.lifeLog.entity;
+package com.kurung.medicine.entity;
 
-import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,22 +17,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "TB_MonthlyLifeLog")
-public class MonthlyLifeLogEntity {
+@Entity(name = "TB_RECOMMENDED_SUPPLEMENTS")
+public class RecommendedSupplementsEntity {
   @Id
+  @Column(name = "REC_SUPP_ID")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "MONTHLY_LIFELOG_ID")
-  private Integer monthlyLifeLogId;
+  private int recSuppId;
 
-  @Column(name = "REPORT_MONTH", nullable = false)
-  private Integer month;
-
-  @Column(name = "MONTHLY_SUMMARY", length = 1000, nullable = false)
-  private String monthlySummary;
-
+  @JoinColumn(name = "SUPP_ID")
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "USER_UUID", nullable = false)
-  private UserEntity user;
+  private SupplementsEntity supplements;
 
-
+  @JoinColumn(name = "MEDI_INTER_ID")
+  @ManyToOne(fetch = FetchType.LAZY)
+  private MedicineInteractionEntity medicineInteraction;
 }
