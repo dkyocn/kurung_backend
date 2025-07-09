@@ -15,24 +15,29 @@ public class FavoritesRepositorySupportImpl implements FavoritesRepositorySuppor
 
   private final JPAQueryFactory jpaQueryFactory;
 
-//  public List<FavoritesEntity> getFavoritesByUser(String uuid) {
-//    return jpaQueryFactory
-//        .selectFrom(favoritesEntity)
+  public List<FavoritesEntity> getFavoritesByUser(String uuid) {
+    return jpaQueryFactory
+        .selectFrom(favoritesEntity)
 //        .where(favoritesEntity.userUuid.eq(uuid))
-//        .fetch();
-//  }
-//
-//  public FavoritesEntity getLatestFavorite(String uuid) {
-//    return jpaQueryFactory
-//        .selectFrom(favoritesEntity)
+        .where(favoritesEntity.user.userUuid.eq(uuid))
+        .fetch();
+  }
+
+  public FavoritesEntity getLatestFavorite(String uuid) {
+    return jpaQueryFactory
+        .selectFrom(favoritesEntity)
 //        .where(favoritesEntity.userUuid.eq(uuid))
-//        .orderBy(favoritesEntity.favoritesId.desc())
-//        .limit(1)
-//        .fetchOne();
-//  }
+        .where(favoritesEntity.user.userUuid.eq(uuid))
+        .orderBy(favoritesEntity.favoritesId.desc())
+        .limit(1)
+        .fetchOne();
+  }
 
   @Override
   public List<FavoritesEntity> getFavoritesById(int id) {
-    return null;
+    return jpaQueryFactory
+        .selectFrom(favoritesEntity)
+        .where(favoritesEntity.favoritesId.eq(id))
+        .fetch();
   }
 }

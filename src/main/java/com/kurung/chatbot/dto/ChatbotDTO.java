@@ -1,6 +1,8 @@
 package com.kurung.chatbot.dto;
 
 import com.kurung.chatbot.entity.ChatbotEntity;
+import com.kurung.user.dto.UserDTO;
+import com.kurung.user.dto.UserDTO.toUserBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -17,7 +19,7 @@ public class ChatbotDTO {
   private int chatbotId;
 
   @Schema(description = "사용자 UUID", example = "user-uuid-1234")
-  private String userUuid;
+  private UserDTO userDTO;
 
   @Schema(description = "질문 여부 (true = 질문, false = 응답)", example = "true")
   private String  question;
@@ -31,8 +33,7 @@ public class ChatbotDTO {
   @Builder(builderMethodName = "toChatbotBuilder", builderClassName = "toChatbotBuilder")
   public ChatbotDTO(ChatbotEntity chatbotEntity) {
     this.chatbotId = chatbotEntity.getChatbotId();
-//    this.userUuid = chatbotEntity.getUserUuid();
-    this.userUuid = chatbotEntity.getUser().getUserUuid();
+    this.userDTO = chatbotEntity.getUser() != null ? UserDTO.toUserBuilder().userEntity(chatbotEntity.getUser()).build() : null;
     this.question = chatbotEntity.getQuestion();
     this.answer = chatbotEntity.getAnswer();
     this.conversationTime = chatbotEntity.getConversationTime();

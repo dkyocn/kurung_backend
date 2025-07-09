@@ -21,18 +21,19 @@ public class FavoritesDTO {
   @Schema(description = "사용자 UUID", example = "abc123-uuid")
   private String userUuid;
   @Schema(description = "운동루틴 ID", example = "101")
-  private int routinesId;
+  private Integer  routinesId;
   @Schema(description = "레시피 ID", example = "202")
-  private int recipeId;
+  private Integer  recipeId;
   @Schema(description = "스트레스 해소 게시글 ID", example = "303")
-  private int stressReliefId;
+  private Integer  stressReliefId;
   @Schema(description = "커뮤니티 게시글 ID", example = "404")
-  private int communityId;
+  private Integer  communityId;
 
   @Builder(builderMethodName = "toFavoritesBuilder", builderClassName = "toFavoritesBuilder")
   public FavoritesDTO(FavoritesEntity favoritesEntity) {
     this.favoritesId = favoritesEntity.getFavoritesId();
-    this.userUuid = favoritesEntity.getUserUuid();
+//    this.userUuid = favoritesEntity.getUserUuid();
+    this.userUuid = favoritesEntity.getUser().getUserUuid();
     this.routinesId = favoritesEntity.getRoutinesId();
     this.recipeId = favoritesEntity.getRecipeId();
     this.stressReliefId = favoritesEntity.getStressReliefId();

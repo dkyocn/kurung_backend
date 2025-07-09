@@ -11,8 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
+import org.springframework.data.annotation.CreatedDate;
 
 @Builder
 @Getter
@@ -26,24 +27,17 @@ public class ChatbotEntity {
   @Column(name = "CHATBOT_ID", nullable = false)
   private int chatbotId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "USER_UUID", nullable = false)
-  private UserEntity user;
-
-//  @Column(name = "USER_UUID", nullable = false)
-//  private String userUuid;
-
   @Column(name = "QUESTION", nullable = false)
   private String  question;
 
   @Column(name = "ANSWER", nullable = false)
   private String  answer;
 
+  @CreatedDate
   @Column(name = "CONVERSATION_TIME", nullable = false)
   private Date conversationTime;
 
-  @PrePersist
-  protected void onCreate() {
-    this.conversationTime = new Date();
-  }
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "USER_UUID", nullable = false)
+  private UserEntity user;
 }

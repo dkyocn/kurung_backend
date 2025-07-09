@@ -29,8 +29,14 @@ public class MissionsController {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
       @ApiResponse(responseCode = "418", description = "조회 실패", content = @Content(mediaType = "application/json"))
   })
-  @Parameter(name = "id", description = "미션 ID", example = "1")
+//  @Parameter(name = "id", description = "미션 ID", example = "1")
+//  public ResponseEntity<MissionsDTO> getMissionById(@PathVariable int id) {
+//    return new ResponseEntity<>(missionsService.getMissionsById(id), HttpStatus.OK);
+//  }
+
   public ResponseEntity<MissionsDTO> getMissionById(@PathVariable int id) {
-    return new ResponseEntity<>(missionsService.getMissionsById(id), HttpStatus.OK);
+    return ResponseEntity.ok(missionsService.getMissionsById(id));
   }
+
+
 }

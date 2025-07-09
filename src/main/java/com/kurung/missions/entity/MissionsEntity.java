@@ -1,5 +1,6 @@
 package com.kurung.missions.entity;
 
+import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,16 +17,13 @@ import java.sql.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "TB_MISSION")
+@Entity(name = "TB_MISSIONS")
 public class MissionsEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "MISSION_ID", nullable = false)
   private int missionId;
-
-  @Column(name = "USER_UUID", nullable = false)
-  private String userUuid;
 
   @Column(name = "STARTED_DATE")
   private Date startedDate;
@@ -39,4 +37,7 @@ public class MissionsEntity {
   @Column(name = "TOGGLE_OPTION", nullable = false)
   private boolean toggleOption;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "USER_UUID", nullable = false)
+  private UserEntity user;
 }

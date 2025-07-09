@@ -38,7 +38,8 @@ public class MissionsDTO {
   @Builder(builderMethodName = "toMissionBuilder", builderClassName = "toMissionBuilder")
   public MissionsDTO(MissionsEntity missionEntity) {
     this.missionId = missionEntity.getMissionId();
-    this.userUuid = missionEntity.getUserUuid();
+//    this.userUuid = missionEntity.getUserUuid();
+    this.userUuid = missionEntity.getUser().getUserUuid();
     this.startedDate = missionEntity.getStartedDate();
     this.isComplete = missionEntity.isComplete();
     this.displayType = missionEntity.getDisplayType();

@@ -4,6 +4,7 @@ import com.kurung.missions.entity.MissionsEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import static com.kurung.missions.entity.QMissionsEntity.missionsEntity;
 
 import java.util.List;
 
@@ -18,14 +19,16 @@ public class MissionsRepositorySupportImpl implements MissionsRepositorySupport 
   public List<MissionsEntity> getMissionsByUser(String uuid) {
     return jpaQueryFactory
         .selectFrom(missionsEntity)
-        .where(missionsEntity.userUuid.eq(uuid))
+//        .where(missionsEntity.userUuid.eq(uuid))
+        .where(missionsEntity.user.userUuid.eq(uuid))
         .fetch();
   }
 
   public MissionsEntity getLatestMission(String uuid) {
     return jpaQueryFactory
         .selectFrom(missionsEntity)
-        .where(missionsEntity.userUuid.eq(uuid))
+//        .where(missionsEntity.userUuid.eq(uuid))
+        .where(missionsEntity.user.userUuid.eq(uuid))
         .orderBy(missionsEntity.missionId.desc())
         .limit(1)
         .fetchOne();
@@ -33,6 +36,9 @@ public class MissionsRepositorySupportImpl implements MissionsRepositorySupport 
 
   @Override
   public List<MissionsEntity> getMissionsById(int id) {
-    return null;  // 필요 시 구현
+    return jpaQueryFactory
+        .selectFrom(missionsEntity)
+        .where(missionsEntity.missionId.eq(id))
+        .fetch();
   }
 }

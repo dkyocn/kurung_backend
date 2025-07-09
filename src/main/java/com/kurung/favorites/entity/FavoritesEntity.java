@@ -1,5 +1,6 @@
 package com.kurung.favorites.entity;
 
+import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,22 +14,24 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "TB_FAVORTIES")
+@Entity(name = "TB_FAVORITES")
 public class FavoritesEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "FAVORITE_ID" , nullable = false)
   private int favoritesId;
-  @Column(name = "USER_UUID" , nullable = false)
-  private String userUuid;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "USER_UUID", nullable = false)
+  private UserEntity user;
   @Column(name = "ROUTINES_ID")
-  private int routinesId;
+  private Integer  routinesId;
   @Column(name = "RECIPE_ID" )
-  private int recipeId;
+  private Integer  recipeId;
   @Column(name = "STRESS_RELIEF_ID")
-  private int stressReliefId;
+  private Integer  stressReliefId;
   @Column(name = "COMMUNITY_ID")
-  private int communityId;
+  private Integer  communityId;
 
 }
