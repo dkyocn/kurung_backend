@@ -4,6 +4,8 @@ import com.kurung.common.config.BooleanToInteger;
 import com.kurung.diagnosis.entity.HealthAnswerEntity;
 import com.kurung.diagnosis.entity.HealthDiagnosisEntity;
 import com.kurung.diet.entity.DietEntity;
+import com.kurung.medicine.entity.MedicineInteractionEntity;
+import com.kurung.healthReport.entity.HealthReportEntity;
 import com.kurung.lifeLog.entity.LifeLogEntity;
 import com.kurung.lifeLog.entity.MonthlyLifeLogEntity;
 import com.kurung.user.enumeration.Gender;
@@ -64,6 +66,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<DietEntity> diet;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<MedicineInteractionEntity> medicineInteraction;
     private List<LifeLogEntity> lifelog;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<MonthlyLifeLogEntity> monthlyLifelog;
@@ -71,4 +74,5 @@ public class UserEntity {
     private List<HealthDiagnosisEntity> healthDiagnosis;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<HealthAnswerEntity> healthAnswer;
+    private List<HealthReportEntity> healthReport;
 }
