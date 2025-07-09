@@ -1,4 +1,4 @@
-package com.kurung.lifeLog.entity;
+package com.kurung.community.entity;
 
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.Column;
@@ -9,31 +9,34 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "TB_MonthlyLifeLog")
-public class MonthlyLifeLogEntity {
+@Entity(name = "TB_COMMENT")
+public class CommentEntity {
+
   @Id
+  @Column(name = "COMMENT_ID")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "MONTHLY_LIFELOG_ID")
-  private Integer monthlyLifeLogId;
-
-  @Column(name = "REPORT_MONTH", nullable = false)
-  private Integer month;
-
-  @Column(name = "MONTHLY_SUMMARY", length = 1000, nullable = false)
-  private String monthlySummary;
-
+  private int commentId;
+  @Column(name = "CONTENT", nullable = false)
+  private String content;
+  @CreatedDate
+  @Column(name = "CREATED_AT")
+  private Date createdAt;
+  @JoinColumn(name = "USER_UUID")
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "USER_UUID", nullable = false)
   private UserEntity user;
-
+  @JoinColumn(name = "COMMUNITY_ID")
+  @ManyToOne(fetch = FetchType.LAZY)
+  private CommunityEntity community;
 
 }

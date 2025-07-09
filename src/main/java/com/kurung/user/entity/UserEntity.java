@@ -1,7 +1,13 @@
 package com.kurung.user.entity;
 
 import com.kurung.common.config.BooleanToInteger;
+import com.kurung.community.entity.CommentEntity;
+import com.kurung.community.entity.CommunityEntity;
+import com.kurung.diagnosis.entity.HealthAnswerEntity;
+import com.kurung.diagnosis.entity.HealthDiagnosisEntity;
 import com.kurung.diet.entity.DietEntity;
+import com.kurung.medicine.entity.MedicineInteractionEntity;
+import com.kurung.healthReport.entity.HealthReportEntity;
 import com.kurung.lifeLog.entity.LifeLogEntity;
 import com.kurung.lifeLog.entity.MonthlyLifeLogEntity;
 import com.kurung.user.enumeration.Gender;
@@ -61,8 +67,20 @@ public class UserEntity {
     // cascade : 모든 cascade 적용
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<DietEntity> diet;
+    @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<CommunityEntity> community;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<CommentEntity> comment;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<MedicineInteractionEntity> medicineInteraction;
     private List<LifeLogEntity> lifelog;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<MonthlyLifeLogEntity> monthlyLifelog;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<HealthDiagnosisEntity> healthDiagnosis;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<HealthAnswerEntity> healthAnswer;
+    private List<HealthReportEntity> healthReport;
 }
