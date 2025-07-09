@@ -34,10 +34,9 @@ public class FavoritesRepositorySupportImpl implements FavoritesRepositorySuppor
   }
 
   @Override
-  public List<FavoritesEntity> getFavoritesById(int id) {
+  public List<FavoritesEntity> getFavoritesById() {
     return jpaQueryFactory
         .selectFrom(favoritesEntity)
-        .where(favoritesEntity.favoritesId.eq(id))
         .fetch();
   }
 }

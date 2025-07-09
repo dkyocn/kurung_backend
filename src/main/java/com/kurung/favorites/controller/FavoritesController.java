@@ -25,15 +25,15 @@ public class FavoritesController {
 
   private final FavoritesService favoritesService;
 
-  @GetMapping("/{id}")
+  @GetMapping("/list")
   @Operation(summary = "즐겨찾기 단일 조회", description = "하나의 즐겨찾기를 ID로 조회하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
       @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   })
   @Parameter(name = "id", description = "즐겨찾기 ID", example = "1")
-  public ResponseEntity<FavoritesDTO> getFavoriteById(@PathVariable int id) {
-    return new ResponseEntity<>(favoritesService.getFavoriteById(id), HttpStatus.OK);
+  public ResponseEntity<List<FavoritesDTO>> getFavoriteById() {
+    return new ResponseEntity<>(favoritesService.getFavoriteList(), HttpStatus.OK);
   }
 
 

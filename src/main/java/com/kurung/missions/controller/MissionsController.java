@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class MissionsController {
 
   private final MissionsService missionsService;
 
-  @GetMapping("/{id}")
+  @GetMapping("/list")
   @Operation(summary = "미션 단일 조회", description = "하나의 미션을 ID로 조회하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
@@ -34,8 +35,8 @@ public class MissionsController {
 //    return new ResponseEntity<>(missionsService.getMissionsById(id), HttpStatus.OK);
 //  }
 
-  public ResponseEntity<MissionsDTO> getMissionById(@PathVariable int id) {
-    return ResponseEntity.ok(missionsService.getMissionsById(id));
+  public ResponseEntity<List<MissionsDTO>> getMissionById() {
+    return new ResponseEntity<>(missionsService.getMissionsList(), HttpStatus.OK);
   }
 
 

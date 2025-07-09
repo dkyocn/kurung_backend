@@ -16,29 +16,28 @@ public class MissionsRepositorySupportImpl implements MissionsRepositorySupport 
 
   private final JPAQueryFactory jpaQueryFactory;
 
-  public List<MissionsEntity> getMissionsByUser(String uuid) {
-    return jpaQueryFactory
-        .selectFrom(missionsEntity)
-//        .where(missionsEntity.userUuid.eq(uuid))
-        .where(missionsEntity.user.userUuid.eq(uuid))
-        .fetch();
-  }
-
-  public MissionsEntity getLatestMission(String uuid) {
-    return jpaQueryFactory
-        .selectFrom(missionsEntity)
-//        .where(missionsEntity.userUuid.eq(uuid))
-        .where(missionsEntity.user.userUuid.eq(uuid))
-        .orderBy(missionsEntity.missionId.desc())
-        .limit(1)
-        .fetchOne();
-  }
+//  public List<MissionsEntity> getMissionsByUser(String uuid) {
+//    return jpaQueryFactory
+//        .selectFrom(missionsEntity)
+////        .where(missionsEntity.userUuid.eq(uuid))
+//        .where(missionsEntity.user.userUuid.eq(uuid))
+//        .fetch();
+//  }
+//
+//  public MissionsEntity getLatestMission(String uuid) {
+//    return jpaQueryFactory
+//        .selectFrom(missionsEntity)
+////        .where(missionsEntity.userUuid.eq(uuid))
+//        .where(missionsEntity.user.userUuid.eq(uuid))
+//        .orderBy(missionsEntity.missionId.desc())
+//        .limit(1)
+//        .fetchOne();
+//  }
 
   @Override
-  public List<MissionsEntity> getMissionsById(int id) {
+  public List<MissionsEntity> getMissionsById() {
     return jpaQueryFactory
         .selectFrom(missionsEntity)
-        .where(missionsEntity.missionId.eq(id))
         .fetch();
   }
 }

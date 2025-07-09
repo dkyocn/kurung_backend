@@ -1,10 +1,8 @@
 package com.kurung.missions.service;
 
 import com.kurung.missions.dto.MissionsDTO;
+import java.util.List;
 
 public interface MissionsService {
-
-  MissionsDTO getMissions(int id);
-
-  MissionsDTO getMissionsById(int id);
+  List<MissionsDTO> getMissionsList();
 }

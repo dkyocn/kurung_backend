@@ -1,7 +1,7 @@
 package com.kurung.community.entity;
 
 import com.kurung.common.entity.BaseEntity;
-import com.kurung.community.enumeration.CATEGORY;
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -38,7 +38,7 @@ public class CommunityEntity extends BaseEntity {
   private String content;
   @Enumerated(EnumType.STRING)
   @Column(name = "CATEGORY", nullable = false)
-  private CATEGORY category;
+  private HealthType category;
   @JoinColumn(name = "USER_UUID")
   @ManyToOne(fetch = FetchType.LAZY)
   private UserEntity user;

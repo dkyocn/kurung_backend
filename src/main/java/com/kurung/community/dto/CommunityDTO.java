@@ -1,10 +1,9 @@
 package com.kurung.community.dto;
 
 import com.kurung.common.dto.BaseDTO;
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.community.entity.CommunityEntity;
-import com.kurung.community.enumeration.CATEGORY;
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.dto.UserDTO.toUserBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -22,7 +21,7 @@ public class CommunityDTO extends BaseDTO {
   protected int communityId;
   protected String title;
   protected String content;
-  protected CATEGORY category;
+  protected HealthType category;
   protected UserDTO user;
   protected List<CommentDTO> comment;
 

@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface MissionsRepositorySupport {
 
-  List<MissionsEntity> getMissionsById(int id);
+  List<MissionsEntity> getMissionsById();
 
 }

@@ -17,28 +17,14 @@ public class MissionsServiceImpl implements MissionsService {
   private final MissionsRepository missionsRepository;
 
   @Override
-  public MissionsDTO getMissions(int id) {
-    return getMissionsById(id);
-  }
+  public List<MissionsDTO> getMissionsList() {
+    List<MissionsEntity> missionsById = missionsRepository.getMissionsById();
 
-  @Override
-  public MissionsDTO getMissionsById(int id) {
-    List<MissionsEntity> missionsById = missionsRepository.getMissionsById(id);
-
-//    if (missionsById.isEmpty()) {
-//      throw new CustomIllegalArgumentException(CustomHttpStatus.FAVORITE_NOT_FOUND);
-//    }
-
-    if (missionsById == null) {
+    if (missionsById.isEmpty()) {
       throw new CustomIllegalArgumentException(CustomHttpStatus.FAVORITE_NOT_FOUND);
     }
 
-    return MissionsDTO.toMissionBuilder()
-        .missionEntity(missionsById.get(0))
-        .build(); // ✅ 단일 DTO 반환
+    return missionsById.stream().map(missionsEntity -> MissionsDTO.toMissionBuilder().missionEntity(missionsEntity).build()).collect(Collectors.toList());
   }
-
-//    return (MissionsDTO) missionsById.stream().map(missionsEntity -> MissionsDTO.toMissionBuilder().missionEntity(missionsEntity).build()).collect(Collectors.toList());
-//  }
 
 }

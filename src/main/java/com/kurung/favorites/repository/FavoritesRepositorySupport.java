@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface FavoritesRepositorySupport {
 
-  List<FavoritesEntity> getFavoritesById(int id);
+  List<FavoritesEntity> getFavoritesById();
 }

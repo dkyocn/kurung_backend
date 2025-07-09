@@ -19,23 +19,13 @@ public class FavoritesServiceImpl implements FavoritesService {
   private final FavoritesRepository favoritesRepository;
 
   @Override
-  public FavoritesDTO getFavoriteById(int id) {
-    List<FavoritesEntity> favoritesById = favoritesRepository.getFavoritesById(id);
+  public List<FavoritesDTO> getFavoriteList() {
+    List<FavoritesEntity> favoritesById = favoritesRepository.getFavoritesById();
 
-//    if(favoritesById.isEmpty()){
-//      throw new CustomIllegalArgumentException(CustomHttpStatus.FAVORITE_NOT_FOUND);
-//    }
-//
-//    return (FavoritesDTO) favoritesById.stream().map(favoritesEntity -> FavoritesDTO.toFavoritesBuilder().favoritesEntity(favoritesEntity).build()).collect(Collectors.toList());
-//  }
-
-    if (favoritesById.isEmpty()) {
+    if(favoritesById.isEmpty()){
       throw new CustomIllegalArgumentException(CustomHttpStatus.FAVORITE_NOT_FOUND);
     }
 
-    // 첫 번째 결과만 반환
-    return FavoritesDTO.toFavoritesBuilder()
-        .favoritesEntity(favoritesById.get(0))
-        .build();
+    return favoritesById.stream().map(favoritesEntity -> FavoritesDTO.toFavoritesBuilder().favoritesEntity(favoritesEntity).build()).collect(Collectors.toList());
   }
 }
