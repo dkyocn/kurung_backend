@@ -35,8 +35,8 @@ public class FavoritesDTO {
 //    this.userUuid = favoritesEntity.getUserUuid();
     this.userUuid = favoritesEntity.getUser().getUserUuid();
     this.routinesId = favoritesEntity.getRoutinesId();
-    this.recipeId = favoritesEntity.getRecipeId();
-    this.stressReliefId = favoritesEntity.getStressReliefId();
-    this.communityId = favoritesEntity.getCommunityId();
+    this.recipeId = favoritesEntity.getRecipe() != null ? favoritesEntity.getRecipe().getRecipeId() : null;
+    this.stressReliefId = favoritesEntity.getStressRelief() != null ? favoritesEntity.getStressRelief().getStressReliefId() : null;
+    this.communityId = favoritesEntity.getCommunity() != null ? favoritesEntity.getCommunity().getCommunityId() : null;
   }
 }

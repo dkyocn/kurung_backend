@@ -1,5 +1,8 @@
 package com.kurung.favorites.entity;
 
+import com.kurung.community.entity.CommunityEntity;
+import com.kurung.diet.entity.RecipeEntity;
+import com.kurung.stressrelief.entity.StressReliefEntity;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
 import jakarta.persistence.Column;
@@ -25,13 +28,20 @@ public class FavoritesEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_UUID", nullable = false)
   private UserEntity user;
+
   @Column(name = "ROUTINES_ID")
   private Integer  routinesId;
-  @Column(name = "RECIPE_ID" )
-  private Integer  recipeId;
-  @Column(name = "STRESS_RELIEF_ID")
-  private Integer  stressReliefId;
-  @Column(name = "COMMUNITY_ID")
-  private Integer  communityId;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "RECIPE_ID")
+  private RecipeEntity recipe;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "STRESS_RELIEF_ID")
+  private StressReliefEntity stressRelief;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "COMMUNITY_ID")
+  private CommunityEntity community;
 
 }
