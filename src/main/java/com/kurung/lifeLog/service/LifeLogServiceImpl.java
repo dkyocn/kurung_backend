@@ -3,7 +3,13 @@ package com.kurung.lifeLog.service;
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.lifeLog.dto.LifeLogDTO;
+import com.kurung.lifeLog.entity.LifeLogEntity;
 import com.kurung.lifeLog.repository.LifeLogRepository;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +25,28 @@ public class LifeLogServiceImpl implements LifeLogService{
         .lifeLogEntity(lifeLogRepository.findById(id)
             .orElseThrow(() -> new CustomIllegalArgumentException(CustomHttpStatus.DIET_NOT_FOUND)))
         .build();
+  }
+
+  @Override
+  public List<LifeLogDTO> getLifeLogList(String userUuid, String date) {
+    Date sqlDate = Date.valueOf(date);
+    LocalDate localDate = sqlDate.toLocalDate();
+
+    // 해당 월의 시작일과 종료일 계산
+    LocalDate firstDayOfMonth = localDate.withDayOfMonth(1);
+    LocalDate lastDayOfMonth = localDate.withDayOfMonth(localDate.lengthOfMonth());
+
+    // LocalDateTime 범위 설정
+    LocalDateTime startDateTime = firstDayOfMonth.atStartOfDay();
+    LocalDateTime endDateTime = lastDayOfMonth.atTime(23, 59, 59);
+
+    // 레포지토리 조회
+    List<LifeLogEntity> lifeLogEntities =lifeLogRepository.findByUser_UserUuidAndCreatedAtBetween(
+        userUuid, startDateTime, endDateTime);
+
+    return lifeLogEntities.stream()
+        .map(LifeLogDTO::new)
+        .collect(Collectors.toList());
   }
 
 }

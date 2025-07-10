@@ -20,5 +20,5 @@ public class BaseDTO {
 
   @Schema(description = "최종 수정 일자", example = "2025-07-06 12:00:00")
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-  protected Date modifiedAt;
+  protected Date updatedAt;
 }
