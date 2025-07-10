@@ -11,7 +11,7 @@ import static com.kurung.favorites.entity.QFavoritesEntity.favoritesEntity;
 
 @Repository
 @RequiredArgsConstructor
-public class FavoritesRepositorySupportImpl implements FavoritesRepositorySupport {
+public class    FavoritesRepositorySupportImpl implements FavoritesRepositorySupport {
 
   private final JPAQueryFactory jpaQueryFactory;
 

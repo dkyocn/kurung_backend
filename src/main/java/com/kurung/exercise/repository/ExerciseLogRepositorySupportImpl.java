@@ -2,9 +2,13 @@ package com.kurung.exercise.repository;
 
 import static com.kurung.exercise.entity.QExerciseLogEntity.exerciseLogEntity;
 
+import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.entity.ExerciseLogEntity;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -43,4 +47,19 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
             .where(exerciseLogEntity.user.userUuid.eq(userUuid))
             .fetch();
     }
+
+    // ExerciseMonthlyTime ----------------------------
+    @Override
+    public List<ExerciseLogEntity> getMonthlyExerciseTime(String uuid, Date startDate, Date endDate) {
+        return jpaQueryFactory
+            .selectFrom(exerciseLogEntity)
+            .where(
+                exerciseLogEntity.user.userUuid.eq(uuid),
+                exerciseLogEntity.createdAt.between(startDate, endDate)
+            )
+            .fetch();
+    }
+
+
+
 }

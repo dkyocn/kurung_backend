@@ -1,5 +1,6 @@
 package com.kurung.exercise.repository;
 
+import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 
@@ -12,6 +13,11 @@ public interface ExerciseLogRepositorySupport {
 
   // SUMMARY
     List<ExerciseLogEntity> getLogsByUserUuid(String userUuid);
+
+  // ExerciseMonthlyTime ----------------------------------------
+  List<ExerciseLogEntity> getMonthlyExerciseTime(String uuid, Date startDate, Date endDate);
+
+
 
 
 }

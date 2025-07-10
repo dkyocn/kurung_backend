@@ -1,10 +1,12 @@
 package com.kurung.exercise.service;
 
 import com.kurung.exercise.dto.ExerciseDTO;
+import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ExerciseService {
@@ -25,6 +27,12 @@ public interface ExerciseService {
 
     // Exercise -------------------------------------
     ExerciseDTO getExerciseById(int id);
+
+    // ExerciseMonthlyTime --------------------------
+    // ExerciseService.java
+    List<MonthlyExerciseDTO> getMonthlyExerciseTime(String uuid, int year, int month);
+
+
 
 
 

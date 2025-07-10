@@ -1,6 +1,7 @@
 package com.kurung.exercise.controller;
 
 import com.kurung.exercise.dto.ExerciseDTO;
+import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
@@ -8,10 +9,15 @@ import com.kurung.exercise.entity.ExerciseEntity;
 import com.kurung.exercise.service.ExerciseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +49,6 @@ public class ExerciseController {
         return ResponseEntity.ok(exerciseService.getExerciseLogById(id));
     }
 
-
 //    // 4. 운동 기록 삭제
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Void> deleteLog(@PathVariable int id) {
@@ -52,7 +57,13 @@ public class ExerciseController {
 //    }
 
     // SUMMARY ----------------------------------
-    @GetMapping("/summary")
+    @GetMapping("/summary/{id}")
+    @Operation(summary = "목표설정 DB 연동 확인", description = "목표설정 entity, dto 연동 확인")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+    })
+    @Parameter(name = "id", description = "회원 아이디", example = "1")
     public ResponseEntity<SummaryDTO> getSummaryByUser(@RequestParam String uuid) {
         return ResponseEntity.ok(exerciseService.getSummaryByUser(uuid));
     }
@@ -61,8 +72,8 @@ public class ExerciseController {
     @GetMapping("/objective/{id}")
     @Operation(summary = "목표설정 DB 연동 확인", description = "목표설정 entity, dto 연동 확인")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+        @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
     @Parameter(name = "id", description = "회원 아이디", example = "1")
     public ResponseEntity<ObjectiveDTO> getObjectiveById(@PathVariable int id) {
@@ -71,15 +82,50 @@ public class ExerciseController {
 
     // Routines ------------------------------
     @GetMapping("/routines/{id}")
+    @Operation(summary = "루틴추천 DB 연동 확인", description = "루틴추천 entity, dto 연동 확인")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+    })
+    @Parameter(name = "id", description = "회원 아이디", example = "1")
     public ResponseEntity<RoutinesDTO> getRoutinesById(@PathVariable int id) {
-        return new ResponseEntity<>(exerciseService.getRoutinesById(id),HttpStatus.OK);
+        return new ResponseEntity<>(exerciseService.getRoutinesById(id), HttpStatus.OK);
     }
 
     // Exercise ---------------------------------
     @GetMapping("/exercise/{id}")
+    @Operation(summary = "루틴추천 DB 연동 확인", description = "루틴추천 entity, dto 연동 확인")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+    })
+    @Parameter(name = "id", description = "회원 아이디", example = "1")
     public ResponseEntity<ExerciseDTO> getExerciseById(@PathVariable int id) {
         return new ResponseEntity<>(exerciseService.getExerciseById(id), HttpStatus.OK);
     }
+
+    // ExerciseMonthlyTime ---------------------------------
+    @GetMapping("/exerciseMonthlyTime/{id}")
+    @Operation(summary = "월간 운동 시간 조회", description = "사용자의 월간 운동 시간을 조회합니다")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "418", description = "조회 실패", content = @Content(mediaType = "application/json"))
+    })
+    @Parameters({
+        @Parameter(name = "id", description = "회원 UUID", example = "2025061401"),
+        @Parameter(name = "year", description = "조회 연도", example = "2025"),
+        @Parameter(name = "month", description = "조회 월", example = "7")
+    })
+    public ResponseEntity<List<MonthlyExerciseDTO>> getMonthlyExerciseTime(
+        @PathVariable("id") String uuid,
+        @RequestParam int year,
+        @RequestParam int month
+    ) {
+        List<MonthlyExerciseDTO> result = exerciseService.getMonthlyExerciseTime(uuid, year, month);
+        return ResponseEntity.ok(result);
+    }
+
+
 
 
 
