@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -64,6 +62,12 @@ public class DietController {
   @Parameter(name = "dietDTO", description = "식단 저장 데이터")
   public ResponseEntity<HttpStatus> createDiet(@RequestBody DietDTO dietDTO) {
     dietService.createDiet(dietDTO);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/update")
+  public ResponseEntity<HttpStatus> updateDiet(@RequestBody DietDTO dietDTO) {
+    dietService.updateDiet(dietDTO);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 

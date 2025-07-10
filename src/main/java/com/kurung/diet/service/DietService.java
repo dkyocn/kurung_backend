@@ -13,6 +13,8 @@ public interface DietService {
     DietScoreDTO getDietScoreById(int id);
     // 식단 저장
     void createDiet(DietDTO dietDTO);
+    // 식단 수정
+    void updateDiet(DietDTO dietDTO);
 
     // 음식 조회
     FoodDTO getFoodById(int id);
