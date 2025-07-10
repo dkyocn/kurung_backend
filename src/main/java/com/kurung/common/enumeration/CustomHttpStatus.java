@@ -43,11 +43,13 @@ public enum CustomHttpStatus {
     CHATBOT_NOT_FOUND(494, "해당 id의 챗봇 대화가 없습니다."),
 
    // Community
-    COMMUNITY_NOT_FOUND(497, "해당 id의 커뮤니티가 없습니다.");
+    COMMUNITY_NOT_FOUND(497, "해당 id의 커뮤니티가 없습니다."),
 
 
     // 5XX Server Error 506, 512 ~ 599
 
+    // DIET
+    DIET_SAVE_ERROR(526,"식단 저장을 실패하였습니다.");
     private final int value;
     private final String message;
 
