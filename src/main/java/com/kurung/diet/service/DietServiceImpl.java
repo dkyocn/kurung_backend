@@ -11,6 +11,7 @@ import com.kurung.diet.entity.DietEntity;
 import com.kurung.diet.entity.DietScoreEntity;
 import com.kurung.diet.entity.FoodEntity;
 import com.kurung.diet.enumeration.DIETTYPE;
+import com.kurung.diet.enumeration.MEAL;
 import com.kurung.diet.repository.DietRepository;
 import com.kurung.diet.repository.DietScoreRepository;
 import com.kurung.diet.repository.FoodRepository;
@@ -40,15 +41,15 @@ public class DietServiceImpl implements DietService {
   // DIET
 
   @Override
-  public DietDTO getDietById(int id) {
+  public DietDTO getCurrentDiet(LocalDateTime currentDate, String userUuid,  MEAL meal) {
 
-    DietEntity dietById = dietRepository.getDietById(id);
+    DietEntity dietById = dietRepository.getCurrentDiet(currentDate,userUuid, meal);
 
-    if (dietById == null) {
-      throw new CustomIllegalArgumentException(CustomHttpStatus.DIET_NOT_FOUND);
+    if (dietById != null) {
+      return DietDTO.toDietBuilder().dietEntity(dietById).build();
+    } else {
+      return null;
     }
-
-    return DietDTO.toDietBuilder().dietEntity(dietById).build();
   }
 
 
