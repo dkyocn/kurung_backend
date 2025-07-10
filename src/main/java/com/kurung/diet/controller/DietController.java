@@ -3,9 +3,11 @@ package com.kurung.diet.controller;
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.dto.FoodDTO;
+import com.kurung.diet.enumeration.MEAL;
 import com.kurung.diet.service.DietService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,15 +35,19 @@ public class DietController {
 
   private final DietService dietService;
 
-  @GetMapping("/{id}")
+  @GetMapping("")
   @Operation(summary = "식단 단일 조회", description = "하나의 식단을 조회할 때 사용하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
       @ApiResponse(responseCode = "463", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   })
-  @Parameter(name = "id", description = "식단 아이디", example = "1")
-  public ResponseEntity<DietDTO> getDietById(@PathVariable int id) {
-    return new ResponseEntity<>(dietService.getDietById(id), HttpStatus.OK);
+  @Parameters({
+      @Parameter(name = "currentDate", description = "오늘 날짜", example = "2025-05-19T00:00:00"),
+      @Parameter(name = "userUuid", description = "사용자 UUID", example = "2025061401"),
+      @Parameter(name = "meal", description = "아침, 점심, 저녁", example = "DINNER")
+  })
+  public ResponseEntity<DietDTO> getDietById(@RequestParam LocalDateTime currentDate, @RequestParam String userUuid, @RequestParam MEAL meal) {
+    return new ResponseEntity<>(dietService.getCurrentDiet(currentDate,userUuid,meal), HttpStatus.OK);
   }
 
   @GetMapping("/score/{id}")
@@ -56,6 +62,12 @@ public class DietController {
   }
 
   @GetMapping("/score")
+  @Operation(summary = "식단 점수 한달 조회", description = "식단 점수 한달치를 조회할 때 사용하는 API")
+  @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @Parameters({
+      @Parameter(name = "currentDate", description = "오늘 날짜", example = "2025-05-19T00:00:00"),
+      @Parameter(name = "userUuid", description = "사용자 UUID", example = "2025061401")
+  })
   public ResponseEntity<List<DietScoreDTO>> getDietScoreMonthList(@RequestParam LocalDateTime currentDate, @RequestParam String userUuid) {
     return new ResponseEntity<>(dietService.getDietScoreMonthList(currentDate,userUuid), HttpStatus.OK);
   }
@@ -95,14 +107,6 @@ public class DietController {
     dietService.deleteDietById(id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
-
-//    @Parameters({
-//            @Parameter(name = "email", description = "이메일", example = "chrome123@naver.com"),
-//            @Parameter(name = "password", description = "6자~12자 이내", example = "abcd1234"),
-//            @Parameter(name = "companyName", description = "업체명", example = "코리아 시스템"),
-//            @Parameter(name = "companyNumber", description = "업체 번호", example = "112233"),
-//            @Parameter(name = "companyAddress", description = "업체 주소", example = "인천시 미추홀구 용현동")
-//    })
 
   @GetMapping("/food")
   @Operation(summary = "음식 리스트 조회", description = "음식 리스트를 조회할 때 사용하는 API")
