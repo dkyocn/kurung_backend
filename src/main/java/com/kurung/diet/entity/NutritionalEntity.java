@@ -1,6 +1,5 @@
 package com.kurung.diet.entity;
 
-import com.kurung.common.entity.BaseEntity;
 import com.kurung.diet.dto.NutritionDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -66,5 +65,16 @@ public class NutritionalEntity {
     this.diet = diet;
     this.food = food;
     this.ingred = ingred;
+  }
+
+  public void updateNutritional(NutritionDTO nutritionDTO) {
+    this.sodium = nutritionDTO.getSodium();
+    this.carb = nutritionDTO.getCarb();
+    this.sugar = nutritionDTO.getSugar();
+    this.transFat = nutritionDTO.getTransFat();
+    this.saturatedFat = nutritionDTO.getSaturatedFat();
+    this.cholesterol = nutritionDTO.getCholesterol();
+    this.protein = nutritionDTO.getProtein();
+    this.kcal = nutritionDTO.getKcal();
   }
 }

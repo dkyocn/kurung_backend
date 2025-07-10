@@ -1,7 +1,6 @@
 package com.kurung.common.enumeration;
 
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 public enum CustomHttpStatus {
@@ -49,7 +48,8 @@ public enum CustomHttpStatus {
     // 5XX Server Error 506, 512 ~ 599
 
     // DIET
-    DIET_SAVE_ERROR(526,"식단 저장을 실패하였습니다.");
+    DIET_SAVE_ERROR(526,"식단 저장을 실패하였습니다."),
+    DIET_UPDATE_ERROR(527,"식단 수정을 실패하였습니다.");
     private final int value;
     private final String message;
 
