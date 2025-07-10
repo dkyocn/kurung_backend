@@ -56,6 +56,12 @@ public class DietController {
   }
 
   @PostMapping("")
+  @Operation(summary = "식단 저장", description = "식단을 저장할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "536", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  @Parameter(name = "dietDTO", description = "식단 저장 데이터")
   public ResponseEntity<HttpStatus> createDiet(@RequestBody DietDTO dietDTO) {
     dietService.createDiet(dietDTO);
     return new ResponseEntity<>(HttpStatus.OK);

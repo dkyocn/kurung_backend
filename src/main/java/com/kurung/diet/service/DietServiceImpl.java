@@ -2,6 +2,7 @@ package com.kurung.diet.service;
 
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
+import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.dto.FoodDTO;
@@ -69,66 +70,71 @@ public class DietServiceImpl implements DietService {
 
     UserDTO userByUuid = userService.getUserByUuid(dietDTO.getUser().getUserUuid());
 
-    // 식단 저장
-    DietEntity dietEntity = dietRepository.save(DietEntity.createDietBuilder()
-        .dietDTO(dietDTO)
-        .userDTO(userByUuid)
-        .build());
+    try {
+      // 식단 저장
+      DietEntity dietEntity = dietRepository.save(DietEntity.createDietBuilder()
+          .dietDTO(dietDTO)
+          .userDTO(userByUuid)
+          .build());
 
-    if (!CollectionUtils.isEmpty(dietDTO.getFoodList())) {
-      // foodId 목록 추출
-      List<Integer> foodIds = dietDTO.getFoodList().stream()
-          .map(FoodDTO::getFoodId)
-          .collect(Collectors.toList());
+      if (!CollectionUtils.isEmpty(dietDTO.getFoodList())) {
+        // foodId 목록 추출
+        List<Integer> foodIds = dietDTO.getFoodList().stream()
+            .map(FoodDTO::getFoodId)
+            .collect(Collectors.toList());
 
-      // 한 번에 조회 (findAllById 사용)
-      foodEntityList = foodRepository.findAllById(foodIds);
+        // 한 번에 조회 (findAllById 사용)
+        foodEntityList = foodRepository.findAllById(foodIds);
 
-      // 누락된 foodId 확인
-      if (foodEntityList.size() != foodIds.size()) {
-        throw new CustomIllegalArgumentException(CustomHttpStatus.FOOD_NOT_FOUND);
+        // 누락된 foodId 확인
+        if (foodEntityList.size() != foodIds.size()) {
+          throw new CustomIllegalArgumentException(CustomHttpStatus.FOOD_NOT_FOUND);
+        }
+
+        sodium = foodEntityList.stream()
+            .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getSodium())
+            .sum();
+        crab = foodEntityList.stream()
+            .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getCarb())
+            .sum();
+
+        sugar = foodEntityList.stream()
+            .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getSugar())
+            .sum();
+
+        transFat = foodEntityList.stream()
+            .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getTransFat())
+            .sum();
+
+        saturatedFat = foodEntityList.stream()
+            .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getSaturatedFat())
+            .sum();
+
+        cholesterol = foodEntityList.stream()
+            .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getCholesterol())
+            .sum();
+        protein = foodEntityList.stream()
+            .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getProtein())
+            .sum();
+        kcal = foodEntityList.stream()
+            .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getKcal())
+            .sum();
+
       }
 
-      sodium = foodEntityList.stream()
-          .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getSodium())
-          .sum();
-      crab = foodEntityList.stream()
-          .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getCarb())
-          .sum();
+      // 포함된 음식 영양성분 합
+      NutritionDTO nutritionDTO = NutritionDTO.builder().sodium(sodium).carb(crab).sugar(sugar)
+          .transFat(transFat)
+          .saturatedFat(saturatedFat).cholesterol(cholesterol).protein(protein).kcal(kcal).build();
 
-      sugar = foodEntityList.stream()
-          .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getSugar())
-          .sum();
-
-      transFat = foodEntityList.stream()
-          .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getTransFat())
-          .sum();
-
-      saturatedFat = foodEntityList.stream()
-          .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getSaturatedFat())
-          .sum();
-
-      cholesterol = foodEntityList.stream()
-          .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getCholesterol())
-          .sum();
-      protein = foodEntityList.stream()
-          .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getProtein())
-          .sum();
-      kcal = foodEntityList.stream()
-          .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD).getKcal())
-          .sum();
-
+      // 음식 추가
+      dietEntity.addFood(foodEntityList);
+      // 영양 성분
+      dietEntity.addNutritional(nutritionDTO);
+    } catch (Exception ex) {
+      throw new CustomRunTimeException(CustomHttpStatus.DIET_SAVE_ERROR);
     }
 
-    // 포함된 음식 영양성분 합
-    NutritionDTO nutritionDTO = NutritionDTO.builder().sodium(sodium).carb(crab).sugar(sugar)
-        .transFat(transFat)
-        .saturatedFat(saturatedFat).cholesterol(cholesterol).protein(protein).kcal(kcal).build();
-
-    // 음식 추가
-    dietEntity.addFood(foodEntityList);
-    // 영양 성분
-    dietEntity.addNutritional(nutritionDTO);
   }
 
   @Override
