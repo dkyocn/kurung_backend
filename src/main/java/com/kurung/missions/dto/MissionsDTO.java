@@ -1,5 +1,6 @@
 package com.kurung.missions.dto;
 
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.missions.entity.MissionsEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -30,7 +31,7 @@ public class MissionsDTO {
   private boolean isComplete;
 
   @Schema(description = "미션 표시 방식 (예: badge, text)", example = "badge")
-  private String displayType;
+  private HealthType displayType;
 
   @Schema(description = "토글 옵션 사용 여부", example = "true")
   private boolean toggleOption;

@@ -1,5 +1,6 @@
 package com.kurung.missions.entity;
 
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
 import jakarta.persistence.Column;
@@ -32,7 +33,8 @@ public class MissionsEntity {
   private boolean isComplete;
 
   @Column(name = "DISPLAY_TYPE")
-  private String displayType;
+  @Enumerated(EnumType.STRING)
+  private HealthType displayType;
 
   @Column(name = "TOGGLE_OPTION", nullable = false)
   private boolean toggleOption;
