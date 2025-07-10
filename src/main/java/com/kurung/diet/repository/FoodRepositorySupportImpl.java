@@ -17,6 +17,13 @@ public class FoodRepositorySupportImpl implements FoodRepositorySupport {
   private final JPAQueryFactory queryFactory;
 
   @Override
+  public FoodEntity getFoodById(int id) {
+    return queryFactory.selectFrom(foodEntity)
+        .where(foodEntity.foodId.eq(id))
+        .fetchOne();
+  }
+
+  @Override
   public List<FoodEntity> getFoodList(String keyword) {
     return queryFactory.selectFrom(foodEntity)
         .where(eqKeyword(keyword))
