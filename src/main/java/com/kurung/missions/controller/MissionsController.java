@@ -39,5 +39,13 @@ public class MissionsController {
     return new ResponseEntity<>(missionsService.getMissionsList(), HttpStatus.OK);
   }
 
+//  @GetMapping("/today")
+//  public ResponseEntity<List<MissionsDTO>> getTodayMissions( @RequestParam String userUuid) {
+//    return new ResponseEntity<>(missionsService.createAndGetTodayMissions(userUuid), HttpStatus.OK);
+//  }
 
+  @GetMapping("/today")
+  public ResponseEntity<List<MissionsDTO>> getTodayMissions(@RequestParam String userUuid) {
+    return new ResponseEntity<>(missionsService.createAndGetTodayMissions(userUuid), HttpStatus.OK);
+  }
 }
