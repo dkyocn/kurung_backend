@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -34,7 +37,7 @@ public class DietController {
   @Operation(summary = "식단 단일 조회", description = "하나의 식단을 조회할 때 사용하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "463", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   })
   @Parameter(name = "id", description = "식단 아이디", example = "1")
   public ResponseEntity<DietDTO> getDietById(@PathVariable int id) {
@@ -42,8 +45,20 @@ public class DietController {
   }
 
   @GetMapping("/score/{id}")
+  @Operation(summary = "식단 점수 조회", description = "식단 점수를 조회할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "464", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  @Parameter(name = "id", description = "식단 점수 아이디", example = "1")
   public ResponseEntity<DietScoreDTO> getDietScoreById(@PathVariable int id) {
     return new ResponseEntity<>(dietService.getDietScoreById(id), HttpStatus.OK);
+  }
+
+  @PostMapping("")
+  public ResponseEntity<HttpStatus> createDiet(@RequestBody DietDTO dietDTO) {
+    dietService.createDiet(dietDTO);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
 //    @Parameters({

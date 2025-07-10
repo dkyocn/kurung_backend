@@ -5,6 +5,7 @@ import com.kurung.diet.entity.DietEntity;
 import com.kurung.diet.enumeration.MEAL;
 import com.kurung.user.dto.UserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class DietDTO {
     @Schema(description = "식단 시간", example = "BREAKFAST")
     protected MEAL meal;
     @Schema(description = "식단 날짜", example = "2025-06-14")
-    protected Date dietDate;
+    protected LocalDateTime dietDate;
     @Schema(description = "음식 리스트")
     protected List<FoodDTO> foodList;
     @Schema(description = "사용자 정보")

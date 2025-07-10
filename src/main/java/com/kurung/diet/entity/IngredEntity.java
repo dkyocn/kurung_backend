@@ -39,6 +39,6 @@ public class IngredEntity {
   private INGREDCATEGORY ingredCategory;
   @OneToMany(mappedBy = "ingred", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private List<FoodIngredEntity> foodIngred;
-  @OneToOne(mappedBy = "ingred")
+  @OneToOne(mappedBy = "ingred", cascade = CascadeType.ALL)
   private NutritionalEntity nutritional;
 }
