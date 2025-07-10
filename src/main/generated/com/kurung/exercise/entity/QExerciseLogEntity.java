@@ -60,7 +60,7 @@ public class QExerciseLogEntity extends EntityPathBase<ExerciseLogEntity> {
 
     public QExerciseLogEntity(Class<? extends ExerciseLogEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.kurung.user.entity.QUserEntity(forProperty("user"), inits.get("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.kurung.user.entity.QUserEntity(forProperty("user")) : null;
     }
 
 }

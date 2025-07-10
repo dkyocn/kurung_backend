@@ -18,8 +18,6 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     private static final long serialVersionUID = -1259695407L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QUserEntity userEntity = new QUserEntity("userEntity");
 
     public final BooleanPath adminYN = createBoolean("adminYN");
@@ -32,13 +30,9 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     public final ListPath<com.kurung.diet.entity.DietEntity, com.kurung.diet.entity.QDietEntity> diet = this.<com.kurung.diet.entity.DietEntity, com.kurung.diet.entity.QDietEntity>createList("diet", com.kurung.diet.entity.DietEntity.class, com.kurung.diet.entity.QDietEntity.class, PathInits.DIRECT2);
 
-    public final ListPath<com.kurung.exercise.entity.ExerciseLogEntity, com.kurung.exercise.entity.QExerciseLogEntity> exerciseLogs = this.<com.kurung.exercise.entity.ExerciseLogEntity, com.kurung.exercise.entity.QExerciseLogEntity>createList("exerciseLogs", com.kurung.exercise.entity.ExerciseLogEntity.class, com.kurung.exercise.entity.QExerciseLogEntity.class, PathInits.DIRECT2);
-
-    public final BooleanPath isActive = createBoolean("isActive");
-
-    public final com.kurung.exercise.entity.QObjectiveEntity Objective;
-  
     public final ListPath<com.kurung.diet.entity.DietScoreEntity, com.kurung.diet.entity.QDietScoreEntity> dietScore = this.<com.kurung.diet.entity.DietScoreEntity, com.kurung.diet.entity.QDietScoreEntity>createList("dietScore", com.kurung.diet.entity.DietScoreEntity.class, com.kurung.diet.entity.QDietScoreEntity.class, PathInits.DIRECT2);
+
+    public final ListPath<com.kurung.exercise.entity.ExerciseLogEntity, com.kurung.exercise.entity.QExerciseLogEntity> exerciseLogs = this.<com.kurung.exercise.entity.ExerciseLogEntity, com.kurung.exercise.entity.QExerciseLogEntity>createList("exerciseLogs", com.kurung.exercise.entity.ExerciseLogEntity.class, com.kurung.exercise.entity.QExerciseLogEntity.class, PathInits.DIRECT2);
 
     public final ListPath<com.kurung.favorites.entity.FavoritesEntity, com.kurung.favorites.entity.QFavoritesEntity> favorites = this.<com.kurung.favorites.entity.FavoritesEntity, com.kurung.favorites.entity.QFavoritesEntity>createList("favorites", com.kurung.favorites.entity.FavoritesEntity.class, com.kurung.favorites.entity.QFavoritesEntity.class, PathInits.DIRECT2);
 
@@ -57,6 +51,8 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
     public final ListPath<com.kurung.missions.entity.MissionsEntity, com.kurung.missions.entity.QMissionsEntity> missions = this.<com.kurung.missions.entity.MissionsEntity, com.kurung.missions.entity.QMissionsEntity>createList("missions", com.kurung.missions.entity.MissionsEntity.class, com.kurung.missions.entity.QMissionsEntity.class, PathInits.DIRECT2);
 
     public final ListPath<com.kurung.lifeLog.entity.MonthlyLifeLogEntity, com.kurung.lifeLog.entity.QMonthlyLifeLogEntity> monthlyLifelog = this.<com.kurung.lifeLog.entity.MonthlyLifeLogEntity, com.kurung.lifeLog.entity.QMonthlyLifeLogEntity>createList("monthlyLifelog", com.kurung.lifeLog.entity.MonthlyLifeLogEntity.class, com.kurung.lifeLog.entity.QMonthlyLifeLogEntity.class, PathInits.DIRECT2);
+
+    public final ListPath<com.kurung.exercise.entity.ObjectiveEntity, com.kurung.exercise.entity.QObjectiveEntity> ObjectiveList = this.<com.kurung.exercise.entity.ObjectiveEntity, com.kurung.exercise.entity.QObjectiveEntity>createList("ObjectiveList", com.kurung.exercise.entity.ObjectiveEntity.class, com.kurung.exercise.entity.QObjectiveEntity.class, PathInits.DIRECT2);
 
     public final StringPath profileImg = createString("profileImg");
 
@@ -83,24 +79,15 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
     public final StringPath userUuid = createString("userUuid");
 
     public QUserEntity(String variable) {
-        this(UserEntity.class, forVariable(variable), INITS);
+        super(UserEntity.class, forVariable(variable));
     }
 
     public QUserEntity(Path<? extends UserEntity> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QUserEntity(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QUserEntity(PathMetadata metadata, PathInits inits) {
-        this(UserEntity.class, metadata, inits);
-    }
-
-    public QUserEntity(Class<? extends UserEntity> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.Objective = inits.isInitialized("Objective") ? new com.kurung.exercise.entity.QObjectiveEntity(forProperty("Objective"), inits.get("Objective")) : null;
+        super(UserEntity.class, metadata);
     }
 
 }

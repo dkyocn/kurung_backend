@@ -54,7 +54,7 @@ public class QRoutinesEntity extends EntityPathBase<RoutinesEntity> {
 
     public QRoutinesEntity(Class<? extends RoutinesEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.kurung.user.entity.QUserEntity(forProperty("user"), inits.get("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.kurung.user.entity.QUserEntity(forProperty("user")) : null;
     }
 
 }

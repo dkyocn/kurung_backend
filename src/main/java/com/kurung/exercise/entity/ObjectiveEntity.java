@@ -17,47 +17,41 @@ import java.sql.Date;
 @Entity(name = "TB_OBJECTIVE")
 public class ObjectiveEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "OBJECTIVE_ID")
-    private int objectiveId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "OBJECTIVE_ID")
+  private int objectiveId;
 
-    @Column(name = "OBJECTIVE_TITLE")
-    private String objectiveTitle;
+  @Column(name = "OBJECTIVE_TITLE")
+  private String objectiveTitle;
 
-    @Column(name = "OBJECTIVE_COUNT")
-    private int objectiveCount;
+  @Column(name = "OBJECTIVE_COUNT")
+  private int objectiveCount;
 
-    @Column(name = "OBJECTIVE_DURATION")
-    private int objectiveDuration;
+  @Column(name = "OBJECTIVE_DURATION")
+  private int objectiveDuration;
 
-    @Column(name = "OBJECTIVE_WEIGHT")
-    private BigDecimal objectiveWeight;
+  @Column(name = "OBJECTIVE_WEIGHT")
+  private BigDecimal objectiveWeight;
 
-    @Column(name = "START_DATE", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
-
-    @Column(name = "END_DATE", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
-
-    @Column(name = "MEMO")
-    private String memo;
-
-    @Column(name = "IS_ACTIVE", nullable = false)
-    private Boolean isActive;
-
-    @Column(name = "CREATED_AT")
-    @Temporal(TemporalType.DATE)
-    private Date createdAt;
-
-    @Column(name = "LAST_UPDATED_AT")
-    @Temporal(TemporalType.DATE)
-    private Date lastUpdatedAt;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_UUID")
-    private UserEntity user;
+  @Column(name = "START_DATE", nullable = false)
+  @Temporal(TemporalType.DATE)
+  private Date startDate;
+  @Column(name = "END_DATE", nullable = false)
+  @Temporal(TemporalType.DATE)
+  private Date endDate;
+  @Column(name = "MEMO")
+  private String memo;
+  @Column(name = "IS_ACTIVE", nullable = false)
+  private Boolean isActive;
+  @Column(name = "CREATED_AT")
+  @Temporal(TemporalType.DATE)
+  private Date createdAt;
+  @Column(name = "LAST_UPDATED_AT")
+  @Temporal(TemporalType.DATE)
+  private Date lastUpdatedAt;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "USER_UUID")
+  private UserEntity user;
 
 }

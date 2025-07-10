@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/kurung/exerciselogs")
+@RequestMapping("/api/v1/kurung/exercise")
 @Tag(name = "Exersice TEST", description = "운동 API 테스트코드입니다.")
 public class ExerciseController {
 
@@ -38,7 +38,7 @@ public class ExerciseController {
 //    }
 
     // 3. 운동 기록 단일 조회 (ID 기반)
-    @GetMapping("/{id}")
+    @GetMapping("/logs/{id}")
     public ResponseEntity<SummaryDTO.ExerciseLogDTO> getLogById(@PathVariable int id) {
         return ResponseEntity.ok(exerciseService.getExerciseLogById(id));
     }

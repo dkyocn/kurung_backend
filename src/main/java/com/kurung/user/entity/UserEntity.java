@@ -33,7 +33,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "TB_USER")
-public class    UserEntity {
+public class UserEntity {
 
     @Id
     @Column(name = "USER_UUID")
@@ -79,13 +79,10 @@ public class    UserEntity {
     private List<DietEntity> diet;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
     private List<ExerciseLogEntity> exerciseLogs;
-
-    @OneToOne(mappedBy = "user")
-    private ObjectiveEntity Objective;
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<ObjectiveEntity> ObjectiveList;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
     private List<RoutinesEntity> Routine;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<MissionsEntity> missions;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
