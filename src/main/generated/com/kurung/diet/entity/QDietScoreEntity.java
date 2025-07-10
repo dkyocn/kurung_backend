@@ -22,7 +22,7 @@ public class QDietScoreEntity extends EntityPathBase<DietScoreEntity> {
 
     public static final QDietScoreEntity dietScoreEntity = new QDietScoreEntity("dietScoreEntity");
 
-    public final DatePath<java.sql.Date> date = createDate("date", java.sql.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> date = createDateTime("date", java.time.LocalDateTime.class);
 
     public final NumberPath<Float> dietScore = createNumber("dietScore", Float.class);
 
