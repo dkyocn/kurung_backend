@@ -113,6 +113,23 @@ public class DietServiceImpl implements DietService {
 
   }
 
+  @Override
+  public void deleteDietById(int id) {
+
+    // 삭제할 식단 조회
+    DietEntity dietById = dietRepository.getDietById(id);
+
+    if (dietById == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.DIET_NOT_FOUND);
+    }
+
+    try {
+      dietRepository.delete(dietById);
+    }  catch (Exception ex) {
+      throw new CustomRunTimeException(CustomHttpStatus.DIET_DELETE_ERROR);
+    }
+  }
+
   // 식단 음식 설정
   private List<FoodEntity> dietFoodSetting(DietDTO dietDTO) {
 
