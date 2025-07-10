@@ -17,6 +17,7 @@ import com.kurung.diet.repository.FoodRepository;
 import com.kurung.diet.repository.NutritionalRepository;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -102,7 +103,7 @@ public class DietServiceImpl implements DietService {
         dietById.addFood(foodEntityList);
       }
 
-      if(dietDTO.getNutrition() != null) {
+      if (dietDTO.getNutrition() != null) {
         NutritionDTO nutritionDTO = dietNutritionSetting(foodEntityList);
         // 영양 성분
         dietById.getNutritional().updateNutritional(nutritionDTO);
@@ -125,7 +126,7 @@ public class DietServiceImpl implements DietService {
 
     try {
       dietRepository.delete(dietById);
-    }  catch (Exception ex) {
+    } catch (Exception ex) {
       throw new CustomRunTimeException(CustomHttpStatus.DIET_DELETE_ERROR);
     }
   }
@@ -215,6 +216,18 @@ public class DietServiceImpl implements DietService {
       throw new CustomIllegalArgumentException(CustomHttpStatus.SCORE_NOT_FOUND);
     }
     return DietScoreDTO.toDietScoreBuilder().dietScoreEntity(dietScoreEntity).build();
+  }
+
+  @Override
+  public List<DietScoreDTO> getDietScoreMonthList(LocalDateTime currentDate, String userUuid) {
+
+    List<DietScoreEntity> dietScoreMonthList = dietScoreRepository.getDietScoreMonthList(
+        currentDate.toLocalDate().withDayOfMonth(1).atStartOfDay(),
+        currentDate.toLocalDate().withDayOfMonth(currentDate.toLocalDate().lengthOfMonth()).atStartOfDay(), userUuid);
+
+    return dietScoreMonthList.stream().map(
+        dietScoreEntity -> DietScoreDTO.toDietScoreBuilder().dietScoreEntity(dietScoreEntity)
+            .build()).collect(Collectors.toList());
   }
 
   // FOOD

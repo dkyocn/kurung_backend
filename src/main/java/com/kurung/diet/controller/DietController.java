@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,11 @@ public class DietController {
   @Parameter(name = "id", description = "식단 점수 아이디", example = "1")
   public ResponseEntity<DietScoreDTO> getDietScoreById(@PathVariable int id) {
     return new ResponseEntity<>(dietService.getDietScoreById(id), HttpStatus.OK);
+  }
+
+  @GetMapping("/score")
+  public ResponseEntity<List<DietScoreDTO>> getDietScoreMonthList(@RequestParam LocalDateTime currentDate, @RequestParam String userUuid) {
+    return new ResponseEntity<>(dietService.getDietScoreMonthList(currentDate,userUuid), HttpStatus.OK);
   }
 
   @PostMapping("")
