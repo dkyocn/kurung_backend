@@ -1,0 +1,10 @@
+package com.kurung.diet.repository;
+
+import com.kurung.diet.entity.FoodEntity;
+import java.util.List;
+
+public interface FoodRepositorySupport {
+
+  List<FoodEntity> getFoodList(String keyword);
+
+}

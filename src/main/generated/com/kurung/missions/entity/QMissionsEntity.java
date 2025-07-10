@@ -22,7 +22,7 @@ public class QMissionsEntity extends EntityPathBase<MissionsEntity> {
 
     public static final QMissionsEntity missionsEntity = new QMissionsEntity("missionsEntity");
 
-    public final StringPath displayType = createString("displayType");
+    public final EnumPath<com.kurung.common.enumeration.HealthType> displayType = createEnum("displayType", com.kurung.common.enumeration.HealthType.class);
 
     public final BooleanPath isComplete = createBoolean("isComplete");
 

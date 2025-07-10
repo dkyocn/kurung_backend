@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FoodDTO extends BaseDTO {
+public class FoodDTO {
 
     @Schema(description = "음식 아이디", example = "1")
     protected int foodId;

@@ -2,12 +2,14 @@ package com.kurung.diet.controller;
 
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.DietScoreDTO;
+import com.kurung.diet.dto.FoodDTO;
 import com.kurung.diet.service.DietService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -50,4 +53,9 @@ public class DietController {
 //            @Parameter(name = "companyNumber", description = "업체 번호", example = "112233"),
 //            @Parameter(name = "companyAddress", description = "업체 주소", example = "인천시 미추홀구 용현동")
 //    })
+
+  @GetMapping("/food")
+  public ResponseEntity<List<FoodDTO>> getFoodListByDietId(@RequestParam(required = false) String keyword) {
+    return new ResponseEntity<>(dietService.getFoodList(keyword), HttpStatus.OK);
+  }
 }
