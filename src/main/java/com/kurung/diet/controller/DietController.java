@@ -66,6 +66,12 @@ public class DietController {
   }
 
   @PostMapping("/update")
+  @Operation(summary = "식단 수정", description = "식단을 수정할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "537", description = "수정 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  @Parameter(name = "dietDTO", description = "식단 수정 데이터")
   public ResponseEntity<HttpStatus> updateDiet(@RequestBody DietDTO dietDTO) {
     dietService.updateDiet(dietDTO);
     return new ResponseEntity<>(HttpStatus.OK);

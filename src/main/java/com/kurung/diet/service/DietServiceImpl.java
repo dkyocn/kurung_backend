@@ -93,19 +93,24 @@ public class DietServiceImpl implements DietService {
       throw new CustomIllegalArgumentException(CustomHttpStatus.DIET_NOT_FOUND);
     }
 
-    if (!CollectionUtils.isEmpty(dietDTO.getFoodList())) {
-      dietById.getDietFood().clear();
-      // 음식 설정
-      foodEntityList = dietFoodSetting(dietDTO);
-      // 음식 추가
-      dietById.addFood(foodEntityList);
+    try {
+      if (!CollectionUtils.isEmpty(dietDTO.getFoodList())) {
+        dietById.getDietFood().clear();
+        // 음식 설정
+        foodEntityList = dietFoodSetting(dietDTO);
+        // 음식 추가
+        dietById.addFood(foodEntityList);
+      }
+
+      if(dietDTO.getNutrition() != null) {
+        NutritionDTO nutritionDTO = dietNutritionSetting(foodEntityList);
+        // 영양 성분
+        dietById.getNutritional().updateNutritional(nutritionDTO);
+      }
+    } catch (Exception ex) {
+      throw new CustomRunTimeException(CustomHttpStatus.DIET_UPDATE_ERROR);
     }
 
-    if(dietDTO.getNutrition() != null) {
-      NutritionDTO nutritionDTO = dietNutritionSetting(foodEntityList);
-      // 영양 성분
-      dietById.getNutritional().updateNutritional(nutritionDTO);
-    }
   }
 
   // 식단 음식 설정
