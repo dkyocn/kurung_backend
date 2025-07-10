@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,6 +75,18 @@ public class DietController {
   @Parameter(name = "dietDTO", description = "식단 수정 데이터")
   public ResponseEntity<HttpStatus> updateDiet(@RequestBody DietDTO dietDTO) {
     dietService.updateDiet(dietDTO);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @DeleteMapping("/{id}")
+  @Operation(summary = "식단 삭제", description = "식단을 삭제할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "삭제 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "537", description = "삭제 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  @Parameter(name = "id", description = "삭제할 식단 아이디", example = "1")
+  public ResponseEntity<HttpStatus> deleteDietById(@PathVariable int id) {
+    dietService.deleteDietById(id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 

@@ -15,6 +15,8 @@ public interface DietService {
     void createDiet(DietDTO dietDTO);
     // 식단 수정
     void updateDiet(DietDTO dietDTO);
+    // 식단 삭제
+    void deleteDietById(int id);
 
     // 음식 조회
     FoodDTO getFoodById(int id);
