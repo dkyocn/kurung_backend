@@ -49,6 +49,18 @@ public class DietServiceImpl implements DietService {
   }
 
   @Override
+  public FoodDTO getFoodById(int id) {
+
+    FoodEntity foodById = foodRepository.getFoodById(id);
+
+    if (foodById == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.FOOD_NOT_FOUND);
+    }
+
+    return  FoodDTO.toFoodBuilder().foodEntity(foodById).build();
+  }
+
+  @Override
   public List<FoodDTO> getFoodList(String keyword) {
     List<FoodEntity> foodList = foodRepository.getFoodList(keyword);
 

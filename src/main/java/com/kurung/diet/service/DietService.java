@@ -11,5 +11,7 @@ public interface DietService {
     DietScoreDTO getDietScoreById(int id);
 
     // 음식 조회
+    FoodDTO getFoodById(int id);
+    // 음식 리스트 조회
     List<FoodDTO> getFoodList(String keyword);
 }

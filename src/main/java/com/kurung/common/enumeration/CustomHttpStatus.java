@@ -18,6 +18,7 @@ public enum CustomHttpStatus {
     // Diet
     DIET_NOT_FOUND(463, "해당 id의 식단이 없습니다."),
     SCORE_NOT_FOUND(464, "해당 id의 식단 점수가 없습니다."),
+    FOOD_NOT_FOUND(465,"해당 id의 음식이 없습니다."),
 
     // Exercise
 

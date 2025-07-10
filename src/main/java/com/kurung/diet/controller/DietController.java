@@ -55,7 +55,21 @@ public class DietController {
 //    })
 
   @GetMapping("/food")
+  @Operation(summary = "음식 리스트 조회", description = "음식 리스트를 조회할 때 사용하는 API")
+  @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @Parameter(name = "keyword", description = "검색어", example = "김치")
   public ResponseEntity<List<FoodDTO>> getFoodListByDietId(@RequestParam(required = false) String keyword) {
     return new ResponseEntity<>(dietService.getFoodList(keyword), HttpStatus.OK);
+  }
+
+  @GetMapping("/food/{id}")
+  @Operation(summary = "음식 조회", description = "하나의 음식을 조회할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "465", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  @Parameter(name = "id", description = "음식 아이디", example = "1")
+  public ResponseEntity<FoodDTO> getFoodById(@PathVariable int id) {
+    return new ResponseEntity<>(dietService.getFoodById(id), HttpStatus.OK);
   }
 }
