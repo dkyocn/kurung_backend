@@ -15,7 +15,6 @@ import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +24,7 @@ public class LifeLogServiceImpl implements LifeLogService{
   private final LifeLogRepository lifeLogRepository;
   private final UserService userService;
 
+  // 라이프 로그 단일 조회
   @Override
   public LifeLogDTO getLifeLogById(int id) {
     return LifeLogDTO.toLifeLogBuilder()
@@ -33,6 +33,7 @@ public class LifeLogServiceImpl implements LifeLogService{
         .build();
   }
 
+  // 라이프 로그 한 달 조회
   @Override
   public List<LifeLogDTO> getLifeLogList(String userUuid, String date) {
     Date sqlDate = Date.valueOf(date);
@@ -55,6 +56,7 @@ public class LifeLogServiceImpl implements LifeLogService{
         .collect(Collectors.toList());
   }
 
+  // 라이프 로그 생성
   @Override
   public void createLifelog(LifeLogDTO lifeLogDTO) {
     UserDTO userDTO = userService.getUserByUuid(lifeLogDTO.getUser().getUserUuid());
@@ -88,5 +90,21 @@ public class LifeLogServiceImpl implements LifeLogService{
       throw new CustomRunTimeException(CustomHttpStatus.LIFELOG_SAVE_ERROR);
     }
 
+  }
+
+  @Override
+  public void deleteLifeLogById(int id) {
+    // 삭제할 라이프 로그 조회
+    LifeLogEntity lifeLogEntity = lifeLogRepository.getLifeLogById(id);
+
+    if(lifeLogEntity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.LIFELOG_NOT_FOUND);
+    }
+
+    try {
+      lifeLogRepository.delete(lifeLogEntity);
+    } catch (Exception e) {
+      throw new CustomRunTimeException(CustomHttpStatus.LIFELOG_DELETE_ERROR);
+    }
   }
 }

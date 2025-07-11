@@ -22,7 +22,7 @@ public class QHealthDiagnosisEntity extends EntityPathBase<HealthDiagnosisEntity
 
     public static final QHealthDiagnosisEntity healthDiagnosisEntity = new QHealthDiagnosisEntity("healthDiagnosisEntity");
 
-    public final DatePath<java.sql.Date> createdAt = createDate("createdAt", java.sql.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
     public final StringPath diagnosisSummary = createString("diagnosisSummary");
 

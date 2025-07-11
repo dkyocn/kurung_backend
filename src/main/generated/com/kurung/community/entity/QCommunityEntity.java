@@ -33,12 +33,12 @@ public class QCommunityEntity extends EntityPathBase<CommunityEntity> {
     public final StringPath content = createString("content");
 
     //inherited
-    public final DatePath<java.sql.Date> createdAt = _super.createdAt;
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final StringPath title = createString("title");
 
     //inherited
-    public final DatePath<java.sql.Date> updatedAt = _super.updatedAt;
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public final com.kurung.user.entity.QUserEntity user;
 
