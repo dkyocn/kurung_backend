@@ -10,6 +10,8 @@ public interface LifeLogService {
   List<LifeLogDTO> getLifeLogList(String userUuid, String date);
   // 라이프 로그 생성
   void createLifelog(LifeLogDTO lifeLogDTO);
+  // 라이프 로그 수정
+  void updateLifeLog(LifeLogDTO lifeLogDTO);
   // 라이프 로그 삭제
   void deleteLifeLogById(int id);
 }
