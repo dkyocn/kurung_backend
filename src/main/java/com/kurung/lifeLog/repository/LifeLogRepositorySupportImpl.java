@@ -24,8 +24,6 @@ public class LifeLogRepositorySupportImpl implements LifeLogRepositorySupport {
   @Override
   public List<LifeLogEntity> findByUser_UserUuidAndCreatedAtBetween(
       String userUuid, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-    Date startDate = Date.valueOf(startDateTime.toLocalDate());
-    Date endDate = Date.valueOf(endDateTime.toLocalDate());
 
     return jpaQueryFactory
         .selectFrom(lifeLogEntity)
