@@ -60,7 +60,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5.3.0
         with:
-          images: ${{ steps.cond_branch.outputs.value }}/kurung_backend
+          images: docker.io/dkyocn00/kurung_backend
 
       # Docker buildx 설정
       - name: Docker Setup Buildx
@@ -79,6 +79,6 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            docker.io/dkycon00/kurung_backend:${{ steps.cond_branch.outputs.value }}
+            docker.io/dkyocn00/kurung_backend:${{ steps.cond_branch.outputs.value }}
             docker.io/dkycon00/kurung_backend:${{ steps.cond_branch.outputs.value}}-${{ env.COMMIT_SHORT_SHA }}
           labels: ${{ steps.meta.outputs.labels }}
