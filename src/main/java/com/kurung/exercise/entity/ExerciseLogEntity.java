@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import org.springframework.data.annotation.CreatedDate;
 
 
 @Getter
@@ -22,22 +23,32 @@ public class ExerciseLogEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "EXERCISE_LOGS_ID")
     private int exerciseLogsId;
+
     @Column(name = "DURATION", nullable = false)
     private int duration;
+
     @Column(name = "INTENSITY", nullable = false)
     private String intensity;
+
     @Column(name = "CALORIES", nullable = false)
     private int calories;
+
     @Column(name = "HEART_RATE")
     private int heartRate;
+
     @Column(name = "PRE_CONDITION")
     private String condition;
+
     @Column(name = "PHYSICAL_NOTE")
     private String physicalNote;
+
     @Column(name = "MEMO")
     private String memo;
+
+    @CreatedDate
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_UUID")
     private UserEntity user;

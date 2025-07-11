@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import org.springframework.data.annotation.CreatedDate;
 
 @Getter
 @Builder
@@ -37,16 +38,23 @@ public class ObjectiveEntity {
 
   @Column(name = "START_DATE", nullable = false)
   private LocalDateTime startDate;
+
   @Column(name = "END_DATE", nullable = false)
   private LocalDateTime endDate;
+
   @Column(name = "MEMO")
   private String memo;
+
   @Column(name = "IS_ACTIVE", nullable = false)
   private Boolean isActive;
+
+  @CreatedDate
   @Column(name = "CREATED_AT")
   private LocalDateTime createdAt;
+
   @Column(name = "LAST_UPDATED_AT")
   private LocalDateTime lastUpdatedAt;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_UUID")
   private UserEntity user;

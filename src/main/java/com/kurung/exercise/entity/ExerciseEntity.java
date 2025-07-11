@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 @Getter
 @Builder
@@ -34,6 +35,7 @@ public class ExerciseEntity {
   @Column(name = "TOOL")
   private String tool;
 
+  @CreatedDate
   @Column(name = "CREATED_AT")
   private LocalDateTime createdAt;
 }

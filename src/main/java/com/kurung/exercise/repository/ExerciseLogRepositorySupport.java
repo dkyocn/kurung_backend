@@ -14,7 +14,7 @@ public interface ExerciseLogRepositorySupport {
 
 
   // SUMMARY
-    List<ExerciseLogEntity> getLogsByUserUuid(String uuid);
+    List<ExerciseLogEntity> getLogsByUserUuid(String userUuid);
 
   // ExerciseMonthlyTime ----------------------------------------
   List<ExerciseLogEntity> getMonthlyExerciseTime(String uuid, LocalDateTime startDateTime, LocalDateTime endDateTime);

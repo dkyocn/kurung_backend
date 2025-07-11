@@ -26,7 +26,7 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<SummaryDTO.ExerciseLogDTO> getLogsByConditionAndDate(String uuid, String condition, Date from, Date to) {
+    public List<SummaryDTO.ExerciseLogDTO> getLogsByConditionAndDate(String userUuid, String condition, Date from, Date to) {
         return null;
 //        return jpaQueryFactory
 //                .selectFrom(log)
@@ -43,20 +43,20 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
 
     // Summary ---------------------------------------
     @Override
-    public List<ExerciseLogEntity> getLogsByUserUuid(String uuid) {
+    public List<ExerciseLogEntity> getLogsByUserUuid(String userUuid) {
             return jpaQueryFactory
             .selectFrom(exerciseLogEntity)
-            .where(exerciseLogEntity.user.userUuid.eq(uuid))
+            .where(exerciseLogEntity.user.userUuid.eq(userUuid))
             .fetch();
     }
 
     // ExerciseMonthlyTime ----------------------------
     @Override
-    public List<ExerciseLogEntity> getMonthlyExerciseTime(String uuid, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public List<ExerciseLogEntity> getMonthlyExerciseTime(String userUuid, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         return jpaQueryFactory
             .selectFrom(exerciseLogEntity)
             .where(
-                exerciseLogEntity.user.userUuid.eq(uuid),
+                exerciseLogEntity.user.userUuid.eq(userUuid),
                 exerciseLogEntity.createdAt.between(startDateTime, endDateTime)
             )
             .fetch();
