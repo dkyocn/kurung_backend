@@ -75,7 +75,7 @@ jobs:
         id: build
         uses: docker/build-push-action@v5.1.0
         with:
-          context: ./kurung_backend
+          context: kurung_backend
           file: Dockerfile
           push: true
           tags: |
