@@ -31,7 +31,7 @@ public class LifeLogRepositorySupportImpl implements LifeLogRepositorySupport {
         .selectFrom(lifeLogEntity)
         .where(
             lifeLogEntity.user.userUuid.eq(userUuid),
-            lifeLogEntity.createdAt.between(startDate, endDate)
+            lifeLogEntity.createdAt.between(startDateTime, endDateTime)
         )
         .fetch();
   }
