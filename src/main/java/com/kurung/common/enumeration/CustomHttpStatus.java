@@ -24,7 +24,7 @@ public enum CustomHttpStatus {
 
 
     // LifeLog
-
+    LIFELOG_NOT_FOUND(473,"해당 id의 라이프 로그가 없습니다."),
 
     // HealthReport
 

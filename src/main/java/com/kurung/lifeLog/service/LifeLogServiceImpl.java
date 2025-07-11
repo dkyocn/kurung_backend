@@ -10,7 +10,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.kurung.user.dto.UserDTO;
+import com.kurung.user.entity.UserEntity;
+import com.kurung.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class LifeLogServiceImpl implements LifeLogService{
 
   private final LifeLogRepository lifeLogRepository;
+  private final UserService userService;
 
   @Override
   public LifeLogDTO getLifeLogById(int id) {
@@ -25,6 +30,36 @@ public class LifeLogServiceImpl implements LifeLogService{
         .lifeLogEntity(lifeLogRepository.findById(id)
             .orElseThrow(() -> new CustomIllegalArgumentException(CustomHttpStatus.DIET_NOT_FOUND)))
         .build();
+  }
+
+  @Override
+  public void createLifelog(LifeLogDTO lifeLogDTO) {
+    UserDTO userDTO = userService.getUserByUuid(lifeLogDTO.getUser().getUserUuid());
+
+    LifeLogEntity logEntity = LifeLogEntity.builder()
+        .emotion(lifeLogDTO.getEmotion())
+        .emotionWrite(lifeLogDTO.getEmotionWrite())
+        .bedTime(lifeLogDTO.getBedTime())
+        .wakeupTime(lifeLogDTO.getWakeupTime())
+        .activity(lifeLogDTO.getActivity())
+        .memo(lifeLogDTO.getMemo())
+        .llPdfPath(lifeLogDTO.getLlPdfPath())
+        .user(UserEntity.builder()
+            .userUuid(userDTO.getUserUuid())
+            .userId(userDTO.getUserId())
+            .userFaceLoginRef(userDTO.getUserFaceLoginRef())
+            .userPwd(userDTO.getUserPwd())
+            .userNick(userDTO.getUserNick())
+            .userGender(userDTO.getUserGender())
+            .userAge(userDTO.getUserAge())
+            .userPath(userDTO.getUserPath())
+            .adminYN(userDTO.isAdminYN())
+            .isActive(userDTO.isActive())
+            .build())
+        .build();
+
+    // 엔티티 저장
+    lifeLogRepository.save(logEntity);
   }
 
   @Override
@@ -48,5 +83,4 @@ public class LifeLogServiceImpl implements LifeLogService{
         .map(LifeLogDTO::new)
         .collect(Collectors.toList());
   }
-
 }
