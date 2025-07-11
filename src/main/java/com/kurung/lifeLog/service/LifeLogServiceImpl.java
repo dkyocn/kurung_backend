@@ -2,6 +2,7 @@ package com.kurung.lifeLog.service;
 
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
+import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.lifeLog.dto.LifeLogDTO;
 import com.kurung.lifeLog.entity.LifeLogEntity;
 import com.kurung.lifeLog.repository.LifeLogRepository;
@@ -33,36 +34,6 @@ public class LifeLogServiceImpl implements LifeLogService{
   }
 
   @Override
-  public void createLifelog(LifeLogDTO lifeLogDTO) {
-    UserDTO userDTO = userService.getUserByUuid(lifeLogDTO.getUser().getUserUuid());
-
-    LifeLogEntity logEntity = LifeLogEntity.builder()
-        .emotion(lifeLogDTO.getEmotion())
-        .emotionWrite(lifeLogDTO.getEmotionWrite())
-        .bedTime(lifeLogDTO.getBedTime())
-        .wakeupTime(lifeLogDTO.getWakeupTime())
-        .activity(lifeLogDTO.getActivity())
-        .memo(lifeLogDTO.getMemo())
-        .llPdfPath(lifeLogDTO.getLlPdfPath())
-        .user(UserEntity.builder()
-            .userUuid(userDTO.getUserUuid())
-            .userId(userDTO.getUserId())
-            .userFaceLoginRef(userDTO.getUserFaceLoginRef())
-            .userPwd(userDTO.getUserPwd())
-            .userNick(userDTO.getUserNick())
-            .userGender(userDTO.getUserGender())
-            .userAge(userDTO.getUserAge())
-            .userPath(userDTO.getUserPath())
-            .adminYN(userDTO.isAdminYN())
-            .isActive(userDTO.isActive())
-            .build())
-        .build();
-
-    // 엔티티 저장
-    lifeLogRepository.save(logEntity);
-  }
-
-  @Override
   public List<LifeLogDTO> getLifeLogList(String userUuid, String date) {
     Date sqlDate = Date.valueOf(date);
     LocalDate localDate = sqlDate.toLocalDate();
@@ -82,5 +53,40 @@ public class LifeLogServiceImpl implements LifeLogService{
     return lifeLogEntities.stream()
         .map(LifeLogDTO::new)
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public void createLifelog(LifeLogDTO lifeLogDTO) {
+    UserDTO userDTO = userService.getUserByUuid(lifeLogDTO.getUser().getUserUuid());
+
+    try {
+      LifeLogEntity logEntity = LifeLogEntity.builder()
+          .emotion(lifeLogDTO.getEmotion())
+          .emotionWrite(lifeLogDTO.getEmotionWrite())
+          .bedTime(lifeLogDTO.getBedTime())
+          .wakeupTime(lifeLogDTO.getWakeupTime())
+          .activity(lifeLogDTO.getActivity())
+          .memo(lifeLogDTO.getMemo())
+          .llPdfPath(lifeLogDTO.getLlPdfPath())
+          .user(UserEntity.builder()
+              .userUuid(userDTO.getUserUuid())
+              .userId(userDTO.getUserId())
+              .userFaceLoginRef(userDTO.getUserFaceLoginRef())
+              .userPwd(userDTO.getUserPwd())
+              .userNick(userDTO.getUserNick())
+              .userGender(userDTO.getUserGender())
+              .userAge(userDTO.getUserAge())
+              .userPath(userDTO.getUserPath())
+              .adminYN(userDTO.isAdminYN())
+              .isActive(userDTO.isActive())
+              .build())
+          .build();
+
+      // 엔티티 저장
+      lifeLogRepository.save(logEntity);
+    } catch (Exception e) {
+      throw new CustomRunTimeException(CustomHttpStatus.LIFELOG_SAVE_ERROR);
+    }
+
   }
 }
