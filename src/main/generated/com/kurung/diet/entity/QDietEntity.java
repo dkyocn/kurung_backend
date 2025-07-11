@@ -22,7 +22,7 @@ public class QDietEntity extends EntityPathBase<DietEntity> {
 
     public static final QDietEntity dietEntity = new QDietEntity("dietEntity");
 
-    public final DatePath<java.sql.Date> dietDate = createDate("dietDate", java.sql.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> dietDate = createDateTime("dietDate", java.time.LocalDateTime.class);
 
     public final ListPath<DietFoodEntity, QDietFoodEntity> dietFood = this.<DietFoodEntity, QDietFoodEntity>createList("dietFood", DietFoodEntity.class, QDietFoodEntity.class, PathInits.DIRECT2);
 

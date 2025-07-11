@@ -8,5 +8,5 @@ public enum INGREDCATEGORY {
   GRAIN,
   OIL,
   SEAFOOD,
-  VEGETABLE
+  VEGETABLE,
 }
