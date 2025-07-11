@@ -20,4 +20,4 @@ jobs:
           distribution: 'temurin'
       # Gradle build
       - name: Build with Gradle
-        run: ./gradlew kurung_backend:bootjar
+        run: ./gradlew bootjar
