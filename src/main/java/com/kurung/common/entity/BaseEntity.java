@@ -1,8 +1,10 @@
 package com.kurung.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,9 +24,9 @@ public class BaseEntity {
 
     @CreatedDate
     @Column(name = "CREATED_AT", updatable = false)
-    protected Date createdAt;
+    protected LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "UPDATED_AT")
-    protected Date updatedAt;
+    protected LocalDateTime updatedAt;
 }

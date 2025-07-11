@@ -4,6 +4,8 @@ import static com.kurung.diet.entity.QDietScoreEntity.dietScoreEntity;
 
 import com.kurung.diet.entity.DietScoreEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -19,5 +21,13 @@ public class DietScoreRepositorySupportImpl implements DietScoreRepositorySuppor
     return queryFactory.selectFrom(dietScoreEntity)
         .where(dietScoreEntity.scoreId.eq(scoreId))
         .fetchOne();
+  }
+
+  @Override
+  public List<DietScoreEntity> getDietScoreMonthList(LocalDateTime startDate,
+      LocalDateTime endDate, String userUuid) {
+    return queryFactory.selectFrom(dietScoreEntity)
+        .where(dietScoreEntity.date.between(startDate,endDate).and(dietScoreEntity.user.userUuid.eq(userUuid)))
+        .fetch();
   }
 }
