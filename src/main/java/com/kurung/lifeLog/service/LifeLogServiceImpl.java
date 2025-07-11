@@ -16,6 +16,7 @@ import com.kurung.user.entity.UserEntity;
 import com.kurung.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -90,6 +91,23 @@ public class LifeLogServiceImpl implements LifeLogService{
       throw new CustomRunTimeException(CustomHttpStatus.LIFELOG_SAVE_ERROR);
     }
 
+  }
+
+  @Override
+  @Transactional
+  public void updateLifeLog(LifeLogDTO lifeLogDTO) {
+    // 수정할 라이프 로그 조회
+    LifeLogEntity lifeLogEntity = lifeLogRepository.getLifeLogById(lifeLogDTO.getLifelogId());
+
+    if(lifeLogEntity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.LIFELOG_NOT_FOUND);
+    }
+
+    try{
+      lifeLogEntity.updateLifeLog(lifeLogDTO);
+    } catch (Exception e) {
+      throw new CustomRunTimeException(CustomHttpStatus.LIFELOG_UPDATE_ERROR);
+    }
   }
 
   @Override
