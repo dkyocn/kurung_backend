@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,7 +52,7 @@ public class ExerciseController {
         @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "468", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    @Parameter(name = "uuid", description = "회원 아이디", example = "2025061401")
+    @Parameter(name = "id", description = "회원 아이디", example = "2025061401")
     public ResponseEntity<SummaryDTO.ExerciseLogDTO> getExerciseLogById(@PathVariable int id) {
         return new ResponseEntity<>(exerciseService.getExerciseLogById(id), HttpStatus.OK);
     }
@@ -64,15 +65,15 @@ public class ExerciseController {
 //    }
 
     // SUMMARY ----------------------------------
-    @GetMapping("/summary/{uuid}")
+    @GetMapping("/summary/{userUuid}")
     @Operation(summary = "운동요약 DB 연동 확인", description = "운동요약 entity, dto 연동 확인")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "468", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    @Parameter(name = "uuid", description = "회원 아이디", example = "2025061401")
-    public ResponseEntity<SummaryDTO> getSummaryByUser(@PathVariable String uuid) {
-        return new ResponseEntity<>(exerciseService.getSummaryByUser(uuid), HttpStatus.OK);
+    @Parameter(name = "userUuid", description = "회원 아이디", example = "2025061401")
+    public ResponseEntity<SummaryDTO> getSummaryByUser(@PathVariable String userUuid) {
+        return new ResponseEntity<>(exerciseService.getSummaryByUser(userUuid), HttpStatus.OK);
     }
 
 
@@ -113,26 +114,23 @@ public class ExerciseController {
     }
 
     // ExerciseMonthlyTime ---------------------------------
-    @GetMapping("/exerciseMonthlyTime/{uuid}")
+    @GetMapping("/exerciseMonthlyTime/{userUuid}")
     @Operation(summary = "월간 총 운동 시간 조회", description = "사용자의 월간 총 운동 시간을 조회합니다")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "468", description = "조회 실패", content = @Content(mediaType = "application/json"))
     })
     @Parameters({
-        @Parameter(name = "id", description = "회원 UUID", example = "2025061401"),
-        @Parameter(name = "year", description = "조회 연도", example = "2025"),
-        @Parameter(name = "month", description = "조회 월", example = "7")
+        @Parameter(name = "timeMonth", description = "오늘 날짜", example = "2025-05-19T00:00:00"),
+        @Parameter(name = "userUuid", description = "회원 UUID", example = "2025061401")
     })
     public ResponseEntity<List<MonthlyExerciseDTO>> getMonthlyExerciseTime(
-        @PathVariable("uuid") String uuid,
-        @RequestParam int year,
-        @RequestParam int month
+        @RequestParam LocalDateTime timeMonth,
+        @PathVariable String userUuid
     ) {
-        List<MonthlyExerciseDTO> result = exerciseService.getMonthlyExerciseTime(uuid, year, month);
+        List<MonthlyExerciseDTO> result = exerciseService.getMonthlyExerciseTime(timeMonth, userUuid);
         return ResponseEntity.ok(result);
     }
-
 
 
 
