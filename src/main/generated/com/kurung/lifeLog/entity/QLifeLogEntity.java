@@ -29,7 +29,7 @@ public class QLifeLogEntity extends EntityPathBase<LifeLogEntity> {
     public final DatePath<java.sql.Date> bedTime = createDate("bedTime", java.sql.Date.class);
 
     //inherited
-    public final DatePath<java.sql.Date> createdAt = _super.createdAt;
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final StringPath emotion = createString("emotion");
 
@@ -42,7 +42,7 @@ public class QLifeLogEntity extends EntityPathBase<LifeLogEntity> {
     public final StringPath memo = createString("memo");
 
     //inherited
-    public final DatePath<java.sql.Date> updatedAt = _super.updatedAt;
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public final com.kurung.user.entity.QUserEntity user;
 
