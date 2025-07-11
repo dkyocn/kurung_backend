@@ -1,6 +1,6 @@
 package com.kurung.diet.entity;
 
-import com.kurung.common.entity.BaseEntity;
+import com.kurung.diet.dto.NutritionDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -50,4 +50,31 @@ public class NutritionalEntity {
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "INGRED_ID")
   private IngredEntity ingred;
+
+  @Builder(builderClassName = "createNutritionalBuilder", builderMethodName = "createNutritionalBuilder")
+  public NutritionalEntity(NutritionDTO nutritionDTO, DietEntity diet, FoodEntity food,
+      IngredEntity ingred) {
+    this.sodium = nutritionDTO.getSodium();
+    this.carb = nutritionDTO.getCarb();
+    this.sugar = nutritionDTO.getSugar();
+    this.transFat = nutritionDTO.getTransFat();
+    this.saturatedFat = nutritionDTO.getSaturatedFat();
+    this.cholesterol = nutritionDTO.getCholesterol();
+    this.protein = nutritionDTO.getProtein();
+    this.kcal = nutritionDTO.getKcal();
+    this.diet = diet;
+    this.food = food;
+    this.ingred = ingred;
+  }
+
+  public void updateNutritional(NutritionDTO nutritionDTO) {
+    this.sodium = nutritionDTO.getSodium();
+    this.carb = nutritionDTO.getCarb();
+    this.sugar = nutritionDTO.getSugar();
+    this.transFat = nutritionDTO.getTransFat();
+    this.saturatedFat = nutritionDTO.getSaturatedFat();
+    this.cholesterol = nutritionDTO.getCholesterol();
+    this.protein = nutritionDTO.getProtein();
+    this.kcal = nutritionDTO.getKcal();
+  }
 }

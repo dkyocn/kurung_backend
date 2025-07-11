@@ -16,7 +16,7 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:oracle:thin:@127.0.0.1:21521:XE
+    url: jdbc:oracle:thin:@127.0.0.1:1521:XE
     username: c##kurung
     password: kurung2025
     #    username: system

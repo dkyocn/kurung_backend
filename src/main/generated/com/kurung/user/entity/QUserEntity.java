@@ -32,6 +32,8 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     public final ListPath<com.kurung.diet.entity.DietScoreEntity, com.kurung.diet.entity.QDietScoreEntity> dietScore = this.<com.kurung.diet.entity.DietScoreEntity, com.kurung.diet.entity.QDietScoreEntity>createList("dietScore", com.kurung.diet.entity.DietScoreEntity.class, com.kurung.diet.entity.QDietScoreEntity.class, PathInits.DIRECT2);
 
+    public final ListPath<com.kurung.exercise.entity.ExerciseLogEntity, com.kurung.exercise.entity.QExerciseLogEntity> exerciseLogs = this.<com.kurung.exercise.entity.ExerciseLogEntity, com.kurung.exercise.entity.QExerciseLogEntity>createList("exerciseLogs", com.kurung.exercise.entity.ExerciseLogEntity.class, com.kurung.exercise.entity.QExerciseLogEntity.class, PathInits.DIRECT2);
+
     public final ListPath<com.kurung.favorites.entity.FavoritesEntity, com.kurung.favorites.entity.QFavoritesEntity> favorites = this.<com.kurung.favorites.entity.FavoritesEntity, com.kurung.favorites.entity.QFavoritesEntity>createList("favorites", com.kurung.favorites.entity.FavoritesEntity.class, com.kurung.favorites.entity.QFavoritesEntity.class, PathInits.DIRECT2);
 
     public final ListPath<com.kurung.diagnosis.entity.HealthAnswerEntity, com.kurung.diagnosis.entity.QHealthAnswerEntity> healthAnswer = this.<com.kurung.diagnosis.entity.HealthAnswerEntity, com.kurung.diagnosis.entity.QHealthAnswerEntity>createList("healthAnswer", com.kurung.diagnosis.entity.HealthAnswerEntity.class, com.kurung.diagnosis.entity.QHealthAnswerEntity.class, PathInits.DIRECT2);
@@ -50,7 +52,11 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     public final ListPath<com.kurung.lifeLog.entity.MonthlyLifeLogEntity, com.kurung.lifeLog.entity.QMonthlyLifeLogEntity> monthlyLifelog = this.<com.kurung.lifeLog.entity.MonthlyLifeLogEntity, com.kurung.lifeLog.entity.QMonthlyLifeLogEntity>createList("monthlyLifelog", com.kurung.lifeLog.entity.MonthlyLifeLogEntity.class, com.kurung.lifeLog.entity.QMonthlyLifeLogEntity.class, PathInits.DIRECT2);
 
+    public final ListPath<com.kurung.exercise.entity.ObjectiveEntity, com.kurung.exercise.entity.QObjectiveEntity> ObjectiveList = this.<com.kurung.exercise.entity.ObjectiveEntity, com.kurung.exercise.entity.QObjectiveEntity>createList("ObjectiveList", com.kurung.exercise.entity.ObjectiveEntity.class, com.kurung.exercise.entity.QObjectiveEntity.class, PathInits.DIRECT2);
+
     public final StringPath profileImg = createString("profileImg");
+
+    public final ListPath<com.kurung.exercise.entity.RoutinesEntity, com.kurung.exercise.entity.QRoutinesEntity> Routine = this.<com.kurung.exercise.entity.RoutinesEntity, com.kurung.exercise.entity.QRoutinesEntity>createList("Routine", com.kurung.exercise.entity.RoutinesEntity.class, com.kurung.exercise.entity.QRoutinesEntity.class, PathInits.DIRECT2);
 
     public final DatePath<java.sql.Date> userAge = createDate("userAge", java.sql.Date.class);
 

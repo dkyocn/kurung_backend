@@ -29,8 +29,6 @@ public class LifeLogEntity extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "LIFELOG_ID")
   private int lifelogId;
-  @Column(name = "LL_IMAGE_PATH", length = 300)
-  private String llImagePath;
   @Column(name = "EMOTION", length = 50, nullable = false)
   private String emotion;
   @Column(name = "EMOTION_WRITE", length = 300, nullable = false)

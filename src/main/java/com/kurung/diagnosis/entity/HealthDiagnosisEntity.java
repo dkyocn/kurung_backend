@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,7 +41,7 @@ public class HealthDiagnosisEntity {
   @Column(name = "REPORT_PDF_PATH")
   private String reportPdfPath;
   @Column(name = "CREATED_AT")
-  private Date createdAt;
+  private LocalDateTime createdAt;
   @OneToMany(mappedBy = "healthDiagnosis", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private List<RecommendedGoalEntity> recommendedGoal;
 }

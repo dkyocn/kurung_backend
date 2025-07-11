@@ -28,7 +28,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
         .dianosisSummary(healthDiagnosisEntity.getDiagnosisSummary())
         .score(healthDiagnosisEntity.getScore())
         .reportPdfPath(healthDiagnosisEntity.getReportPdfPath())
-        .createDate(healthDiagnosisEntity.getCreatedAt())
+        .createdAt(healthDiagnosisEntity.getCreatedAt())
         .build();
   }
 }
