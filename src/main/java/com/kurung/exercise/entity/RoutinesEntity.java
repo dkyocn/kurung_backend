@@ -4,6 +4,7 @@ package com.kurung.exercise.entity;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +35,7 @@ public class RoutinesEntity {
   private String videoUrl;
 
   @Column(name = "SAVED_DATE", nullable = false)
-  private Date savedDate;
+  private LocalDateTime savedDate;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_UUID")

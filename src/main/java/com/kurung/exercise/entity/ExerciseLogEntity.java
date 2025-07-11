@@ -2,6 +2,7 @@ package com.kurung.exercise.entity;
 
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,9 +36,8 @@ public class ExerciseLogEntity {
     private String physicalNote;
     @Column(name = "MEMO")
     private String memo;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED_AT", nullable = false)
-    private Date createdAt;
+    @Column(name = "CREATED_AT")
+    private LocalDateTime createdAt;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_UUID")
     private UserEntity user;

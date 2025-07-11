@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/kurung/exercise")
 @Tag(name = "Exersice TEST", description = "운동 API 테스트코드입니다.")
+
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
@@ -45,8 +46,14 @@ public class ExerciseController {
 
     // 3. 운동 기록 단일 조회 (ID 기반)
     @GetMapping("/logs/{id}")
-    public ResponseEntity<SummaryDTO.ExerciseLogDTO> getLogById(@PathVariable int id) {
-        return ResponseEntity.ok(exerciseService.getExerciseLogById(id));
+    @Operation(summary = "운동요약 DB 연동 확인", description = "운동요약 entity, dto 연동 확인")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "468", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+    })
+    @Parameter(name = "uuid", description = "회원 아이디", example = "2025061401")
+    public ResponseEntity<SummaryDTO.ExerciseLogDTO> getExerciseLogById(@PathVariable int id) {
+        return new ResponseEntity<>(exerciseService.getExerciseLogById(id), HttpStatus.OK);
     }
 
 //    // 4. 운동 기록 삭제
@@ -57,23 +64,24 @@ public class ExerciseController {
 //    }
 
     // SUMMARY ----------------------------------
-    @GetMapping("/summary/{id}")
-    @Operation(summary = "목표설정 DB 연동 확인", description = "목표설정 entity, dto 연동 확인")
+    @GetMapping("/summary/{uuid}")
+    @Operation(summary = "운동요약 DB 연동 확인", description = "운동요약 entity, dto 연동 확인")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+        @ApiResponse(responseCode = "468", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
-    @Parameter(name = "id", description = "회원 아이디", example = "1")
-    public ResponseEntity<SummaryDTO> getSummaryByUser(@RequestParam String uuid) {
-        return ResponseEntity.ok(exerciseService.getSummaryByUser(uuid));
+    @Parameter(name = "uuid", description = "회원 아이디", example = "2025061401")
+    public ResponseEntity<SummaryDTO> getSummaryByUser(@PathVariable String uuid) {
+        return new ResponseEntity<>(exerciseService.getSummaryByUser(uuid), HttpStatus.OK);
     }
+
 
     // Objective -----------------------------
     @GetMapping("/objective/{id}")
     @Operation(summary = "목표설정 DB 연동 확인", description = "목표설정 entity, dto 연동 확인")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+        @ApiResponse(responseCode = "470", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
     @Parameter(name = "id", description = "회원 아이디", example = "1")
     public ResponseEntity<ObjectiveDTO> getObjectiveById(@PathVariable int id) {
@@ -85,7 +93,7 @@ public class ExerciseController {
     @Operation(summary = "루틴추천 DB 연동 확인", description = "루틴추천 entity, dto 연동 확인")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+        @ApiResponse(responseCode = "469", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
     @Parameter(name = "id", description = "회원 아이디", example = "1")
     public ResponseEntity<RoutinesDTO> getRoutinesById(@PathVariable int id) {
@@ -94,10 +102,10 @@ public class ExerciseController {
 
     // Exercise ---------------------------------
     @GetMapping("/exercise/{id}")
-    @Operation(summary = "루틴추천 DB 연동 확인", description = "루틴추천 entity, dto 연동 확인")
+    @Operation(summary = "운동종목 및 url DB 연동 확인", description = "운동종목 및 url entity, dto 연동 확인")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+        @ApiResponse(responseCode = "469", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
     @Parameter(name = "id", description = "회원 아이디", example = "1")
     public ResponseEntity<ExerciseDTO> getExerciseById(@PathVariable int id) {
@@ -105,11 +113,11 @@ public class ExerciseController {
     }
 
     // ExerciseMonthlyTime ---------------------------------
-    @GetMapping("/exerciseMonthlyTime/{id}")
-    @Operation(summary = "월간 운동 시간 조회", description = "사용자의 월간 운동 시간을 조회합니다")
+    @GetMapping("/exerciseMonthlyTime/{uuid}")
+    @Operation(summary = "월간 총 운동 시간 조회", description = "사용자의 월간 총 운동 시간을 조회합니다")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "418", description = "조회 실패", content = @Content(mediaType = "application/json"))
+        @ApiResponse(responseCode = "468", description = "조회 실패", content = @Content(mediaType = "application/json"))
     })
     @Parameters({
         @Parameter(name = "id", description = "회원 UUID", example = "2025061401"),
@@ -117,7 +125,7 @@ public class ExerciseController {
         @Parameter(name = "month", description = "조회 월", example = "7")
     })
     public ResponseEntity<List<MonthlyExerciseDTO>> getMonthlyExerciseTime(
-        @PathVariable("id") String uuid,
+        @PathVariable("uuid") String uuid,
         @RequestParam int year,
         @RequestParam int month
     ) {

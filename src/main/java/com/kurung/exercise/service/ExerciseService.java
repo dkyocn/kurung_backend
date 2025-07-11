@@ -16,6 +16,7 @@ public interface ExerciseService {
     List<SummaryDTO.ExerciseLogDTO> getExerciseLogsByUser(String uuid);
     SummaryDTO.ExerciseLogDTO getExerciseLogById(int id);
     void deleteExerciseLog(int id);
+
     // Summary --------------------------------------
     SummaryDTO getSummaryByUser(String uuid);
 
@@ -29,11 +30,6 @@ public interface ExerciseService {
     ExerciseDTO getExerciseById(int id);
 
     // ExerciseMonthlyTime --------------------------
-    // ExerciseService.java
     List<MonthlyExerciseDTO> getMonthlyExerciseTime(String uuid, int year, int month);
-
-
-
-
 
 }

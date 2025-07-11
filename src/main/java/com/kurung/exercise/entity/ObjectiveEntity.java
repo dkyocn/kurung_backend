@@ -2,6 +2,7 @@ package com.kurung.exercise.entity;
 
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,21 +36,17 @@ public class ObjectiveEntity {
   private BigDecimal objectiveWeight;
 
   @Column(name = "START_DATE", nullable = false)
-  @Temporal(TemporalType.DATE)
-  private Date startDate;
+  private LocalDateTime startDate;
   @Column(name = "END_DATE", nullable = false)
-  @Temporal(TemporalType.DATE)
-  private Date endDate;
+  private LocalDateTime endDate;
   @Column(name = "MEMO")
   private String memo;
   @Column(name = "IS_ACTIVE", nullable = false)
   private Boolean isActive;
   @Column(name = "CREATED_AT")
-  @Temporal(TemporalType.DATE)
-  private Date createdAt;
+  private LocalDateTime createdAt;
   @Column(name = "LAST_UPDATED_AT")
-  @Temporal(TemporalType.DATE)
-  private Date lastUpdatedAt;
+  private LocalDateTime lastUpdatedAt;
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_UUID")
   private UserEntity user;

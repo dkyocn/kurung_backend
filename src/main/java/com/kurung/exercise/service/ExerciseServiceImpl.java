@@ -14,6 +14,7 @@ import com.kurung.exercise.repository.ObjectiveRepository;
 import com.kurung.exercise.repository.RoutinesRepository;
 import com.kurung.exercise.repository.RoutinesRepositorySupportImpl;
 import com.kurung.user.dto.UserDTO;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -138,32 +139,25 @@ public class ExerciseServiceImpl implements ExerciseService {
     // ExerciseMonthlyTime -------------------------------------------------
     @Override
     public List<MonthlyExerciseDTO> getMonthlyExerciseTime(String uuid, int year, int month) {
-        // 1일과 말일 날짜 구하기
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
-        // 유저의 운동 로그 조회 (Repository는 java.sql.Date로 받음)
-        List<ExerciseLogEntity> logs = exerciseLogRepository.getMonthlyExerciseTime(
-            uuid,
-            java.sql.Date.valueOf(startDate),
-            java.sql.Date.valueOf(endDate)
-        );
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
 
-        // 총 운동 시간 계산
+        List<ExerciseLogEntity> logs = exerciseLogRepository.getMonthlyExerciseTime(uuid, startDateTime, endDateTime);
+
         int totalDuration = logs.stream()
             .mapToInt(ExerciseLogEntity::getDuration)
             .sum();
 
-        // 년-월 형식 문자열 만들기 (예: 2025-06)
         String yearMonthStr = year + "-" + String.format("%02d", month);
-        LocalDate parsedDate = LocalDate.parse(yearMonthStr + "-01"); // 1일로 변환
+        LocalDate parsedDate = LocalDate.parse(yearMonthStr + "-01");
 
-        // DTO 생성 및 반환
         return List.of(MonthlyExerciseDTO.builder()
-            .date(String.valueOf(LocalDate.parse(parsedDate.toString())))  // 또는 .date(yearMonthStr)
+            .date(String.valueOf(parsedDate))
             .totalDuration(totalDuration)
             .build());
     }
-
 
 }

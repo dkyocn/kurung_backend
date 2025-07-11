@@ -3,6 +3,7 @@ package com.kurung.exercise.dto;
 import com.kurung.exercise.entity.RoutinesEntity;
 import com.kurung.user.dto.UserDTO;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class RoutinesDTO {
   private String routineLevel;
   private String place;
   private String videoUrl;
-  private Date savedDate;
+  private LocalDateTime savedDate;
   private UserDTO user;
 
   public RoutinesDTO(RoutinesEntity entity) {

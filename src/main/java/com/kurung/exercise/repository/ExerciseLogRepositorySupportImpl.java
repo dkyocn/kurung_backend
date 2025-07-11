@@ -9,6 +9,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -40,25 +41,27 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
 //                .collect(Collectors.toList());
     }
 
+    // Summary ---------------------------------------
     @Override
-    public List<ExerciseLogEntity> getLogsByUserUuid(String userUuid) {
+    public List<ExerciseLogEntity> getLogsByUserUuid(String uuid) {
             return jpaQueryFactory
             .selectFrom(exerciseLogEntity)
-            .where(exerciseLogEntity.user.userUuid.eq(userUuid))
+            .where(exerciseLogEntity.user.userUuid.eq(uuid))
             .fetch();
     }
 
     // ExerciseMonthlyTime ----------------------------
     @Override
-    public List<ExerciseLogEntity> getMonthlyExerciseTime(String uuid, Date startDate, Date endDate) {
+    public List<ExerciseLogEntity> getMonthlyExerciseTime(String uuid, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         return jpaQueryFactory
             .selectFrom(exerciseLogEntity)
             .where(
                 exerciseLogEntity.user.userUuid.eq(uuid),
-                exerciseLogEntity.createdAt.between(startDate, endDate)
+                exerciseLogEntity.createdAt.between(startDateTime, endDateTime)
             )
             .fetch();
     }
+
 
 
 
