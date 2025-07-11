@@ -3,6 +3,7 @@ package com.kurung.exercise.dto;
 
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.user.dto.UserDTO;
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -38,7 +39,7 @@ public class SummaryDTO {
         private String condition;
         private String physicalNote;
         private String memo;
-        private Date createdAt;
+        private LocalDateTime createdAt;
 
         @Builder(builderMethodName = "toExerciseLogBuilder", builderClassName = "toExerciseLogBuilder")
         public ExerciseLogDTO(ExerciseLogEntity entity) {

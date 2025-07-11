@@ -2,9 +2,14 @@ package com.kurung.exercise.repository;
 
 import static com.kurung.exercise.entity.QExerciseLogEntity.exerciseLogEntity;
 
+import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.entity.ExerciseLogEntity;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -21,7 +26,7 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<SummaryDTO.ExerciseLogDTO> getLogsByConditionAndDate(String uuid, String condition, Date from, Date to) {
+    public List<SummaryDTO.ExerciseLogDTO> getLogsByConditionAndDate(String userUuid, String condition, Date from, Date to) {
         return null;
 //        return jpaQueryFactory
 //                .selectFrom(log)
@@ -36,6 +41,7 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
 //                .collect(Collectors.toList());
     }
 
+    // Summary ---------------------------------------
     @Override
     public List<ExerciseLogEntity> getLogsByUserUuid(String userUuid) {
             return jpaQueryFactory
@@ -43,4 +49,20 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
             .where(exerciseLogEntity.user.userUuid.eq(userUuid))
             .fetch();
     }
+
+    // ExerciseMonthlyTime ----------------------------
+    @Override
+    public List<ExerciseLogEntity> getMonthlyExerciseTime(String userUuid, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return jpaQueryFactory
+            .selectFrom(exerciseLogEntity)
+            .where(
+                exerciseLogEntity.user.userUuid.eq(userUuid),
+                exerciseLogEntity.createdAt.between(startDateTime, endDateTime)
+            )
+            .fetch();
+    }
+
+
+
+
 }
