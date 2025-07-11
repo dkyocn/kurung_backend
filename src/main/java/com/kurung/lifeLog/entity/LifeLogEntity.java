@@ -1,6 +1,7 @@
 package com.kurung.lifeLog.entity;
 
 import com.kurung.common.entity.BaseEntity;
+import com.kurung.lifeLog.dto.LifeLogDTO;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,9 +36,9 @@ public class LifeLogEntity extends BaseEntity {
   @Column(name = "EMOTION_WRITE", length = 300, nullable = false)
   private String emotionWrite;
   @Column(name = "BED_TIME", nullable = false)
-  private Date bedTime;
+  private LocalDateTime bedTime;
   @Column(name = "WAKEUP_TIME", nullable = false)
-  private Date wakeupTime;
+  private LocalDateTime wakeupTime;
   @Column(name = "ACTIVITY", length = 50, nullable = false)
   private String activity;
   @Column(name = "MEMO", nullable = false)
@@ -46,4 +48,13 @@ public class LifeLogEntity extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_UUID", nullable = false)
   private UserEntity user;
+
+  public void updateLifeLog(LifeLogDTO lifeLogDTO) {
+     this.emotion = lifeLogDTO.getEmotion();
+     this.emotionWrite = lifeLogDTO.getEmotionWrite();
+     this.bedTime = lifeLogDTO.getBedTime();
+     this.wakeupTime = lifeLogDTO.getWakeupTime();
+     this.activity = lifeLogDTO.getActivity();
+     this.memo = lifeLogDTO.getMemo();
+  }
 }

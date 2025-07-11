@@ -50,8 +50,36 @@ public class LifeLogController {
   }
 
   @PostMapping("/create")
+  @Operation(summary = "라이프 로그 저장", description = "새 라이프 로그를 등록할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "536", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
   public ResponseEntity<HttpStatus> createLifelog(@RequestBody LifeLogDTO lifeLogDTO) {
     lifeLogService.createLifelog(lifeLogDTO);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/update")
+  @Operation(summary = "라이프 로그 수정", description = "라이프 로그를 수정할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "537", description = "수정 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  public ResponseEntity<HttpStatus> updateLifelog(@RequestBody LifeLogDTO lifeLogDTO) {
+    lifeLogService.updateLifeLog(lifeLogDTO);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @DeleteMapping("/{id}")
+  @Operation(summary = "라이프 로그 삭제", description = "라이프 로그를 삭제할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "삭제 성공", content= @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "538",description = "삭제 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  @Parameter(name="id",description = "삭제할 라이프 로그 아이디", example = "1")
+  public ResponseEntity<HttpStatus> deleteLifelog(@PathVariable int id) {
+    lifeLogService.deleteLifeLogById(id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }

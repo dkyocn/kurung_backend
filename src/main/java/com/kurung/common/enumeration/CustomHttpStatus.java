@@ -45,6 +45,12 @@ public enum CustomHttpStatus {
 
   // 5XX Server Error 506, 512 ~ 599
 
+  // User
+
+  // Stress
+
+  // Diagnosis
+
   // DIET
   DIET_SAVE_ERROR(526, "식단 저장을 실패하였습니다."),
   DIET_UPDATE_ERROR(527, "식단 수정을 실패하였습니다."),
@@ -58,6 +64,23 @@ public enum CustomHttpStatus {
   OBJECT_SAVE_ERROR(532, "운동목표 저장을 실패하였습니다."),
   OBJECT_UPDATE_ERROR(571, "운동목표 수정을 실패하였습니다."),
   OBJECT_DELETE_ERROR(572, "운동목표 삭제를 실패하였습니다.");
+
+  // LifeLog
+  LIFELOG_SAVE_ERROR(536,"라이프 로그 저장을 실패하였습니다."),
+  LIFELOG_UPDATE_ERROR(537,"라이프 로그 수정을 실패하였습니다."),
+  LIFELOG_DELETE_ERROR(538,"라이프 로그 삭제를 실패하였습니다.");
+
+  // HealthReport
+
+  // Mission
+
+  // Medicine
+
+  // Favorite
+
+  // Chatbot
+
+  // Community
 
 
   private final int value;
