@@ -1,4 +1,4 @@
-name: KURUNG BACKEND CI
+name: KURUNG BACKEND CI - PR
 on:
   pull_request:
     branches: ["develop", "master"]
