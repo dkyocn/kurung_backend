@@ -63,7 +63,7 @@ public enum CustomHttpStatus {
   EXERCISE_DELETE_ERROR(535,"운동기록 삭제를 실패하였습니다."),
   OBJECT_SAVE_ERROR(532, "운동목표 저장을 실패하였습니다."),
   OBJECT_UPDATE_ERROR(571, "운동목표 수정을 실패하였습니다."),
-  OBJECT_DELETE_ERROR(572, "운동목표 삭제를 실패하였습니다.");
+  OBJECT_DELETE_ERROR(572, "운동목표 삭제를 실패하였습니다."),
 
   // LifeLog
   LIFELOG_SAVE_ERROR(536,"라이프 로그 저장을 실패하였습니다."),

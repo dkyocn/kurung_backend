@@ -52,8 +52,8 @@ public class ObjectiveEntity {
   @Column(name = "CREATED_AT")
   private LocalDateTime createdAt;
 
-  @Column(name = "LAST_UPDATED_AT")
-  private LocalDateTime lastUpdatedAt;
+  @Column(name = "UPDATED_AT")
+  private LocalDateTime UpdatedAt;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_UUID")

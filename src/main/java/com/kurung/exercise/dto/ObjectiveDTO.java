@@ -1,5 +1,6 @@
 package com.kurung.exercise.dto;
 
+import com.kurung.common.dto.BaseDTO;
 import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.user.dto.UserDTO;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.util.Date;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ObjectiveDTO {
+public class ObjectiveDTO extends BaseDTO {
 
     private int objectiveId;
     private UserDTO user;
@@ -28,7 +29,7 @@ public class ObjectiveDTO {
     private String memo;
     private Boolean isActive;
     private LocalDateTime createdAt;
-    private LocalDateTime lastUpdatedAt;
+    private LocalDateTime UpdatedAt;
 
     public ObjectiveDTO(ObjectiveEntity entity) {
         this.objectiveId = entity.getObjectiveId();
@@ -44,6 +45,6 @@ public class ObjectiveDTO {
         this.memo = entity.getMemo();
         this.isActive = entity.getIsActive();
         this.createdAt = entity.getCreatedAt();
-        this.lastUpdatedAt = entity.getLastUpdatedAt();
+        this.UpdatedAt = entity.getUpdatedAt();
     }
 }

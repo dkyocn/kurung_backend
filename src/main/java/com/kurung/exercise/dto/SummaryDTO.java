@@ -32,11 +32,16 @@ public class SummaryDTO {
 
         private int exerciseLogsId;
         private UserDTO user;
+        private int exerciseId;
+        private String preCondition;
         private int duration;
         private String intensity;
-        private int calories;
-        private int heartRate;
-        private String condition;
+        private Integer calories;
+        private Integer heartRate;
+        private Integer setCount;
+        private Integer repCount;
+        private String bodyCondition;
+        private String postFeeling;
         private String physicalNote;
         private String memo;
         private LocalDateTime createdAt;
@@ -47,14 +52,20 @@ public class SummaryDTO {
             this.user = entity.getUser() != null
                 ? UserDTO.toUserBuilder().userEntity(entity.getUser()).build()
                 : null;
+            this.exerciseId = entity.getExerciseId();
+            this.preCondition = entity.getPreCondition();
             this.duration = entity.getDuration();
             this.intensity = entity.getIntensity();
             this.calories = entity.getCalories();
             this.heartRate = entity.getHeartRate();
-            this.condition = entity.getCondition();
+            this.setCount = entity.getSetCount();
+            this.repCount = entity.getRepCount();
+            this.bodyCondition = entity.getBodyCondition();
+            this.postFeeling = entity.getPostFeeling();
             this.physicalNote = entity.getPhysicalNote();
             this.memo = entity.getMemo();
             this.createdAt = entity.getCreatedAt();
         }
+
     }
 }
