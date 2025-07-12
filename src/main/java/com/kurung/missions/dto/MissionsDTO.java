@@ -46,4 +46,14 @@ public class MissionsDTO {
     this.displayType = missionEntity.getDisplayType();
     this.toggleOption = missionEntity.isToggleOption();
   }
+  public static MissionsDTO toDTO(MissionsEntity entity) {
+    return MissionsDTO.builder()
+        .missionId(entity.getMissionId())
+        .userUuid(entity.getUser().getUserUuid())
+        .startedDate(entity.getStartedDate())
+        .isComplete(entity.isComplete())
+        .displayType(entity.getDisplayType())
+        .toggleOption(entity.isToggleOption())
+        .build();
+  }
 }

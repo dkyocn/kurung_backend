@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,13 +40,16 @@ public class MissionsController {
     return new ResponseEntity<>(missionsService.getMissionsList(), HttpStatus.OK);
   }
 
-//  @GetMapping("/today")
-//  public ResponseEntity<List<MissionsDTO>> getTodayMissions( @RequestParam String userUuid) {
-//    return new ResponseEntity<>(missionsService.createAndGetTodayMissions(userUuid), HttpStatus.OK);
-//  }
 
   @GetMapping("/today")
   public ResponseEntity<List<MissionsDTO>> getTodayMissions(@RequestParam String userUuid) {
     return new ResponseEntity<>(missionsService.createAndGetTodayMissions(userUuid), HttpStatus.OK);
   }
+
+  @PostMapping("/update")
+  public ResponseEntity<MissionsDTO> updateMission(@RequestBody MissionsDTO dto) {
+    return missionsService.updateMission(dto);
+  }
+
+
 }

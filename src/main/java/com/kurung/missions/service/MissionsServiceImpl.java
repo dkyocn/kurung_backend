@@ -6,6 +6,7 @@ import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.missions.dto.MissionsDTO;
 import com.kurung.missions.entity.MissionsEntity;
 import com.kurung.missions.repository.MissionsRepository;
+import com.kurung.missions.repository.MissionsRepositorySupport;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.repository.UserRepository;
 import java.sql.Date;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -25,6 +27,7 @@ public class MissionsServiceImpl implements MissionsService {
 
   private final MissionsRepository missionsRepository;
   private final UserRepository userRepository;
+  private final MissionsRepositorySupport missionsRepositorySupport;
 
   @Override
   public List<MissionsDTO> getMissionsList() {
@@ -39,81 +42,20 @@ public class MissionsServiceImpl implements MissionsService {
         .collect(Collectors.toList());
   }
 
-//  @Override
-//  public List<MissionsDTO> createAndGetTodayMissions(String userUuid) {
-//
-//    UserEntity user = userRepository.findByUserUuid(userUuid)
-//        .orElseThrow(() -> new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND));
-//
-//    List<MissionsDTO> todayMissions = new ArrayList<>();
-//    Date today = new Date(System.currentTimeMillis());
-//
-//    for (HealthType type : List.of(
-//        HealthType.EXERCISE,
-//        HealthType.STRESS,
-//        HealthType.DAILY,
-//        HealthType.DIET
-//    )) {
-//      boolean exists = missionsRepository.existsByUserUserUuidAndDisplayTypeAndStartedDate(
-//          userUuid,
-//          type,
-//          today
-//      );
-//
-//      MissionsEntity mission;
-//
-//      if (!exists) {
-//        // 🔥 중복 선언 제거하고 위에서 가져온 user 사용
-//        mission = MissionsEntity.builder()
-//            .user(user) // 여기만 고침!
-//            .displayType(type)
-//            .startedDate(today)
-//            .isComplete(false)
-//            .toggleOption(true)
-//            .build();
-//
-//        missionsRepository.save(mission);
-//      } else {
-//        mission = missionsRepository.findByUserUserUuidAndDisplayTypeAndStartedDate(
-//            userUuid,
-//            type,
-//            today
-//        );
-//      }
-//
-//      todayMissions.add(MissionsDTO.toMissionBuilder().missionEntity(mission).build());
-//    }
-//
-//    return todayMissions;
-//  }
-//}
-
   @Override
   public List<MissionsDTO> createAndGetTodayMissions(String userUuid) {
-
-    // ✅ 1. 사용자 조회 (반드시 DB에 있는 사용자여야 함)
     UserEntity user = userRepository.findByUserUuid(userUuid)
         .orElseThrow(() -> new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND));
 
+    Date today = Date.valueOf(LocalDate.now());
     List<MissionsDTO> todayMissions = new ArrayList<>();
-    Date today = new Date(System.currentTimeMillis());
 
-    // ✅ 2. 미션 4개 생성 또는 조회
-    for (HealthType type : List.of(
-        HealthType.EXERCISE,
-        HealthType.STRESS,
-        HealthType.DAILY,
-        HealthType.DIET
-    )) {
-      boolean exists = missionsRepository.existsByUserUserUuidAndDisplayTypeAndStartedDate(
-          userUuid,
-          type,
-          today
-      );
+    for (HealthType type : List.of(HealthType.EXERCISE, HealthType.STRESS, HealthType.DAILY, HealthType.DIET)) {
 
+      boolean exists = missionsRepositorySupport.existsMission(userUuid, type, today);
       MissionsEntity mission;
+
       if (!exists) {
-        // ✅ DB에서 조회한 user로 설정
         mission = MissionsEntity.builder()
             .user(user)
             .displayType(type)
@@ -121,18 +63,38 @@ public class MissionsServiceImpl implements MissionsService {
             .isComplete(false)
             .toggleOption(true)
             .build();
+
         mission = missionsRepository.save(mission);
       } else {
-        mission = missionsRepository.findByUserUserUuidAndDisplayTypeAndStartedDate(
-            userUuid,
-            type,
-            today
-        );
+        mission = missionsRepositorySupport.findMission(userUuid, type, today);
       }
 
       todayMissions.add(MissionsDTO.toMissionBuilder().missionEntity(mission).build());
     }
 
     return todayMissions;
+  }
+
+  @Override
+  public ResponseEntity<MissionsDTO> updateMission(MissionsDTO dto) {
+    Optional<MissionsEntity> optional = missionsRepository.findById(dto.getMissionId());
+
+    if (optional.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    MissionsEntity entity = optional.get();
+
+    entity = MissionsEntity.builder()
+        .missionId(entity.getMissionId())
+        .user(entity.getUser()) // 기존 사용자 유지
+        .startedDate(dto.getStartedDate())
+        .isComplete(dto.isComplete())
+        .displayType(dto.getDisplayType())
+        .toggleOption(dto.isToggleOption())
+        .build();
+
+    MissionsEntity updated = missionsRepository.save(entity);
+    return ResponseEntity.ok(MissionsDTO.toDTO(updated));
   }
 }

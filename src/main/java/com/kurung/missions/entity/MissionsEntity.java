@@ -3,14 +3,7 @@ package com.kurung.missions.entity;
 import com.kurung.common.enumeration.HealthType;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import jakarta.persistence.Id;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.MappedSuperclass;
+import lombok.*;
 
 import java.sql.Date;
 
@@ -18,7 +11,8 @@ import java.sql.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "TB_MISSIONS")
+@Entity
+@Table(name = "TB_MISSIONS")  // ✅ 테이블 이름 지정
 public class MissionsEntity {
 
   @Id
