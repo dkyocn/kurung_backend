@@ -15,7 +15,7 @@ import java.util.Date;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ObjectiveDTO extends RoutinesDTO {
+public class ObjectiveDTO {
 
     private int objectiveId;
     private UserDTO user;
