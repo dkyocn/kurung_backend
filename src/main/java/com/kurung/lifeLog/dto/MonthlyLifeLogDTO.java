@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class MonthlyLifeLogDTO {
   private int monthlyLifeLogId;           	// 월간 라이프로그 고유 ID
-  private int month;                      	// 해당 월 (예: 7)
+  private String month;                      	// 해당 월 (예: 7)
   private String monthlySummary;         // 월간 요약 텍스트
   private UserDTO user;                   	// 사용자 정보
 
@@ -36,10 +36,22 @@ public class MonthlyLifeLogDTO {
   private int countDepressed;	// 우울함
 
   @Builder(builderMethodName = "toMonthlyLifeLogBuilder", builderClassName = "toLifeLogBuilder")
-  public MonthlyLifeLogDTO(MonthlyLifeLogEntity MonthlylifeLogEntity){
+  public MonthlyLifeLogDTO(MonthlyLifeLogEntity MonthlylifeLogEntity, List<LifeLogDTO> lifeLogList, int avgSleepTime, int countLifeLog, int countHappy, int countCalm, int countTired, int countSad, int countAngry,
+      int countAnxious, int countExcited, int countDepressed) {
     this.monthlyLifeLogId = MonthlylifeLogEntity.getMonthlyLifeLogId();
     this.month = MonthlylifeLogEntity.getMonth();
     this.monthlySummary = MonthlylifeLogEntity.getMonthlySummary();
+    this.lifeLogList = lifeLogList;
+    this.avgSleepTime = avgSleepTime;
+    this.countLifeLog = countLifeLog;
+    this.countHappy = countHappy;
+    this.countCalm = countCalm;
+    this.countTired = countTired;
+    this.countSad = countSad;
+    this.countAngry = countAngry;
+    this.countAnxious = countAnxious;
+    this.countExcited = countExcited;
+    this.countDepressed = countDepressed;
     this.user = UserDTO.toUserBuilder()
         .userEntity(MonthlylifeLogEntity.getUser())
         .build();

@@ -1,15 +1,24 @@
 package com.kurung.lifeLog.service;
 
+
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.lifeLog.dto.LifeLogDTO;
+import com.kurung.lifeLog.dto.MonthlyLifeLogDTO;
 import com.kurung.lifeLog.entity.LifeLogEntity;
+import com.kurung.lifeLog.entity.MonthlyLifeLogEntity;
 import com.kurung.lifeLog.repository.LifeLogRepository;
+import com.kurung.lifeLog.repository.MonthlyLifeLogRepository;
 import java.sql.Date;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
@@ -23,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LifeLogServiceImpl implements LifeLogService{
 
   private final LifeLogRepository lifeLogRepository;
+  private final MonthlyLifeLogRepository monthlyLifeLogRepository;
   private final UserService userService;
 
   // 라이프 로그 단일 조회
@@ -123,6 +133,75 @@ public class LifeLogServiceImpl implements LifeLogService{
       lifeLogRepository.delete(lifeLogEntity);
     } catch (Exception e) {
       throw new CustomRunTimeException(CustomHttpStatus.LIFELOG_DELETE_ERROR);
+    }
+  }
+
+  @Override
+  public MonthlyLifeLogDTO getMonthlyLifeLog(String userUuid, String date) {
+    // 월간 리포트 조회
+    MonthlyLifeLogEntity monthlyLifeLogEntity = monthlyLifeLogRepository.findByMonthlyLifeLog_UserUuidAndMonth(userUuid, date);
+
+    if(monthlyLifeLogEntity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.LIFELOG_NOT_FOUND);
+    }
+
+    try {
+
+      YearMonth yearMonth = YearMonth.parse(date);
+      LocalDate firstDayOfMonth = yearMonth.atDay(1);
+      LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
+
+      LocalDateTime startDateTime = firstDayOfMonth.atStartOfDay();
+      LocalDateTime endDateTime = lastDayOfMonth.atTime(23, 59, 59);
+
+      UserDTO userDTO = userService.getUserByUuid(userUuid);
+
+      // 라이프 로그 엔티티 조회
+      List<LifeLogEntity> lifeLogEntities = lifeLogRepository.findByUser_UserUuidAndCreatedAtBetween(
+          userUuid, startDateTime, endDateTime);
+
+      List<LifeLogDTO> lifeLogList = lifeLogEntities.stream().map(LifeLogDTO::new).toList();
+
+      // 평균 수면 시간 계산
+      List<Integer> sleepMinutesList = lifeLogEntities.stream().filter(
+              lifeLogEntity -> lifeLogEntity.getBedTime() != null
+                  && lifeLogEntity.getWakeupTime() != null)
+          .map(lifeLogEntity -> {
+            LocalDateTime bedTime = lifeLogEntity.getBedTime();
+            LocalDateTime wakeupTime = lifeLogEntity.getWakeupTime();
+            long minutes = Duration.between(bedTime, wakeupTime).toMinutes();
+            return (int) Math.max(minutes, 0);
+          }).toList();
+
+      int avgSleepMinutes = sleepMinutesList.isEmpty() ? 0
+          : (int) sleepMinutesList.stream().mapToInt(Integer::intValue).average().orElse(0);
+
+      // 라이프 로그 갯수 카운트
+      int countLifeLog = lifeLogEntities.size();
+
+      // 감정별 갯수 카운트
+      Map<String, Long> emotionCount = lifeLogEntities.stream()
+          .collect(Collectors.groupingBy(LifeLogEntity::getEmotion, Collectors.counting()));
+
+      return MonthlyLifeLogDTO.builder()
+          .monthlyLifeLogId(monthlyLifeLogEntity.getMonthlyLifeLogId())
+          .month(monthlyLifeLogEntity.getMonth())
+          .monthlySummary(monthlyLifeLogEntity.getMonthlySummary())
+          .lifeLogList(lifeLogList)
+          .user(userDTO)
+          .avgSleepTime(avgSleepMinutes)
+          .countLifeLog(countLifeLog)
+          .countHappy(emotionCount.getOrDefault("행복함", 0L).intValue())
+          .countCalm(emotionCount.getOrDefault("평온함", 0L).intValue())
+          .countHappy(emotionCount.getOrDefault("행복함", 0L).intValue())
+          .countCalm(emotionCount.getOrDefault("평온함", 0L).intValue())
+          .countHappy(emotionCount.getOrDefault("행복함", 0L).intValue())
+          .countCalm(emotionCount.getOrDefault("평온함", 0L).intValue())
+          .countHappy(emotionCount.getOrDefault("행복함", 0L).intValue())
+          .countCalm(emotionCount.getOrDefault("평온함", 0L).intValue())
+          .build();
+    }catch (Exception e){
+      throw new CustomRunTimeException(CustomHttpStatus.MONTHLYLIFELOG_NOT_FOUND);
     }
   }
 }

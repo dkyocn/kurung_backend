@@ -25,8 +25,8 @@ public enum CustomHttpStatus {
   OBJECTIVE_NOT_FOUND(470, "해당 id의 운동목표가 없습니다."),
 
   // LifeLog
-    LIFELOG_NOT_FOUND(473,"해당 id의 라이프 로그가 없습니다."),
-  
+  LIFELOG_NOT_FOUND(473,"해당 id의 라이프 로그가 없습니다."),
+  MONTHLYLIFELOG_NOT_FOUND(474,"해당 id의 라이프 로그가 없습니다."),
   // HealthReport
 
   // Mission
