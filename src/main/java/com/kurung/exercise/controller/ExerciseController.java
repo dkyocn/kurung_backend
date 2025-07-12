@@ -38,7 +38,20 @@ public class ExerciseController {
 //        ExerciseLogDTO savedLog = exerciseLogService.createExerciseLog(dto);
 //        return ResponseEntity.ok(savedLog);
 //    }
-//
+
+    @PostMapping("")
+    @Operation(summary = "운동 기록 저장", description = "운동 기록을 저장하는 API")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "531", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+    })
+    @Parameter(name = "exerciseLogDTO", description = "운동 기록 저장 데이터")
+    public ResponseEntity<HttpStatus> createExerciseLog(@RequestBody SummaryDTO.ExerciseLogDTO exerciseLogDTO) {
+        exerciseService.createExerciseLog(exerciseLogDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 //    // 2. 사용자별 전체 운동 기록 조회
 //    @GetMapping("/user/{uuid}")
 //    public ResponseEntity<List<ExerciseLogDTO>> getLogsByUser(@PathVariable String uuid) {

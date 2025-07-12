@@ -1,19 +1,18 @@
 package com.kurung.exercise.service;
 
-import static com.kurung.exercise.entity.QExerciseLogEntity.exerciseLogEntity;
-
-import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.exercise.dto.ExerciseDTO;
 import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
+import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.exercise.repository.ExerciseLogRepository;
 import com.kurung.exercise.repository.ExerciseRepository;
 import com.kurung.exercise.repository.ObjectiveRepository;
 import com.kurung.exercise.repository.RoutinesRepository;
 import com.kurung.user.dto.UserDTO;
+import com.kurung.user.entity.UserEntity;
 import com.kurung.user.repository.UserRepository;
 import com.kurung.user.service.UserService;
 import java.time.LocalDateTime;
@@ -24,20 +23,59 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class ExerciseServiceImpl implements ExerciseService {
 
   private final UserService userService;
+  private final UserRepository userRepository;
   private final ExerciseRepository exerciseRepository;
   private final ExerciseLogRepository exerciseLogRepository;
   private final ObjectiveRepository objectiveRepository;
   private final RoutinesRepository routinesRepository;
 
-  @Override
+  /* @Override
   public SummaryDTO.ExerciseLogDTO createExerciseLog(SummaryDTO.ExerciseLogDTO dto) {
     ExerciseLogEntity saved = exerciseLogRepository.save(ExerciseLogEntity.builder().build());
+    return SummaryDTO.ExerciseLogDTO.toExerciseLogBuilder()
+        .entity(saved)
+        .build();
+  }
+*/
+
+  // Exercise create -------------------------------------------------------
+  @Transactional
+  @Override
+  public SummaryDTO.ExerciseLogDTO createExerciseLog(SummaryDTO.ExerciseLogDTO dto) {
+    // 1. UserEntity 조회 (UserDTO에 userUuid가 반드시 들어와야 함)
+    String userUuid = dto.getUser().getUserUuid();
+    UserEntity user = userRepository.findById(userUuid)
+        .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
+
+    // 2. DTO → Entity 변환
+    ExerciseLogEntity entity = ExerciseLogEntity.builder()
+        .user(user)
+        .exerciseId(dto.getExerciseId())
+        .preCondition(dto.getPreCondition())
+        .duration(dto.getDuration())
+        .intensity(dto.getIntensity())
+        .calories(dto.getCalories())
+        .heartRate(dto.getHeartRate())
+        .setCount(dto.getSetCount())
+        .repCount(dto.getRepCount())
+        .bodyCondition(dto.getBodyCondition())
+        .postFeeling(dto.getPostFeeling())
+        .physicalNote(dto.getPhysicalNote())
+        .memo(dto.getMemo())
+        .createdAt(dto.getCreatedAt() == null ? LocalDateTime.now() : dto.getCreatedAt())
+        .build();
+
+    // 3. DB에 저장
+    ExerciseLogEntity saved = exerciseLogRepository.save(entity);
+
+    // 4. Entity → DTO 변환 후 반환
     return SummaryDTO.ExerciseLogDTO.toExerciseLogBuilder()
         .entity(saved)
         .build();
@@ -67,7 +105,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     exerciseLogRepository.deleteById(id);
   }
 
-  // SUMMARY LINE -----------------------------------------------------------
+  // SUMMARY  -----------------------------------------------------------
   @Override
   public SummaryDTO getSummaryByUser(String userUuid) {
     List<ExerciseLogEntity> logs = exerciseLogRepository.getLogsByUserUuid(userUuid);
@@ -104,7 +142,7 @@ public class ExerciseServiceImpl implements ExerciseService {
             .memo(entity.getMemo())
             .isActive(entity.getIsActive())
             .createdAt(entity.getCreatedAt())
-            .lastUpdatedAt(entity.getLastUpdatedAt())
+            .UpdatedAt(entity.getUpdatedAt())
             .build()).orElseThrow();
   }
 

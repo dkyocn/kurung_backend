@@ -16,6 +16,7 @@ public interface ExerciseService {
     SummaryDTO.ExerciseLogDTO createExerciseLog(SummaryDTO.ExerciseLogDTO exerciseLogDTO);
     List<SummaryDTO.ExerciseLogDTO> getExerciseLogsByUser(String uuid);
     SummaryDTO.ExerciseLogDTO getExerciseLogById(int id);
+
     void deleteExerciseLog(int id);
 
     // Summary --------------------------------------
