@@ -1,6 +1,7 @@
 package com.kurung.lifeLog.service;
 
 import com.kurung.lifeLog.dto.LifeLogDTO;
+import com.kurung.lifeLog.dto.MonthlyLifeLogDTO;
 import java.util.List;
 
 public interface LifeLogService {
@@ -14,4 +15,6 @@ public interface LifeLogService {
   void updateLifeLog(LifeLogDTO lifeLogDTO);
   // 라이프 로그 삭제
   void deleteLifeLogById(int id);
+  // 월간 리포트 조회
+  MonthlyLifeLogDTO getMonthlyLifeLog(String userUuid, String date);
 }
