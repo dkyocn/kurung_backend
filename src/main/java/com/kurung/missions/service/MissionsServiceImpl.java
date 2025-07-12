@@ -97,4 +97,11 @@ public class MissionsServiceImpl implements MissionsService {
     MissionsEntity updated = missionsRepository.save(entity);
     return ResponseEntity.ok(MissionsDTO.toDTO(updated));
   }
+
+  @Override
+  public void deleteMission(int missionId) {
+    MissionsEntity mission = missionsRepository.findById(missionId)
+        .orElseThrow(() -> new RuntimeException("미션이 존재하지 않습니다."));
+    missionsRepository.delete(mission);
+  }
 }

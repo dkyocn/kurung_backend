@@ -51,5 +51,11 @@ public class MissionsController {
     return missionsService.updateMission(dto);
   }
 
+  @DeleteMapping("/delete/{missionId}")
+  public ResponseEntity<Void> deleteMission(@PathVariable int missionId) {
+    missionsService.deleteMission(missionId);
+    return ResponseEntity.ok().build();
+  }
+
 
 }

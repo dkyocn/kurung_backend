@@ -12,5 +12,7 @@ public interface MissionsService {
 
   ResponseEntity<MissionsDTO> updateMission(MissionsDTO dto);
 
+  void deleteMission(int missionId);
+
 //  List<MissionsDTO> getMissionsByUserAndType(String userUuid, String displayType);
 }
