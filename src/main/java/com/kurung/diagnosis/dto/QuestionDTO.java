@@ -1,9 +1,11 @@
 package com.kurung.diagnosis.dto;
 
 import com.kurung.common.dto.BaseDTO;
+import com.kurung.diagnosis.entity.HealthQuestionEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -26,4 +28,21 @@ public class QuestionDTO extends BaseDTO {
   protected int textOption;
   @Schema(description = "선지 정보")
   protected List<OptionDTO> options;
+
+  @Builder(builderMethodName = "toQuestionBuilder", builderClassName = "toQuestionBuilder")
+  public QuestionDTO(HealthQuestionEntity healthQuestionEntity) {
+    this.questionCode = healthQuestionEntity.getQuestionCode();
+    this.category = healthQuestionEntity.getCategory().getValue();
+    this.questionText = healthQuestionEntity.getQuestionText();
+    this.isMultiple = healthQuestionEntity.getIsMultiple();
+    this.textOption = healthQuestionEntity.getTextOption();
+//    this.options = OptionDTO.toOptionBuilder()
+//        .healthOptionEntity(healthQuestionEntity.getHealthOption())
+//        .build();
+    // ✅ 리스트 전체 매핑
+    this.options = healthQuestionEntity.getHealthOption().stream()
+        .map(OptionDTO::new) // OptionDTO(HealthOptionEntity) 생성자 사용
+        .toList();
+  }
+
 }

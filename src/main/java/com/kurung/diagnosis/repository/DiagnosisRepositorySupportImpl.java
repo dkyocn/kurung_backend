@@ -13,9 +13,9 @@ public class DiagnosisRepositorySupportImpl implements DiagnosisRepositorySuppor
 
   private final JPAQueryFactory jpaQueryFactory;
 
-  public HealthDiagnosisEntity getDiagnosisById(int score) {
+  public HealthDiagnosisEntity getDiagnosisByUserUuid(String userUuid) {
     return jpaQueryFactory.selectFrom(healthDiagnosisEntity)
-        .where(healthDiagnosisEntity.score.eq(score))
+        .where(healthDiagnosisEntity.user.userUuid.eq(userUuid))
         .fetchOne();
   }
 }

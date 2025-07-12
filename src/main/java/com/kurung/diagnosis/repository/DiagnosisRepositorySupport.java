@@ -4,5 +4,5 @@ import com.kurung.diagnosis.entity.HealthDiagnosisEntity;
 
 public interface DiagnosisRepositorySupport {
 
-  HealthDiagnosisEntity getDiagnosisById(int score);
+  HealthDiagnosisEntity getDiagnosisByUserUuid(String userUuid);
 }
