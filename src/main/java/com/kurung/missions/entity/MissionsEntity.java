@@ -3,6 +3,8 @@ package com.kurung.missions.entity;
 import com.kurung.common.enumeration.HealthType;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.*;
 
 import java.sql.Date;
@@ -11,8 +13,7 @@ import java.sql.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "TB_MISSIONS")  // ✅ 테이블 이름 지정
+@Entity(name = "TB_MISSIONS")
 public class MissionsEntity {
 
   @Id
@@ -21,7 +22,7 @@ public class MissionsEntity {
   private int missionId;
 
   @Column(name = "STARTED_DATE")
-  private Date startedDate;
+  private LocalDateTime startedDate;
 
   @Column(name = "IS_COMPLETED", nullable = false)
   private boolean isComplete;

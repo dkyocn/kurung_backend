@@ -17,17 +17,17 @@ import lombok.experimental.SuperBuilder;
 public class FavoritesDTO {
 
   @Schema(description = "즐겨찾기 ID", example = "1")
-  private int favoritesId;
+  protected int favoritesId;
   @Schema(description = "사용자 UUID", example = "abc123-uuid")
-  private String userUuid;
+  protected String userUuid;
   @Schema(description = "운동루틴 ID", example = "101")
-  private Integer  routinesId;
+  protected Integer  routinesId;
   @Schema(description = "레시피 ID", example = "202")
-  private Integer  recipeId;
+  protected Integer  recipeId;
   @Schema(description = "스트레스 해소 게시글 ID", example = "303")
-  private Integer  stressReliefId;
+  protected Integer  stressReliefId;
   @Schema(description = "커뮤니티 게시글 ID", example = "404")
-  private Integer  communityId;
+  protected Integer  communityId;
 
   @Builder(builderMethodName = "toFavoritesBuilder", builderClassName = "toFavoritesBuilder")
   public FavoritesDTO(FavoritesEntity favoritesEntity) {

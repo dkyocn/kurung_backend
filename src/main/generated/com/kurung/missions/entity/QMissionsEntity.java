@@ -22,13 +22,13 @@ public class QMissionsEntity extends EntityPathBase<MissionsEntity> {
 
     public static final QMissionsEntity missionsEntity = new QMissionsEntity("missionsEntity");
 
-    public final StringPath displayType = createString("displayType");
+    public final EnumPath<com.kurung.common.enumeration.HealthType> displayType = createEnum("displayType", com.kurung.common.enumeration.HealthType.class);
 
     public final BooleanPath isComplete = createBoolean("isComplete");
 
     public final NumberPath<Integer> missionId = createNumber("missionId", Integer.class);
 
-    public final DatePath<java.sql.Date> startedDate = createDate("startedDate", java.sql.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> startedDate = createDateTime("startedDate", java.time.LocalDateTime.class);
 
     public final BooleanPath toggleOption = createBoolean("toggleOption");
 

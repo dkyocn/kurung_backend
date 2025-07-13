@@ -31,31 +31,16 @@ public class MissionsController {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
       @ApiResponse(responseCode = "418", description = "조회 실패", content = @Content(mediaType = "application/json"))
   })
-//  @Parameter(name = "id", description = "미션 ID", example = "1")
-//  public ResponseEntity<MissionsDTO> getMissionById(@PathVariable int id) {
-//    return new ResponseEntity<>(missionsService.getMissionsById(id), HttpStatus.OK);
-//  }
-
   public ResponseEntity<List<MissionsDTO>> getMissionById() {
     return new ResponseEntity<>(missionsService.getMissionsList(), HttpStatus.OK);
   }
 
 
   @GetMapping("/today")
+  @Operation(summary = "오늘 미션 리스트 조회", description = "오늘 미션을 조회하는 API")
+  @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json"))
+  @Parameter(name = "userUuid", description = "사용자 UUID", example = "2025061401")
   public ResponseEntity<List<MissionsDTO>> getTodayMissions(@RequestParam String userUuid) {
-    return new ResponseEntity<>(missionsService.createAndGetTodayMissions(userUuid), HttpStatus.OK);
+    return new ResponseEntity<>(missionsService.getTodayMissions(userUuid), HttpStatus.OK);
   }
-
-  @PostMapping("/update")
-  public ResponseEntity<MissionsDTO> updateMission(@RequestBody MissionsDTO dto) {
-    return missionsService.updateMission(dto);
-  }
-
-  @DeleteMapping("/delete/{missionId}")
-  public ResponseEntity<Void> deleteMission(@PathVariable int missionId) {
-    missionsService.deleteMission(missionId);
-    return ResponseEntity.ok().build();
-  }
-
-
 }

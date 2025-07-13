@@ -2,7 +2,11 @@ package com.kurung.missions.dto;
 
 import com.kurung.common.enumeration.HealthType;
 import com.kurung.missions.entity.MissionsEntity;
+import com.kurung.user.dto.UserDTO;
+import com.kurung.user.dto.UserDTO.toUserBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,41 +23,30 @@ import java.sql.Date;
 public class MissionsDTO {
 
   @Schema(description = "미션 ID", example = "1")
-  private int missionId;
+  protected int missionId;
 
   @Schema(description = "사용자 UUID", example = "user-uuid-1234")
-  private String userUuid;
+  protected UserDTO userDTO;
 
   @Schema(description = "미션 시작 날짜", example = "2025-07-08")
-  private Date startedDate;
+  protected LocalDateTime startedDate;
 
   @Schema(description = "미션 완료 여부", example = "false")
-  private boolean isComplete;
+  protected boolean isComplete;
 
   @Schema(description = "미션 표시 방식 (예: badge, text)", example = "badge")
-  private HealthType displayType;
+  protected HealthType displayType;
 
   @Schema(description = "토글 옵션 사용 여부", example = "true")
-  private boolean toggleOption;
+  protected boolean toggleOption;
 
   @Builder(builderMethodName = "toMissionBuilder", builderClassName = "toMissionBuilder")
   public MissionsDTO(MissionsEntity missionEntity) {
     this.missionId = missionEntity.getMissionId();
-//    this.userUuid = missionEntity.getUserUuid();
-    this.userUuid = missionEntity.getUser().getUserUuid();
+    this.userDTO = missionEntity.getUser() != null ? UserDTO.toUserBuilder().userEntity(missionEntity.getUser()).build() : null;
     this.startedDate = missionEntity.getStartedDate();
     this.isComplete = missionEntity.isComplete();
     this.displayType = missionEntity.getDisplayType();
     this.toggleOption = missionEntity.isToggleOption();
-  }
-  public static MissionsDTO toDTO(MissionsEntity entity) {
-    return MissionsDTO.builder()
-        .missionId(entity.getMissionId())
-        .userUuid(entity.getUser().getUserUuid())
-        .startedDate(entity.getStartedDate())
-        .isComplete(entity.isComplete())
-        .displayType(entity.getDisplayType())
-        .toggleOption(entity.isToggleOption())
-        .build();
   }
 }

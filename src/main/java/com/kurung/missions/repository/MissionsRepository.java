@@ -10,8 +10,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MissionsRepository extends JpaRepository<MissionsEntity, Integer>, MissionsRepositorySupport {
-
-//  boolean existsByUserUserUuidAndDisplayTypeAndStartedDate(String userUuid, HealthType displayType, Date startedDate);
-//
-//  List<MissionsEntity> findByUserUuidAndDisplayType(String attr0, void attr1);
 }
