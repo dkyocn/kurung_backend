@@ -5,26 +5,49 @@ import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.missions.dto.MissionsDTO;
 import com.kurung.missions.entity.MissionsEntity;
 import com.kurung.missions.repository.MissionsRepository;
+import com.kurung.user.dto.UserDTO;
+import com.kurung.user.service.UserService;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 
 @Service
 @RequiredArgsConstructor
 public class MissionsServiceImpl implements MissionsService {
 
   private final MissionsRepository missionsRepository;
+  private final UserService userService;
 
   @Override
   public List<MissionsDTO> getMissionsList() {
     List<MissionsEntity> missionsById = missionsRepository.getMissionsById();
 
     if (missionsById.isEmpty()) {
-      throw new CustomIllegalArgumentException(CustomHttpStatus.FAVORITE_NOT_FOUND);
+      throw new CustomIllegalArgumentException(CustomHttpStatus.MISSIONS_NOT_FOUND);
     }
 
-    return missionsById.stream().map(missionsEntity -> MissionsDTO.toMissionBuilder().missionEntity(missionsEntity).build()).collect(Collectors.toList());
+    return missionsById.stream()
+        .map(missionsEntity -> MissionsDTO.toMissionBuilder().missionEntity(missionsEntity).build())
+        .collect(Collectors.toList());
   }
 
+  @Override
+  public List<MissionsDTO> getTodayMissions(String userUuid) {
+
+    UserDTO userByUuid = userService.getUserByUuid(userUuid);
+
+    LocalDate today = LocalDate.now();
+    LocalDateTime startOfDay = today.atStartOfDay();         // 00:00:00
+    LocalDate localDate = startOfDay.toLocalDate();
+
+    List<MissionsEntity> missionList = missionsRepository.getMissionList(userUuid, localDate);
+
+    return missionList.stream()
+        .map(MissionsDTO::new)
+        .collect(Collectors.toList());
+  }
 }

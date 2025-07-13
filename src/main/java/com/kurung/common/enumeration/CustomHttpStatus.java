@@ -30,12 +30,12 @@ public enum CustomHttpStatus {
   // HealthReport
 
   // Mission
+  MISSIONS_NOT_FOUND(483, "해당 id의 미션이 없습니다."),
 
   // Medicine
 
   // Favorite
   FAVORITE_NOT_FOUND(491, "해당 id의 즐겨찾기가 없습니다."),
-
 
   // Chatbot
   CHATBOT_NOT_FOUND(494, "해당 id의 챗봇 대화가 없습니다."),
@@ -72,16 +72,6 @@ public enum CustomHttpStatus {
 
   // HealthReport
 
-  // Mission
-
-  // Medicine
-
-  // Favorite
-
-  // Chatbot
-
-  // Community
-
 
   private final int value;
   private final String message;
@@ -90,4 +80,5 @@ public enum CustomHttpStatus {
     this.value = value;
     this.message = message;
   }
-  }
+
+}
