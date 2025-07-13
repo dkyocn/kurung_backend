@@ -122,6 +122,17 @@ public class ExerciseController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/objective/deleted/{id}")
+    @Operation(summary = "목표 삭제", description = "PK 기준으로 목표 데이터를 삭제합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "572", description = "삭제 실패", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<HttpStatus> deleteObjective(@PathVariable int id) {
+        exerciseService.deleteObjective(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     // Routines ------------------------------
     @GetMapping("/routines/{id}")
     @Operation(summary = "루틴추천 DB 연동 확인", description = "루틴추천 entity, dto 연동 확인")

@@ -25,6 +25,7 @@ public interface ExerciseService {
     // Objective ------------------------------------
     void createObjective(ObjectiveDTO objectiveDTO);
     void updateObjective(ObjectiveDTO objectiveDTO);
+    void deleteObjective(int id);
 
     // Routines -------------------------------------
     RoutinesDTO getRoutinesById(int id);

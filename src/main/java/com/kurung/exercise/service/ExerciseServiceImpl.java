@@ -133,7 +133,6 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
   }
 
-
   // Objective created -----------------------
   @Transactional
   @Override
@@ -150,9 +149,20 @@ public class ExerciseServiceImpl implements ExerciseService {
     );
   }
 
-
-
-
+  // Objective Deleted -------------------------------
+  @Override
+  @Transactional
+  public void deleteObjective(int id) {
+    ObjectiveEntity objectiveEntity = objectiveRepository.getReferenceById(id);
+    if (objectiveEntity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.OBJECTIVE_NOT_FOUND);
+    }
+    try {
+      objectiveRepository.delete(objectiveEntity);
+    } catch (Exception e) {
+      throw new CustomRunTimeException(CustomHttpStatus.OBJECT_DELETE_ERROR);
+    }
+  }
 
   // Routines ----------------------------------------------------------------------
   @Override
