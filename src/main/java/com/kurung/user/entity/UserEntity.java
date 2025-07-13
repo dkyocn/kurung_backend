@@ -32,12 +32,10 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "TB_USER")
+@Entity(name = "TB_USER")
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_UUID")
     private String userUuid;
     @Column(name = "USER_ID")

@@ -1,12 +1,6 @@
 package com.kurung.common.enumeration;
 
-import com.kurung.common.exception.CustomIllegalArgumentException;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
 
 @Getter
 public enum CustomHttpStatus {
@@ -47,7 +41,6 @@ public enum CustomHttpStatus {
     // Chatbot
     CHATBOT_NOT_FOUND(494, "해당 id의 챗봇 대화가 없습니다."),
 
-
   // Community
   COMMUNITY_NOT_FOUND(497, "해당 id의 커뮤니티가 없습니다.");
 
@@ -56,12 +49,10 @@ public enum CustomHttpStatus {
 
   private final int value;
   private final String message;
-//  private final HttpStatus httpStatus;
 
   CustomHttpStatus(int value, String message) {
     this.value = value;
     this.message = message;
-//    this.httpStatus = httpStatus;
   }
 
 }
