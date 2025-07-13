@@ -8,6 +8,7 @@ import com.kurung.common.util.JWTUtil;
 import com.kurung.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import com.kurung.user.service.RefreshService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
