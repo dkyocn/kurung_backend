@@ -1,5 +1,7 @@
 package com.kurung.exercise.entity;
 
+import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
+import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -8,7 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 import org.springframework.data.annotation.CreatedDate;
 
 
@@ -24,9 +25,6 @@ public class ExerciseLogEntity {
     @Column(name = "EXERCISE_LOGS_ID")
     private int exerciseLogsId;
 
-    @Column(name = "EXERCISE_ID", nullable = false)
-    private int exerciseId;
-
     @Column(name = "PRE_CONDITION", nullable = false)
     private String preCondition;
 
@@ -37,16 +35,16 @@ public class ExerciseLogEntity {
     private String intensity;
 
     @Column(name = "CALORIES")
-    private Integer calories;
+    private int calories;
 
     @Column(name = "HEART_RATE")
-    private Integer heartRate;
+    private int heartRate;
 
     @Column(name = "SET_COUNT")
-    private Integer setCount;
+    private int setCount;
 
     @Column(name = "REP_COUNT")
-    private Integer repCount;
+    private int repCount;
 
     @Column(name = "BODY_CONDITION")
     private String bodyCondition;
@@ -64,9 +62,31 @@ public class ExerciseLogEntity {
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_UUID", nullable = false)
     private UserEntity user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EXERCISE_ID")
+    private ExerciseEntity exercise;
+
+    @Builder(builderMethodName = "createExerciseLogBuilder", builderClassName = "createExerciseLogBuilder")
+    public ExerciseLogEntity(ExerciseLogDTO exerciseLogDTO, UserDTO userDTO, ExerciseEntity exerciseEntity) {
+        this.exerciseLogsId = exerciseLogDTO.getExerciseLogsId();
+        this.preCondition = exerciseLogDTO.getPreCondition();
+        this.duration = exerciseLogDTO.getDuration();
+        this.intensity = exerciseLogDTO.getIntensity();
+        this.calories = exerciseLogDTO.getCalories();
+        this.heartRate = exerciseLogDTO.getHeartRate();
+        this.setCount = exerciseLogDTO.getSetCount();
+        this.repCount = exerciseLogDTO.getRepCount();
+        this.bodyCondition = exerciseLogDTO.getBodyCondition();
+        this.postFeeling = exerciseLogDTO.getPostFeeling();
+        this.physicalNote = exerciseLogDTO.getPhysicalNote();
+        this.memo = exerciseLogDTO.getMemo();
+        this.user = UserEntity.createUserBuilder().userDTO(userDTO).build();
+
+        // ExerciseDTO를 ExerciseEntity로 변환
+        this.exercise = exerciseEntity;
+    }
 }

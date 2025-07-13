@@ -1,6 +1,7 @@
 package com.kurung.exercise.dto;
 
 
+import com.kurung.common.dto.BaseDTO;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.user.dto.UserDTO;
 import java.time.LocalDateTime;
@@ -16,35 +17,35 @@ import java.util.List;
 @SuperBuilder
 public class SummaryDTO {
 
-    private String date;
-    private int totalDuration;
-    private int totalKcal;
-    private int routineCount;
-    private int goalAchievementRate;
+    protected String date;
+    protected int totalDuration;
+    protected int totalKcal;
+    protected int routineCount;
+    protected int goalAchievementRate;
 
-    private List<SummaryDTO.ExerciseLogDTO> exerciseList;
+    protected List<SummaryDTO.ExerciseLogDTO> exerciseList;
 
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ExerciseLogDTO {
+    public static class ExerciseLogDTO  {
 
-        private int exerciseLogsId;
-        private UserDTO user;
-        private int exerciseId;
-        private String preCondition;
-        private int duration;
-        private String intensity;
-        private Integer calories;
-        private Integer heartRate;
-        private Integer setCount;
-        private Integer repCount;
-        private String bodyCondition;
-        private String postFeeling;
-        private String physicalNote;
-        private String memo;
-        private LocalDateTime createdAt;
+        protected int exerciseLogsId;
+        protected UserDTO user;
+        protected ExerciseDTO exercise;
+        protected String preCondition;
+        protected int duration;
+        protected String intensity;
+        protected int calories;
+        protected int heartRate;
+        protected int setCount;
+        protected int repCount;
+        protected String bodyCondition;
+        protected String postFeeling;
+        protected String physicalNote;
+        protected String memo;
+        protected LocalDateTime createdAt;
 
         @Builder(builderMethodName = "toExerciseLogBuilder", builderClassName = "toExerciseLogBuilder")
         public ExerciseLogDTO(ExerciseLogEntity entity) {
@@ -52,7 +53,9 @@ public class SummaryDTO {
             this.user = entity.getUser() != null
                 ? UserDTO.toUserBuilder().userEntity(entity.getUser()).build()
                 : null;
-            this.exerciseId = entity.getExerciseId();
+            this.exercise = entity.getExercise() != null
+                ? new ExerciseDTO(entity.getExercise())
+                : null;
             this.preCondition = entity.getPreCondition();
             this.duration = entity.getDuration();
             this.intensity = entity.getIntensity();
