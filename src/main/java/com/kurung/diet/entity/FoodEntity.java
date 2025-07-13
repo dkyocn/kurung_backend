@@ -30,6 +30,6 @@ public class FoodEntity {
     private List<FoodIngredEntity>  foodIngred;
     @OneToMany(mappedBy = "food", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<RecipeEntity> recipe;
-    @OneToOne(mappedBy = "food")
+    @OneToOne(mappedBy = "food", cascade = CascadeType.ALL)
     private NutritionalEntity nutritional;
 }

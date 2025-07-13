@@ -2,6 +2,7 @@ package com.kurung.exercise.dto;
 
 import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.user.dto.UserDTO;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,12 +23,12 @@ public class ObjectiveDTO extends RoutinesDTO {
     private int objectiveCount;
     private int objectiveDuration;
     private BigDecimal objectiveWeight;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private String memo;
     private Boolean isActive;
-    private Date createdAt;
-    private Date lastUpdatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastUpdatedAt;
 
     public ObjectiveDTO(ObjectiveEntity entity) {
         this.objectiveId = entity.getObjectiveId();
