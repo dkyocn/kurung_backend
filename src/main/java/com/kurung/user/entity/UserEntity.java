@@ -40,6 +40,8 @@ public class UserEntity {
   @Id
   @Column(name = "USER_UUID")
   private String userUuid;
+  @Column(name = "LOGIN_OK")
+  private String loginOk;
   @Column(name = "USER_ID")
   private String userId;
   @Column(name = "USER_FACELOGIN_YN")
@@ -69,6 +71,13 @@ public class UserEntity {
   @Column(name = "ADMIN_YN")
   @Convert(converter = BooleanToInteger.class)
   private boolean adminYN;
+  @Column(name = "REFRESH_TOKEN", length = 1000)
+  private String refreshToken;
+  @Transient
+  private String accessToken;
+  @Transient
+  private UserDTO userDTO;
+
   @ToString.Exclude // ToString 메서드에서 해당 필드 제외 (무한루프방지)
   // @OneToMany : 일대다 매핑
   // mappedBy diet:user 에서 엔티티 관계 소유자 지정
@@ -127,5 +136,6 @@ public class UserEntity {
     this.profileImg = userDTO.getProfileImg() != null ? userDTO.getProfileImg() : null;
     this.adminYN = userDTO.isAdminYN();
     this.isActive = userDTO.isActive();
+    this.refreshToken = userDTO.getRefreshToken();
   }
 }

@@ -44,6 +44,8 @@ public class UserDTO {
     protected boolean isActive;
     @Schema(description = "관리자 여부", example = "true")
     protected boolean adminYN;
+    @Schema(description = "리프레시 토큰")
+    protected String refreshToken;
 
     @Builder(builderMethodName = "toUserBuilder", builderClassName = "toUserBuilder")
     public UserDTO(UserEntity userEntity) {
@@ -62,3 +64,6 @@ public class UserDTO {
         this.adminYN = userEntity.isAdminYN();
     }
 }
+
+
+

@@ -1,6 +1,7 @@
 package com.kurung.user.controller;
 
 import com.kurung.user.dto.UserDTO;
+import com.kurung.user.entity.UserEntity;
 import com.kurung.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,16 @@ public class UserController {
 
     private final UserService userService;
 
-    // 사용자 조회
+    // 1. 사용자 조회 (기존 코드)
     @GetMapping("/{userUuid}")
     public ResponseEntity<UserDTO> getUserByUuid(@PathVariable String userUuid) {
-        // 없는 사용자일 경우 예외 없이 바로 반환 (무조건 있다고 가정)
         return ResponseEntity.ok(userService.getUserByUuid(userUuid));
+    }
+
+    // 2. 사용자 로그인 (추가된 코드)
+    @PostMapping("/login")
+    public ResponseEntity<UserEntity> login(@RequestBody UserEntity userEntity) {
+        UserEntity result = userService.login(userEntity); //
+        return ResponseEntity.ok(result);
     }
 }

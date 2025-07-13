@@ -2,23 +2,28 @@ package com.kurung.user.repository;
 
 import static com.kurung.user.entity.QUserEntity.userEntity;
 
-import com.kurung.user.entity.UserEntity;  // ✅ 엔티티 import
-import com.querydsl.jpa.impl.JPAQueryFactory;  // ✅ QueryDSL용 쿼리팩토리 import
+import com.kurung.user.entity.UserEntity;  // 엔티티 import
+import com.querydsl.jpa.impl.JPAQueryFactory;  // QueryDSL용 쿼리팩토리 import
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
+@Primary
 @RequiredArgsConstructor
 public class UserRepositorySupportImpl implements UserRepositorySupport {
 
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public UserEntity getUserByUuid(String userUuid) {
+    public UserEntity findByUserUuid(String userUuid) {
         return jpaQueryFactory.selectFrom(userEntity)
                 .where(userEntity.userUuid.eq(userUuid))
                 .fetchOne();
     }
 }
+
+
+
+
 
