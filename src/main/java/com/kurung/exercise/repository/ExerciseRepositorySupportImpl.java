@@ -13,6 +13,7 @@ public class ExerciseRepositorySupportImpl implements ExerciseRepositorySupport 
 
   private final JPAQueryFactory jpaQueryFactory;
 
+  @Override
   public RoutinesEntity getRoutinesById(int id) {
     return jpaQueryFactory
         .selectFrom(routinesEntity)

@@ -76,7 +76,7 @@ public class DietController {
   @Operation(summary = "식단 저장", description = "식단을 저장할 때 사용하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "536", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "526", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   })
   @Parameter(name = "dietDTO", description = "식단 저장 데이터")
   public ResponseEntity<HttpStatus> createDiet(@RequestBody DietDTO dietDTO) {
@@ -88,7 +88,7 @@ public class DietController {
   @Operation(summary = "식단 수정", description = "식단을 수정할 때 사용하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "537", description = "수정 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "527", description = "수정 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   })
   @Parameter(name = "dietDTO", description = "식단 수정 데이터")
   public ResponseEntity<HttpStatus> updateDiet(@RequestBody DietDTO dietDTO) {
@@ -100,7 +100,7 @@ public class DietController {
   @Operation(summary = "식단 삭제", description = "식단을 삭제할 때 사용하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "삭제 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "537", description = "삭제 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "528", description = "삭제 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   })
   @Parameter(name = "id", description = "삭제할 식단 아이디", example = "1")
   public ResponseEntity<HttpStatus> deleteDietById(@PathVariable int id) {

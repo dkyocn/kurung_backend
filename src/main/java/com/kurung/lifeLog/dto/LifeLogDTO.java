@@ -5,6 +5,7 @@ import com.kurung.lifeLog.entity.LifeLogEntity;
 import com.kurung.user.dto.UserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,9 +25,9 @@ public class LifeLogDTO extends BaseDTO {
   @Schema(description = "라이프 로그 한 줄 감정", example = "1")
   protected String emotionWrite;
   @Schema(description = "라이프 로그 잠든 시간", example = "1")
-  protected Date bedTime;
+  protected LocalDateTime bedTime;
   @Schema(description = "라이프 로그 기상 시간", example = "1")
-  protected Date wakeupTime;
+  protected LocalDateTime wakeupTime;
   @Schema(description = "라이프 로그 활동량", example = "1")
   protected String activity;
   @Schema(description = "라이프 로그 일기", example = "1")

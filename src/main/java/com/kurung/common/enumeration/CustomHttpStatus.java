@@ -20,10 +20,13 @@ public enum CustomHttpStatus {
   FOOD_NOT_FOUND(465, "해당 id의 음식이 없습니다."),
 
   // Exercise
+  EXERCISE_NOT_FOUND(468, "해당 id의 운동기록이 없습니다."),
+  EXERCISESCORE_NOT_FOUND(469, "해당 id의 운동의 정보가 없습니다."),
+  OBJECTIVE_NOT_FOUND(470, "해당 id의 운동목표가 없습니다."),
 
   // LifeLog
-    LIFELOG_NOT_FOUND(473,"해당 id의 라이프 로그가 없습니다."),
-  
+  LIFELOG_NOT_FOUND(473,"해당 id의 라이프 로그가 없습니다."),
+  MONTHLYLIFELOG_NOT_FOUND(474,"해당 id의 라이프 로그가 없습니다."),
   // HealthReport
 
   // Mission
@@ -42,10 +45,44 @@ public enum CustomHttpStatus {
 
   // 5XX Server Error 506, 512 ~ 599
 
+  // User
+
+  // Stress
+
+  // Diagnosis
+
   // DIET
   DIET_SAVE_ERROR(526, "식단 저장을 실패하였습니다."),
   DIET_UPDATE_ERROR(527, "식단 수정을 실패하였습니다."),
-  DIET_DELETE_ERROR(528,"식단 삭제를 실패하였습니다.");
+  DIET_DELETE_ERROR(528,"식단 삭제를 실패하였습니다."),
+
+  // EXERCISE
+  EXERCISE_SAVE_ERROR(531, "운동기록 저장을 실패하였습니다."),
+  VIDEO_SAVE_ERROR(533, "운동영상 저장을 실패하였습니다."),
+  EXERCISE_UPDATE_ERROR(534, "운동기록 수정을 실패하였습니다."),
+  EXERCISE_DELETE_ERROR(535,"운동기록 삭제를 실패하였습니다."),
+  OBJECT_SAVE_ERROR(532, "운동목표 저장을 실패하였습니다."),
+  OBJECT_UPDATE_ERROR(571, "운동목표 수정을 실패하였습니다."),
+  OBJECT_DELETE_ERROR(572, "운동목표 삭제를 실패하였습니다."),
+
+  // LifeLog
+  LIFELOG_SAVE_ERROR(536,"라이프 로그 저장을 실패하였습니다."),
+  LIFELOG_UPDATE_ERROR(537,"라이프 로그 수정을 실패하였습니다."),
+  LIFELOG_DELETE_ERROR(538,"라이프 로그 삭제를 실패하였습니다.");
+
+  // HealthReport
+
+  // Mission
+
+  // Medicine
+
+  // Favorite
+
+  // Chatbot
+
+  // Community
+
+
   private final int value;
   private final String message;
 
