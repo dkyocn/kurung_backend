@@ -1,5 +1,8 @@
 package com.kurung.exercise.entity;
 
+import com.kurung.common.entity.BaseEntity;
+import com.kurung.exercise.dto.ObjectiveDTO;
+import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -17,7 +20,7 @@ import org.springframework.data.annotation.CreatedDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "TB_OBJECTIVE")
-public class ObjectiveEntity {
+public class ObjectiveEntity extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +37,7 @@ public class ObjectiveEntity {
   private int objectiveDuration;
 
   @Column(name = "OBJECTIVE_WEIGHT")
-  private BigDecimal objectiveWeight;
+  private float objectiveWeight;
 
   @Column(name = "START_DATE", nullable = false)
   private LocalDateTime startDate;
@@ -48,15 +51,32 @@ public class ObjectiveEntity {
   @Column(name = "IS_ACTIVE", nullable = false)
   private Boolean isActive;
 
-  @CreatedDate
-  @Column(name = "CREATED_AT")
-  private LocalDateTime createdAt;
-
-  @Column(name = "UPDATED_AT")
-  private LocalDateTime UpdatedAt;
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_UUID")
   private UserEntity user;
+
+  @Builder(builderMethodName = "createObjectiveBuilder", builderClassName = "CreateObjectiveBuilder")
+  public ObjectiveEntity(ObjectiveDTO objectiveDTO, UserDTO userDTO) {
+    this.objectiveTitle = objectiveDTO.getObjectiveTitle();
+    this.objectiveCount = objectiveDTO.getObjectiveCount();
+    this.objectiveDuration = objectiveDTO.getObjectiveDuration();
+    this.objectiveWeight = objectiveDTO.getObjectiveWeight();
+    this.startDate = objectiveDTO.getStartDate();
+    this.endDate = objectiveDTO.getEndDate();
+    this.memo = objectiveDTO.getMemo();
+    this.isActive = objectiveDTO.getIsActive();
+    this.user = UserEntity.createUserBuilder().userDTO(userDTO).build();
+  }
+
+  public void updateObjective(ObjectiveDTO dto) {
+    this.objectiveTitle = dto.getObjectiveTitle();
+    this.objectiveCount = dto.getObjectiveCount();
+    this.objectiveDuration = dto.getObjectiveDuration();
+    this.objectiveWeight = dto.getObjectiveWeight();
+    this.startDate = dto.getStartDate();
+    this.endDate = dto.getEndDate();
+    this.memo = dto.getMemo();
+    this.isActive = dto.getIsActive();
+  }
 
 }

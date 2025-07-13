@@ -9,27 +9,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 @Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ObjectiveDTO extends BaseDTO {
 
-    private int objectiveId;
-    private UserDTO user;
-    private String objectiveTitle;
-    private int objectiveCount;
-    private int objectiveDuration;
-    private BigDecimal objectiveWeight;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private String memo;
-    private Boolean isActive;
-    private LocalDateTime createdAt;
-    private LocalDateTime UpdatedAt;
+    protected int objectiveId;
+    protected UserDTO user;
+    protected String objectiveTitle;
+    protected int objectiveCount;
+    protected int objectiveDuration;
+    protected float objectiveWeight;
+    protected LocalDateTime startDate;
+    protected LocalDateTime endDate;
+    protected String memo;
+    protected Boolean isActive;
 
     public ObjectiveDTO(ObjectiveEntity entity) {
         this.objectiveId = entity.getObjectiveId();
@@ -44,7 +39,5 @@ public class ObjectiveDTO extends BaseDTO {
         this.endDate = entity.getEndDate();
         this.memo = entity.getMemo();
         this.isActive = entity.getIsActive();
-        this.createdAt = entity.getCreatedAt();
-        this.UpdatedAt = entity.getUpdatedAt();
     }
 }
