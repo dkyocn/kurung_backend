@@ -1,6 +1,5 @@
 package com.kurung.diet.entity;
 
-import com.kurung.common.entity.BaseEntity;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +27,7 @@ public class DietScoreEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int scoreId;
   @Column(name = "DIET_DATE", nullable = false)
-  private Date date;
+  private LocalDateTime date;
   @Column(name = "DIET_SCORE")
   private float dietScore;
   @JoinColumn(name = "USER_UUID")

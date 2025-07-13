@@ -7,11 +7,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 @Getter
 @Builder
@@ -34,7 +35,7 @@ public class ExerciseEntity {
   @Column(name = "TOOL")
   private String tool;
 
+  @CreatedDate
   @Column(name = "CREATED_AT")
-  @Temporal(TemporalType.DATE)
-  private Date createdAt;
+  private LocalDateTime createdAt;
 }

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "TB_MonthlyLifeLog")
+@Entity(name = "TB_Monthly_LifeLog")
 public class MonthlyLifeLogEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class MonthlyLifeLogEntity {
   private Integer monthlyLifeLogId;
 
   @Column(name = "REPORT_MONTH", nullable = false)
-  private Integer month;
+  private String month;
 
   @Column(name = "MONTHLY_SUMMARY", length = 1000, nullable = false)
   private String monthlySummary;
