@@ -8,6 +8,7 @@ public enum CustomHttpStatus {
   // 4XX client Error 418 ~ 421, 452 ~ 499
   // User
   USER_NOT_FOUND(418, "해당 id의 사용자가 없습니다."),
+  PASSWORD_MISMATCH(419, "비밀번호가 일치하지 않습니다."),
 
   // Stress
   STRESSRELIEF_NOT_FOUND(453, "해당 id의 사용자가 없습니다."),

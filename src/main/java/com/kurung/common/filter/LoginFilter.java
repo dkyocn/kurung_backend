@@ -1,6 +1,7 @@
 package com.kurung.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kurung.user.repository.UserRepositorySupport;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,14 +24,14 @@ import java.util.Map;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JWTUtil jwtUtil; //JWT토큰 생성
-    private final UserRepository userRepository; //DB 사용자 정보 추출
+    private final UserRepositorySupport userRepositorySupport; //DB 사용자 정보 추출
 
     //생성자(constructor) + 외부 도구들
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, UserRepository userRepository){
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, UserRepositorySupport userRepositorySupport) {
         this.setAuthenticationManager(authenticationManager);
         this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;
-        this.setFilterProcessesUrl("/login"); //login 명시적 고정
+        this.userRepositorySupport = userRepositorySupport;
+        this.setFilterProcessesUrl("/login");
     }
 
     //Id+Pwd를 통해 로그인 심사 요청
@@ -61,6 +62,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         if(userId == null || userPwd == null){
             throw new RuntimeException("아이디 또는 비밀번호가 전달되지 않았습니다.");
         }
+        //실제 비밀번호
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, userPwd);
         return this.getAuthenticationManager().authenticate(authenticationToken);
     }
@@ -70,11 +72,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authentication) throws IOException, ServletException{
         log.info("로그인 성공 로직 실행");
-        String userId = authentication.getName(); // 로그인 성공한 사용자 ID
-        UserEntity user = userRepository.findByUserId(userId); // 사용자 정보 DB에서 재조회
+        String userUuid = authentication.getName(); // 로그인 성공한 사용자 UUID
+        UserEntity user = userRepositorySupport.findByUserUuid(userUuid); // UUID로 사용자 정보 재조회
 
         if(user == null){
-            throw new RuntimeException("로그인 사용자를 찾을 수 없습니다." + userId);
+            throw new RuntimeException("로그인 사용자를 찾을 수 없습니다." + userUuid);
         }
         if(user.getLoginOk().equals("N")){
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -87,7 +89,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         Map<String, Object> responseBody = Map.of(
                 "accessToken", accessToken,
-                "userId", userId,
+                "userUuid", user.getUserUuid(), //UUID로 변경
                 "userName", user.getUserNick(),
                 "role", user.isAdminYN() ? "ADMIN" : "USER"
         );
