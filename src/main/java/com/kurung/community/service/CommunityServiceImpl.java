@@ -1,11 +1,14 @@
 package com.kurung.community.service;
 
 import com.kurung.common.enumeration.CustomHttpStatus;
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.community.dto.CommunityDTO;
 import com.kurung.community.entity.CommunityEntity;
 import com.kurung.community.repository.CommunityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,5 +26,13 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     return CommunityDTO.toCommunityBuilder().communityEntity(communityEntity).build();
+  }
+
+  @Override
+  public Page<CommunityDTO> getCommunityByPage(Pageable pageable, HealthType healthType, String keyword) {
+
+    Page<CommunityEntity> communityByPage = communityRepository.getCommunityByPage(pageable,
+        keyword, healthType);
+    return communityByPage.map(communityEntity ->  CommunityDTO.toCommunityBuilder().communityEntity(communityEntity).build());
   }
 }
