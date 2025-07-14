@@ -1,7 +1,5 @@
 package com.kurung.lifeLog.dto;
 
-import com.kurung.common.dto.BaseDTO;
-import com.kurung.lifeLog.entity.LifeLogEntity;
 import com.kurung.lifeLog.entity.MonthlyLifeLogEntity;
 import com.kurung.user.dto.UserDTO;
 import java.util.List;
@@ -23,7 +21,7 @@ public class MonthlyLifeLogDTO {
 
 
   private List<LifeLogDTO> lifeLogList;   // 해당 월의 일간 라이프로그 목록
-  private int avgSleepTime;               	// 평균 수면 시간 (단위: 분)
+  private double avgSleepTime;               	// 평균 수면 시간 (단위: 시간)
   private int countLifeLog;               	// 총 라이프로그 개수
   // 감정별 횟수
   private int countHappy;		// 행복함
