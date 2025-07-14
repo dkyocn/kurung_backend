@@ -13,4 +13,7 @@ public interface MissionsRepositorySupport {
   List<MissionsEntity> getMissionsById();
 
   List<MissionsEntity> getMissionList(String userUuid, LocalDate startedDate);
+
+  List<MissionsEntity> getMissionMonthList(LocalDate startDate, LocalDate endDate, String userUuid);
+
 }

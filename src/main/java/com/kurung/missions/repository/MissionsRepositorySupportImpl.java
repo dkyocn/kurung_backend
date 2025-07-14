@@ -1,19 +1,17 @@
 package com.kurung.missions.repository;
 
-import com.kurung.common.enumeration.HealthType;
+import com.kurung.diet.entity.DietScoreEntity;
 import com.kurung.missions.entity.MissionsEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.util.List;
 
+import static com.kurung.diet.entity.QDietScoreEntity.dietScoreEntity;
 import static com.kurung.missions.entity.QMissionsEntity.missionsEntity;
 
 @Repository
@@ -42,5 +40,18 @@ public class MissionsRepositorySupportImpl implements MissionsRepositorySupport 
         )
         .fetch();
   }
+
+  @Override
+  public List<MissionsEntity> getMissionMonthList(LocalDate startDate, LocalDate endDate, String userUuid) {
+    return jpaQueryFactory
+        .selectFrom(missionsEntity)
+        .where(
+            missionsEntity.user.userUuid.eq(userUuid),
+            missionsEntity.startedDate.between(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay())
+        )
+        .fetch();
+  }
+
+
 
 }
