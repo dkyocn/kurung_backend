@@ -173,8 +173,14 @@ public class LifeLogServiceImpl implements LifeLogService{
             return (int) Math.max(minutes, 0);
           }).toList();
 
-      int avgSleepMinutes = sleepMinutesList.isEmpty() ? 0
-          : (int) sleepMinutesList.stream().mapToInt(Integer::intValue).average().orElse(0);
+      double avgSleepMinute = sleepMinutesList.isEmpty() ? 0.0
+          : sleepMinutesList.stream().mapToInt(Integer::intValue).average().orElse(0)/60.0;
+
+      double avgSleepMinutes = Math.round(avgSleepMinute * 10) / 10.0;
+
+
+
+
 
       // 라이프 로그 갯수 카운트
       int countLifeLog = lifeLogEntities.size();
