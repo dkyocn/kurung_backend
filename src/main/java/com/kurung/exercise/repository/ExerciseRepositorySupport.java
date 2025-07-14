@@ -4,5 +4,6 @@ import com.kurung.exercise.entity.ExerciseEntity;
 import com.kurung.exercise.entity.RoutinesEntity;
 
 public interface ExerciseRepositorySupport {
-  RoutinesEntity getRoutinesById(int id);
+  ExerciseEntity getExerciseById(int id);
+
 }

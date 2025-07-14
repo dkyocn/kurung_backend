@@ -10,16 +10,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ExerciseLogRepositorySupport {
-  List<SummaryDTO.ExerciseLogDTO> getLogsByConditionAndDate(String uuid, String condition, Date from, Date to);
 
+  // Exercise --------------------------------
+  ExerciseLogEntity getExerciseLogById(int id);
 
   // SUMMARY
-    List<ExerciseLogEntity> getLogsByUserUuid(String userUuid);
+  List<ExerciseLogEntity> getLogsByUserUuid(String userUuid);
 
   // ExerciseMonthlyTime ----------------------------------------
-  List<ExerciseLogEntity> getMonthlyExerciseTime(String uuid, LocalDateTime startDateTime, LocalDateTime endDateTime);
-
-
+  List<ExerciseLogEntity> getMonthlyExerciseTime(String uuid, LocalDateTime startDateTime,
+      LocalDateTime endDateTime);
 
 
 }

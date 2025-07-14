@@ -12,10 +12,11 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class RoutinesRepositorySupportImpl implements RoutinesRepositorySupport {
 
-  private final JPAQueryFactory jpaQueryFactory;
+  private final JPAQueryFactory queryFactory;
 
+  @Override
   public RoutinesEntity getRoutinesById(int id) {
-    return jpaQueryFactory
+    return queryFactory
         .selectFrom(routinesEntity)
         .leftJoin(routinesEntity.user).fetchJoin()
         .where(routinesEntity.routinesId.eq(id))

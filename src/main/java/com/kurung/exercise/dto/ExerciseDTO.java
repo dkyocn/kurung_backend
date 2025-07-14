@@ -17,11 +17,11 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class ExerciseDTO {
 
-  private int exerciseId;
-  private String exerciseName;
-  private String exerciseCategory;
-  private String tool;
-  private LocalDateTime createdAt;
+  protected int exerciseId;
+  protected String exerciseName;
+  protected String exerciseCategory;
+  protected String tool;
+  protected LocalDateTime createdAt;
 
   public ExerciseDTO(ExerciseEntity entity) {
     this.exerciseId = entity.getExerciseId();
@@ -30,4 +30,6 @@ public class ExerciseDTO {
     this.tool = entity.getTool();
     this.createdAt = entity.getCreatedAt();
   }
+
+
 }
