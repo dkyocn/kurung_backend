@@ -1,10 +1,13 @@
 package com.kurung.exercise.controller;
 
+import com.kurung.common.enumeration.CustomHttpStatus;
+import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.exercise.dto.ExerciseDTO;
 import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
+import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.exercise.service.ExerciseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +34,8 @@ public class ExerciseController {
 
   private final ExerciseService exerciseService;
 
-  //    // 1. 운동 기록 생성
-  @PostMapping("")
+  // Exercise --------------------------------------------
+  @PostMapping("/create")
   @Operation(summary = "운동 기록 저장", description = "운동 기록을 저장하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -44,7 +48,7 @@ public class ExerciseController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @PostMapping("/Log/update")
+  @PostMapping("/log/update")
   @Operation(summary = "운동기록 수정", description = "운동기록을 수정하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -52,26 +56,26 @@ public class ExerciseController {
   })
   @Parameter(name = "id", description = "회원 아이디", example = "2025061401")
   public ResponseEntity<SummaryDTO.ExerciseLogDTO> updateExerciseLog(
-      @RequestBody SummaryDTO.ExerciseLogDTO dto) {
-    return new ResponseEntity<>(exerciseService.updateExerciseLog(dto), HttpStatus.OK);
+      @RequestBody SummaryDTO.ExerciseLogDTO exerciseLogDTO) {
+    return new ResponseEntity<>(exerciseService.updateExerciseLog(exerciseLogDTO), HttpStatus.OK);
   }
 
-  @DeleteMapping("/Log/{id}")
+  @DeleteMapping("/log/delete/{id}")
   @Operation(summary = "운동기록 삭제", description = "운동기록을 삭제하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "삭제 성공"),
       @ApiResponse(responseCode = "535", description = "삭제 실패")
   })
   @Parameter(name = "id", description = "운동기록 ID", example = "3")
-  public ResponseEntity<Void> deleteExerciseLog(@PathVariable int id) {
+  public ResponseEntity<SummaryDTO.ExerciseLogDTO> deleteExerciseLog(@PathVariable int id) {
     exerciseService.deleteExerciseLog(id);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204 반환
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
 
   // 운동 기록 단일 조회 (ID 기반)
-  @GetMapping("/logs/{id}")
-  @Operation(summary = "운동요약 DB 연동 확인", description = "운동요약 entity, dto 연동 확인")
+  @GetMapping("/log/select/{id}")
+  @Operation(summary = "운동기록 단일 조회", description = "운동요약 entity, dto 연동 확인")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
       @ApiResponse(responseCode = "468", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
@@ -80,6 +84,8 @@ public class ExerciseController {
   public ResponseEntity<SummaryDTO.ExerciseLogDTO> getExerciseLogById(@PathVariable int id) {
     return new ResponseEntity<>(exerciseService.getExerciseLogById(id), HttpStatus.OK);
   }
+
+  // 아이디 받은걸로 조회 후 Entity로 해서 isAction 변경
 
   // SUMMARY ----------------------------------
   @GetMapping("/summary/{userUuid}")
@@ -94,16 +100,16 @@ public class ExerciseController {
   }
 
   // Objective -----------------------------
-//   @GetMapping("/objective/{id}")
-//   @Operation(summary = "이번 달 내 목표 단일 조회", description = "로그인 사용자의 이번 달 목표만 조회합니다.")
-//    @ApiResponses(value = {
-//        @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-//        @ApiResponse(responseCode = "470", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
-//    })
-//    @Parameter(name = "id", description = "회원 아이디", example = "1")
-//   public ResponseEntity getObjectiveById(@PathVariable int id) {
-//     return new ResponseEntity<>(exerciseService.getObjectiveById(id), HttpStatus.OK);
-//   }
+  @PostMapping("/objective/activation/{objectiveId}")
+  @Operation(summary = "운동목표 활성화/비활성화", description = "목표 ID와 활성화 여부를 받아 상태를 변경합니다.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "상태 변경 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "468", description = "해당 목표 없음", content = @Content(mediaType = "application/json"))
+  })
+  public ResponseEntity<HttpStatus> updateObjectiveAction(@PathVariable int objectiveId) {
+    exerciseService.updateObjectiveaction(objectiveId);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
   // objective selecte --------------------
   @GetMapping("/objective/monthly")
@@ -112,12 +118,11 @@ public class ExerciseController {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
       @ApiResponse(responseCode = "468", description = "해당 월에 목표 없음", content = @Content(mediaType = "application/json"))
   })
-  public ResponseEntity<List<ObjectiveDTO>> getObjectiveMonthList(
+  public ResponseEntity<ObjectiveDTO> getMonthlyObjective(
       @RequestParam String userUuid,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date) {
-
-    List<ObjectiveDTO> list = exerciseService.getObjectiveMonthList(date, userUuid);
-    return new ResponseEntity<>(list, HttpStatus.OK);
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date
+  ) {
+    return new ResponseEntity<>(exerciseService.getObjectiveByMonth(date, userUuid), HttpStatus.OK);
   }
 
 

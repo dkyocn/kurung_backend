@@ -29,11 +29,16 @@ public interface ExerciseService {
   SummaryDTO getSummaryByUser(String uuid);
 
   // Objective ------------------------------------
-  List<ObjectiveDTO> getObjectiveMonthList(LocalDateTime date, String userUuid);
+  //void ObjectiveActivation(ObjectiveEntity objectiveEntity);
+
+  ObjectiveDTO getObjectiveByMonth(LocalDateTime date, String userUuid);
 
   void createObjective(ObjectiveDTO objectiveDTO);
 
   void updateObjective(ObjectiveDTO objectiveDTO);
+
+  void updateObjectiveaction(int objectiveId);
+
 //    ObjectiveEntity getObjectiveById(int id);
 
   // Routines -------------------------------------
@@ -44,5 +49,6 @@ public interface ExerciseService {
 
   // ExerciseMonthlyTime --------------------------
   List<MonthlyExerciseDTO> getMonthlyExerciseTime(LocalDateTime timeMonth, String userUuid);
+
 
 }

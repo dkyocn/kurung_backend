@@ -19,6 +19,7 @@ import com.kurung.exercise.repository.RoutinesRepository;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -85,12 +86,13 @@ public class ExerciseServiceImpl implements ExerciseService {
   @Override
   @Transactional
   public void deleteExerciseLog(int id) {
-    ExerciseLogEntity entity = exerciseLogRepository.findById(id).orElse(null);
+    Optional<ExerciseLogEntity> optionalEntity = exerciseLogRepository.findById(id);
 
-    if (entity == null) {
+    if (!optionalEntity.isPresent()) {
       throw new CustomIllegalArgumentException(CustomHttpStatus.EXERCISELOG_NOT_FOUND);
     }
 
+    ExerciseLogEntity entity = optionalEntity.get();
     exerciseLogRepository.delete(entity);
   }
 
@@ -129,18 +131,42 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   // Objective ----------------------------------------
   @Override
-  public List<ObjectiveDTO> getObjectiveMonthList(LocalDateTime date, String userUuid) {
+  @Transactional
+  public void updateObjectiveaction(int objectiveId) {
+    ObjectiveEntity entity = objectiveRepository.findByObjectiveId(objectiveId);
+    if (entity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.OBJECTIVE_NOT_FOUND);
+    }
+    entity.updateIsActive(); // ← 여기가 핵심
+  }
+
+
+  // Objective Monthly -------------------------------
+  @Override
+  public ObjectiveDTO getObjectiveByMonth(LocalDateTime date, String userUuid) {
+
+    UserDTO userByUuid = userService.getUserByUuid(userUuid);
+
+    // 1. 월 시작과 종료 날짜 계산
     LocalDateTime startOfMonth = date.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
     LocalDateTime endOfMonth = date.withDayOfMonth(date.toLocalDate().lengthOfMonth())
         .withHour(23).withMinute(59).withSecond(59);
 
-    List<ObjectiveEntity> objectiveEntities = objectiveRepository
-        .getObjectiveMonthList(startOfMonth, endOfMonth, userUuid);
+    // 2. 해당 월에 해당하는 목표 엔티티 조회
+    ObjectiveEntity objectiveEntity = objectiveRepository.getObjectiveByMonth(startOfMonth, endOfMonth, userUuid);
 
-    return objectiveEntities.stream()
-        .map(entity -> ObjectiveDTO.toObjectiveBuilder().entity(entity).build())
-        .collect(Collectors.toList());
+    // 3. 결과가 없으면 null 반환
+    if (objectiveEntity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.OBJECTIVE_NOT_FOUND);
+    }
+
+    // 5. ObjectiveDTO로 변환해서 반환
+    return ObjectiveDTO.toObjectiveBuilder()
+        .objectiveEntity(objectiveEntity)
+        .userDTO(userByUuid)
+        .build();
   }
+
 
   // Objective Updated -------------------------------
   @Override

@@ -3,6 +3,7 @@ package com.kurung.exercise.dto;
 import com.kurung.common.dto.BaseDTO;
 import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.user.dto.UserDTO;
+import com.kurung.user.entity.UserEntity;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,23 +26,23 @@ public class ObjectiveDTO extends BaseDTO {
   protected LocalDateTime startDate;
   protected LocalDateTime endDate;
   protected String memo;
-  protected Boolean isActive;
+  protected boolean isActive;
 
   @Builder(builderMethodName = "toObjectiveBuilder", builderClassName = "toObjectiveBuilder")
-  public ObjectiveDTO(ObjectiveEntity entity) {
-    this.objectiveId = entity.getObjectiveId();
-    this.user = entity.getUser() != null
-        ? UserDTO.toUserBuilder().userEntity(entity.getUser()).build()
-        : null;
-    this.objectiveTitle = entity.getObjectiveTitle();
-    this.objectiveCount = entity.getObjectiveCount();
-    this.objectiveDuration = entity.getObjectiveDuration();
-    this.objectiveWeight = entity.getObjectiveWeight();
-    this.startDate = entity.getStartDate();
-    this.endDate = entity.getEndDate();
-    this.memo = entity.getMemo();
-    this.isActive = entity.getIsActive();
-    this.createdAt = entity.getCreatedAt();
-    this.updatedAt = entity.getUpdatedAt();
+  public ObjectiveDTO(ObjectiveEntity objectiveEntity, UserDTO userDTO) {
+    this.objectiveId = objectiveEntity.getObjectiveId();
+    this.user = userDTO;
+    this.objectiveTitle = objectiveEntity.getObjectiveTitle();
+    this.objectiveCount = objectiveEntity.getObjectiveCount();
+    this.objectiveDuration = objectiveEntity.getObjectiveDuration();
+    this.objectiveWeight = objectiveEntity.getObjectiveWeight();
+    this.startDate = objectiveEntity.getStartDate();
+    this.endDate = objectiveEntity.getEndDate();
+    this.memo = objectiveEntity.getMemo();
+    this.createdAt = objectiveEntity.getCreatedAt();
+    this.updatedAt = objectiveEntity.getUpdatedAt();
+    this.isActive = objectiveEntity.isActive();
   }
+
+
 }

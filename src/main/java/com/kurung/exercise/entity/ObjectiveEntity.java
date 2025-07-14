@@ -49,7 +49,7 @@ public class ObjectiveEntity extends BaseEntity {
   private String memo;
 
   @Column(name = "IS_ACTIVE", nullable = false)
-  private Boolean isActive;
+  private boolean isActive;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_UUID")
@@ -64,7 +64,6 @@ public class ObjectiveEntity extends BaseEntity {
     this.startDate = objectiveDTO.getStartDate();
     this.endDate = objectiveDTO.getEndDate();
     this.memo = objectiveDTO.getMemo();
-    this.isActive = objectiveDTO.getIsActive();
     this.user = UserEntity.createUserBuilder().userDTO(userDTO).build();
   }
 
@@ -76,7 +75,9 @@ public class ObjectiveEntity extends BaseEntity {
     this.startDate = objectiveDTO.getStartDate();
     this.endDate = objectiveDTO.getEndDate();
     this.memo = objectiveDTO.getMemo();
-    this.isActive = objectiveDTO.getIsActive();
   }
 
+  public void updateIsActive() {
+    this.isActive = this.isActive ? false : true;
+  }
 }

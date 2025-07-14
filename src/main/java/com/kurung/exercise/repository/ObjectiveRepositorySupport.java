@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface ObjectiveRepositorySupport {
 
-  List<ObjectiveEntity> getObjectiveMonthList(LocalDateTime startDate, LocalDateTime endDate,
+  ObjectiveEntity getObjectiveByMonth(LocalDateTime startDate, LocalDateTime endDate,
       String userUuid);
 
+  ObjectiveEntity findByObjectiveId(int objectiveId);
 }

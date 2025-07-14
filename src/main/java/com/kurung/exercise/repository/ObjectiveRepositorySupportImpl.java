@@ -19,25 +19,25 @@ public class ObjectiveRepositorySupportImpl implements ObjectiveRepositorySuppor
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public List<ObjectiveEntity> getObjectiveMonthList(LocalDateTime startDate,
-      LocalDateTime endDate,
+  public ObjectiveEntity getObjectiveByMonth(LocalDateTime startDate, LocalDateTime endDate,
       String userUuid) {
-    return queryFactory.selectFrom(objectiveEntity)
-        .where(objectiveEntity.startDate.loe(endDate) // 종료일보다 늦게 시작한 건 제외
-            .and(objectiveEntity.endDate.goe(startDate)) // 시작일보다 빨리 끝난 건 제외
-            .and(objectiveEntity.user.userUuid.eq(userUuid)))
-        .fetch();
+    return queryFactory
+        .selectFrom(objectiveEntity)
+        .where(
+            objectiveEntity.startDate.loe(endDate),
+            objectiveEntity.endDate.goe(startDate),
+            objectiveEntity.user.userUuid.eq(userUuid)
+        )
+        .fetchOne();
   }
 
+  @Override
+  public  ObjectiveEntity findByObjectiveId(int objectiveId) {
+    return queryFactory
+        .selectFrom(objectiveEntity)
+        .where(objectiveEntity.objectiveId.eq(objectiveId))
+        .fetchOne();
+  }
 
-
-
-    /*@Override
-    public ObjectiveEntity getObjectiveById(int id) {
-        return queryFactory
-            .selectFrom(objectiveEntity)
-            .where(objectiveEntity.objectiveId.eq(id))
-            .fetchOne();
-    }*/
 
 }

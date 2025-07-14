@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 @Getter
@@ -19,6 +20,7 @@ import org.springframework.data.annotation.CreatedDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "TB_EXERCISE_LOGS")
+@EntityListeners(value = {AuditingEntityListener.class})
 public class ExerciseLogEntity {
 
   @Id
@@ -105,6 +107,5 @@ public class ExerciseLogEntity {
     this.postFeeling = dto.getPostFeeling();
     this.physicalNote = dto.getPhysicalNote();
     this.memo = dto.getMemo();
-    // 연관관계 수정 필요시(운동종목 등) 별도 처리
   }
 }
