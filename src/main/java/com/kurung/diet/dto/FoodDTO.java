@@ -1,6 +1,5 @@
 package com.kurung.diet.dto;
 
-import com.kurung.common.dto.BaseDTO;
 import com.kurung.diet.entity.FoodEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -37,6 +36,9 @@ public class FoodDTO {
         this.foodPhoto = foodEntity.getFoodPhoto();
         this.ingredList = foodEntity.getFoodIngred() != null ? foodEntity.getFoodIngred().stream().map(foodIngredEntity -> IngredDTO.toIngredBuilder().IngredEntity(foodIngredEntity.getIngred()).build()).collect(
             Collectors.toList()) : null;
-        this.recipeList = foodEntity.getRecipe() != null ? foodEntity.getRecipe().stream().map(recipeEntity -> RecipeDTO.builder().build()).collect(Collectors.toList()) : null ;
+        this.recipeList = foodEntity.getRecipe() != null ? foodEntity.getRecipe().stream().map(recipeEntity -> RecipeDTO.builder()
+            .recipeId(recipeEntity.getRecipeId())
+            .order(recipeEntity.getOrder())
+            .recipeContent(recipeEntity.getRecipeContent()).build()).collect(Collectors.toList()) : null ;
     }
 }
