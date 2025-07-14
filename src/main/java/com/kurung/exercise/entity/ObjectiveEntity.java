@@ -68,15 +68,15 @@ public class ObjectiveEntity extends BaseEntity {
     this.user = UserEntity.createUserBuilder().userDTO(userDTO).build();
   }
 
-  public void updateObjective(ObjectiveDTO dto) {
-    this.objectiveTitle = dto.getObjectiveTitle();
-    this.objectiveCount = dto.getObjectiveCount();
-    this.objectiveDuration = dto.getObjectiveDuration();
-    this.objectiveWeight = dto.getObjectiveWeight();
-    this.startDate = dto.getStartDate();
-    this.endDate = dto.getEndDate();
-    this.memo = dto.getMemo();
-    this.isActive = dto.getIsActive();
+  public void updateObjective(ObjectiveDTO objectiveDTO) {
+    this.objectiveTitle = objectiveDTO.getObjectiveTitle();
+    this.objectiveCount = objectiveDTO.getObjectiveCount();
+    this.objectiveDuration = objectiveDTO.getObjectiveDuration();
+    this.objectiveWeight = objectiveDTO.getObjectiveWeight();
+    this.startDate = objectiveDTO.getStartDate();
+    this.endDate = objectiveDTO.getEndDate();
+    this.memo = objectiveDTO.getMemo();
+    this.isActive = objectiveDTO.getIsActive();
   }
 
 }

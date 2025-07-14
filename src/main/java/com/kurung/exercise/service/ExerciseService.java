@@ -7,32 +7,42 @@ import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
+import com.kurung.exercise.entity.ObjectiveEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 public interface ExerciseService {
 
 
-    void createExerciseLog(ExerciseLogDTO exerciseLogDTO);
-    List<SummaryDTO.ExerciseLogDTO> getExerciseLogsByUser(String uuid);
-    SummaryDTO.ExerciseLogDTO getExerciseLogById(int id);
+  void createExerciseLog(ExerciseLogDTO exerciseLogDTO);
+
+  SummaryDTO.ExerciseLogDTO getExerciseLogById(int id);
+
+  SummaryDTO.ExerciseLogDTO updateExerciseLog(SummaryDTO.ExerciseLogDTO exerciseLogDTO);
+
+  void deleteExerciseLog(int id);
 
 
-    // Summary --------------------------------------
-    SummaryDTO getSummaryByUser(String uuid);
+  // Summary --------------------------------------
+  SummaryDTO getSummaryByUser(String uuid);
 
-    // Objective ------------------------------------
-    void createObjective(ObjectiveDTO objectiveDTO);
-    void updateObjective(ObjectiveDTO objectiveDTO);
+  // Objective ------------------------------------
+  List<ObjectiveDTO> getObjectiveMonthList(LocalDateTime date, String userUuid);
 
-    // Routines -------------------------------------
-    RoutinesDTO getRoutinesById(int id);
+  void createObjective(ObjectiveDTO objectiveDTO);
 
-    // Exercise -------------------------------------
-    ExerciseDTO getExerciseById(int id);
+  void updateObjective(ObjectiveDTO objectiveDTO);
+//    ObjectiveEntity getObjectiveById(int id);
 
-    // ExerciseMonthlyTime --------------------------
-    List<MonthlyExerciseDTO> getMonthlyExerciseTime(LocalDateTime timeMonth, String userUuid);
+  // Routines -------------------------------------
+  RoutinesDTO getRoutinesById(int id);
+
+  // Exercise -------------------------------------
+  ExerciseDTO getExerciseById(int id);
+
+  // ExerciseMonthlyTime --------------------------
+  List<MonthlyExerciseDTO> getMonthlyExerciseTime(LocalDateTime timeMonth, String userUuid);
 
 }
