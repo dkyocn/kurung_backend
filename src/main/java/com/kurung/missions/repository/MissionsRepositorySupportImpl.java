@@ -47,7 +47,7 @@ public class MissionsRepositorySupportImpl implements MissionsRepositorySupport 
         .selectFrom(missionsEntity)
         .where(
             missionsEntity.user.userUuid.eq(userUuid),
-            missionsEntity.startedDate.between(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay())
+            missionsEntity.startedDate.between(startDate.atStartOfDay(),endDate.atTime(23, 59, 59))
         )
         .fetch();
   }

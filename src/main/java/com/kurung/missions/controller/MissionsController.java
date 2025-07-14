@@ -54,9 +54,12 @@ public class MissionsController {
       @Parameter(name = "currentDate", description = "기준 날짜", example = "2025-06-01"),
       @Parameter(name = "userUuid", description = "사용자 UUID", example = "2025061401")
   })
-  public ResponseEntity<List<MissionsDTO>> getMissionMonthList(@RequestParam LocalDate currentDate, @RequestParam String userUuid) {
-    return new ResponseEntity<>(missionsService.getMissionMonthList(currentDate.atStartOfDay(),userUuid), HttpStatus.OK);
-  }
+  public ResponseEntity<List<MissionsDTO>> getMissionMonthList(
+      @RequestParam LocalDate currentDate,
+      @RequestParam String userUuid
+  ) {
 
+    return new ResponseEntity<>(missionsService.getMissionMonthList(currentDate, userUuid), HttpStatus.OK);
+  }
 
 }

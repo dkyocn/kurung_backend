@@ -56,15 +56,16 @@ public class MissionsServiceImpl implements MissionsService {
 
 
   @Override
-  public List<MissionsDTO> getMissionMonthList(LocalDateTime currentDate, String userUuid) {
+  public List<MissionsDTO> getMissionMonthList(LocalDate currentDate, String userUuid) {
 
-    // ✅ 명시적으로 6월 1일 ~ 6월 30일 설정
-    LocalDate startDate = LocalDate.of(2025, 6, 1);
-    LocalDate endDate = LocalDate.of(2025, 6, 30);
+    // 현재 월의 시작과 끝 구하기
+    LocalDate startDate = LocalDate.from(currentDate.withDayOfMonth(1).atStartOfDay());
+    LocalDate endDate = LocalDate.from(
+        currentDate.withDayOfMonth(currentDate.lengthOfMonth()).atStartOfDay());
 
-    // ✅ 리포지터리 메서드에 정확한 타입 전달
     List<MissionsEntity> missionMonthList = missionsRepository.getMissionMonthList(
-        startDate, endDate, userUuid);
+        startDate, endDate, userUuid
+    );
 
     return missionMonthList.stream()
         .map(missionsEntity -> MissionsDTO.toMissionBuilder().missionEntity(missionsEntity).build())
