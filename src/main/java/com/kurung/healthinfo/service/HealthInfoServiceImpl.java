@@ -1,9 +1,10 @@
 package com.kurung.healthinfo.service;
 
+import com.kurung.common.enumeration.CustomHttpStatus;
+import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.healthinfo.dto.HealthInfoDTO;
 import com.kurung.healthinfo.entity.HealthInfoEntity;
 import com.kurung.healthinfo.repository.HealthInfoRepository;
-import com.kurung.healthinfo.repository.HealthInfoRepositorySupport;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,8 +26,16 @@ public class HealthInfoServiceImpl implements HealthInfoService {
 
   @Override
   public HealthInfoDTO getHealthInfoById(String userUuid, LocalDateTime targetDate) {
-    HealthInfoEntity entity = healthInfoRepository.findByUserAndDate(userUuid, targetDate);
-    return entity != null ? HealthInfoDTO.toHealthInfoBuilder().entity(entity).build() : null;
+    LocalDateTime startOfDay = targetDate.toLocalDate().atStartOfDay(); // 00:00:00
+    LocalDateTime endOfDay = targetDate.toLocalDate().atTime(23, 59, 59); // 23:59:59
+
+    HealthInfoEntity entity = healthInfoRepository.findByUserAndDateBetween(userUuid, startOfDay, endOfDay);
+
+    if (entity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.HEALTH_INFO_NOT_FOUND);
+    }
+
+    return HealthInfoDTO.toHealthInfoBuilder().entity(entity).build();
   }
 
 

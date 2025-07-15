@@ -8,6 +8,5 @@ public interface HealthInfoRepositorySupport {
 
   List<HealthInfoEntity> getHealthInfo();
 
-  HealthInfoEntity findByUserAndDate(String userUuid, LocalDateTime targetDate);
-
+  HealthInfoEntity findByUserAndDateBetween(String userUuid, LocalDateTime startOfDay, LocalDateTime endOfDay);
 }

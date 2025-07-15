@@ -32,14 +32,27 @@ public class HealthInfoController {
 
   private final HealthInfoService healthInfoService;
 
+//  @GetMapping("/list")
+//  @Operation(summary = "건강정보 전체 조회", description = "사용자의 건강정보 리스트를 조회하는 API")
+//  public ResponseEntity<List<HealthInfoDTO>> getHealthInfoList() {
+//    return new ResponseEntity<>(healthInfoService.getHealthInfo(), HttpStatus.OK);
+//  }
+
+
   @GetMapping("/list")
   @Operation(summary = "건강정보 단일 조회", description = "사용자의 건강정보를 조회할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "463", description = "조회 실패", content = @Content(mediaType = "application/json"))
+  })
+  @Parameters({
+      @Parameter(name = "userUuid", description = "사용자 UUID", example = "2025061401"),
+      @Parameter(name = "targetDate", description = "조회 기준 날짜", example = "2025-07-15")
+  })
   public ResponseEntity<HealthInfoDTO> getHealthInfoById(
       @RequestParam String userUuid,
       @RequestParam LocalDateTime targetDate
   ) {
     return new ResponseEntity<>(healthInfoService.getHealthInfoById(userUuid, targetDate), HttpStatus.OK);
   }
-
-
 }
