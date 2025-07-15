@@ -11,4 +11,6 @@ public interface CommunityService {
 
   Page<CommunityDTO> getCommunityByPage(Pageable pageable, HealthType healthType, String keyword);
 
+  void createCommunity(CommunityDTO communityDTO);
+
 }
