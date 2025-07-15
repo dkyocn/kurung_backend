@@ -15,4 +15,6 @@ public interface CommunityService {
 
   void updateCommunity(CommunityDTO communityDTO);
 
+  void deleteCommunity(int id);
+
 }

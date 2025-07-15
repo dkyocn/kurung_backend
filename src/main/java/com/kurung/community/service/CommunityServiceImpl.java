@@ -73,4 +73,20 @@ public class CommunityServiceImpl implements CommunityService {
       throw new CustomRunTimeException(CustomHttpStatus.COMMUNITY_UPDATE_ERROR);
     }
   }
+
+  @Override
+  public void deleteCommunity(int id) {
+    CommunityEntity communityEntity = communityRepository.getCommunityById(id);
+    if (communityEntity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.COMMUNITY_NOT_FOUND);
+    }
+
+    try {
+      // 추후 본인 확인 추가
+      communityRepository.delete(communityEntity);
+    } catch (RuntimeException e) {
+      throw new CustomRunTimeException(CustomHttpStatus.COMMUNITY_DELETE_ERROR);
+    }
+
+  }
 }
