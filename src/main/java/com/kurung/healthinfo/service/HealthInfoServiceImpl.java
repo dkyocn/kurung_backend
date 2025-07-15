@@ -67,9 +67,12 @@ public class HealthInfoServiceImpl implements HealthInfoService {
   @Override
   @Transactional
   public HealthInfoDTO updateHealthInfo(HealthInfoDTO healthInfoDTO) {
-    // 수정 대상 엔티티 조회
-    HealthInfoEntity entity = healthInfoRepository.findById(healthInfoDTO.getHealthinfoId())
-        .orElseThrow(() -> new CustomIllegalArgumentException(CustomHttpStatus.HEALTH_INFO_NOT_FOUND));
+
+    HealthInfoEntity entity = healthInfoRepository.getHealthInfoById(healthInfoDTO.getHealthinfoId());
+
+    if (entity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.HEALTH_INFO_NOT_FOUND);
+    }
 
     try {
       entity.updateHealthInfo(

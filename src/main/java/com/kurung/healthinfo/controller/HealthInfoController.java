@@ -80,6 +80,13 @@ public class HealthInfoController {
       @ApiResponse(responseCode = "200", description = "수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
       @ApiResponse(responseCode = "526", description = "수정 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   })
+
+//  @Parameter(name = "healthInfoDTO", description = "건강정보 저장 데이터")
+//  public ResponseEntity<HttpStatus> updateHealthInfo(@RequestBody HealthInfoDTO healthInfoDTO) {
+//    healthInfoService.updateHealthInfo(healthInfoDTO);
+//    return new ResponseEntity<>(HttpStatus.OK);
+//  }
+
   @Parameter(name = "healthInfoDTO", description = "건강정보 저장 데이터")
   public ResponseEntity<HealthInfoDTO> updateHealthInfo(@RequestBody HealthInfoDTO healthInfoDTO) {
     HealthInfoDTO updated = healthInfoService.updateHealthInfo(healthInfoDTO);
