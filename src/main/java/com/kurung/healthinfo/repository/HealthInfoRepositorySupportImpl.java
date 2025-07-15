@@ -31,7 +31,6 @@ public class HealthInfoRepositorySupportImpl implements HealthInfoRepositorySupp
             healthInfoEntity.user.userUuid.eq(userUuid),
             healthInfoEntity.updatedAt.between(start, end)
         )
-        .orderBy(healthInfoEntity.updatedAt.desc())
         .fetchFirst();
   }
 
@@ -43,6 +42,7 @@ public class HealthInfoRepositorySupportImpl implements HealthInfoRepositorySupp
             healthInfoEntity.user.userUuid.eq(userUuid),
             healthInfoEntity.updatedAt.between(startDateTime, endDateTime)
         )
+        .orderBy(healthInfoEntity.updatedAt.desc())
         .fetch();
   }
 

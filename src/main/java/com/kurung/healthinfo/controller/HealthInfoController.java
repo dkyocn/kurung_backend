@@ -57,7 +57,7 @@ public class HealthInfoController {
     return new ResponseEntity<>(healthInfoService.getHealthInfoById(userUuid, targetDate), HttpStatus.OK);
   }
 
-  @GetMapping("/range")
+  @GetMapping("/month")
   @Operation(summary = "건강정보 한달 조회", description = "건강정보 한달 조회할 때 사용하는 API")
   @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   @Parameters({
