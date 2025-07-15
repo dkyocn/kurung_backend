@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "HEALTH INFO API TEST", description = " 건강정보 API 테스트코드입니다.")
-@RequestMapping("/api/v1/kurung/health_info")
+@RequestMapping("/api/v1/kurung/healthinfo")
 public class HealthInfoController {
 
   private final HealthInfoService healthInfoService;
