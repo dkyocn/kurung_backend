@@ -31,7 +31,20 @@ public class HealthInfoRepositorySupportImpl implements HealthInfoRepositorySupp
             healthInfoEntity.user.userUuid.eq(userUuid),
             healthInfoEntity.updatedAt.between(start, end)
         )
-        .orderBy(healthInfoEntity.updatedAt.desc())
         .fetchFirst();
   }
+
+  @Override
+  public List<HealthInfoEntity> getHealthInfoMonthList(LocalDateTime startDateTime, LocalDateTime endDateTime, String userUuid) {
+    return jpaQueryFactory
+        .selectFrom(healthInfoEntity)
+        .where(
+            healthInfoEntity.user.userUuid.eq(userUuid),
+            healthInfoEntity.updatedAt.between(startDateTime, endDateTime)
+        )
+        .orderBy(healthInfoEntity.updatedAt.desc())
+        .fetch();
+  }
+
+
 }

@@ -9,4 +9,6 @@ public interface HealthInfoRepositorySupport {
   List<HealthInfoEntity> getHealthInfo();
 
   HealthInfoEntity findByUserAndDateBetween(String userUuid, LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+  List<HealthInfoEntity> getHealthInfoMonthList(LocalDateTime startDateTime, LocalDateTime endDateTime, String userUuid);
 }

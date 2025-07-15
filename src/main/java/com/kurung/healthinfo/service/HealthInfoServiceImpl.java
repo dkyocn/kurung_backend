@@ -5,9 +5,12 @@ import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.healthinfo.dto.HealthInfoDTO;
 import com.kurung.healthinfo.entity.HealthInfoEntity;
 import com.kurung.healthinfo.repository.HealthInfoRepository;
+import com.kurung.missions.dto.MissionsDTO;
+import com.kurung.missions.entity.MissionsEntity;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.service.UserService;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,6 +47,26 @@ public class HealthInfoServiceImpl implements HealthInfoService {
 
     return HealthInfoDTO.toHealthInfoBuilder().entity(entity).build();
   }
+
+  @Override
+  public List<HealthInfoDTO> getHealthInfoMonthList(LocalDate currentDate, String userUuid) {
+
+    // 사용자 존재 여부 확인
+    userService.getUserByUuid(userUuid);
+
+    // 월별 건강 정보 목록 조회
+    List<HealthInfoEntity> healthInfoMonthList = healthInfoRepository.getHealthInfoMonthList(
+        currentDate.withDayOfMonth(1).atStartOfDay(),
+        currentDate.withDayOfMonth(currentDate.lengthOfMonth()).atTime(23, 59, 59),
+        userUuid);
+
+    //  DTO로 변환하여 반환
+    return healthInfoMonthList.stream()
+        .map(entity -> HealthInfoDTO.toHealthInfoBuilder().entity(entity).build())
+        .collect(Collectors.toList());
+  }
+
+
 
 
 }
