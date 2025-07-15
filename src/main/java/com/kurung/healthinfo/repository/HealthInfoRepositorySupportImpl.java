@@ -1,6 +1,10 @@
 package com.kurung.healthinfo.repository;
 
+import com.kurung.common.enumeration.CustomHttpStatus;
+import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.healthinfo.entity.HealthInfoEntity;
+import com.kurung.healthinfo.entity.QHealthInfoEntity;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +28,8 @@ public class HealthInfoRepositorySupportImpl implements HealthInfoRepositorySupp
 
 
   @Override
-  public HealthInfoEntity findByUserAndDateBetween(String userUuid, LocalDateTime start, LocalDateTime end) {
+  public HealthInfoEntity findByUserAndDateBetween(String userUuid, LocalDateTime start,
+      LocalDateTime end) {
     return jpaQueryFactory
         .selectFrom(healthInfoEntity)
         .where(
@@ -35,7 +40,8 @@ public class HealthInfoRepositorySupportImpl implements HealthInfoRepositorySupp
   }
 
   @Override
-  public List<HealthInfoEntity> getHealthInfoMonthList(LocalDateTime startDateTime, LocalDateTime endDateTime, String userUuid) {
+  public List<HealthInfoEntity> getHealthInfoMonthList(LocalDateTime startDateTime,
+      LocalDateTime endDateTime, String userUuid) {
     return jpaQueryFactory
         .selectFrom(healthInfoEntity)
         .where(
@@ -44,6 +50,20 @@ public class HealthInfoRepositorySupportImpl implements HealthInfoRepositorySupp
         )
         .orderBy(healthInfoEntity.updatedAt.desc())
         .fetch();
+  }
+
+  @Override
+  public HealthInfoEntity getHealthInfoById(int healthInfoId) {
+    HealthInfoEntity result = jpaQueryFactory
+        .selectFrom(healthInfoEntity)
+        .where(healthInfoEntity.healthinfoId.eq(healthInfoId))
+        .fetchOne();
+
+    if (result == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.HEALTH_INFO_NOT_FOUND);
+    }
+
+    return result;
   }
 
 

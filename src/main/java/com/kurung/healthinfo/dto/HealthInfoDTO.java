@@ -43,4 +43,5 @@ public class HealthInfoDTO extends BaseDTO {
     this.memo = entity.getMemo();
 
   }
+
 }

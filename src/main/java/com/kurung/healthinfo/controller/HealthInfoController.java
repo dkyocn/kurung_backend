@@ -20,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,4 +74,16 @@ public class HealthInfoController {
     return new ResponseEntity<>(healthInfoService.getHealthInfoMonthList(currentDate, userUuid), HttpStatus.OK);
   }
 
+  @PostMapping("/update")
+  @Operation(summary = "건강정보 수정", description = "건강정보를 수정할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "526", description = "수정 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+
+  @Parameter(name = "healthInfoDTO", description = "건강정보 저장 데이터")
+  public ResponseEntity<HttpStatus> updateHealthInfo(@RequestBody HealthInfoDTO healthInfoDTO) {
+    healthInfoService.updateHealthInfo(healthInfoDTO);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }
