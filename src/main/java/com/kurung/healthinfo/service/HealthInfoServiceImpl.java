@@ -5,6 +5,9 @@ import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.healthinfo.dto.HealthInfoDTO;
 import com.kurung.healthinfo.entity.HealthInfoEntity;
 import com.kurung.healthinfo.repository.HealthInfoRepository;
+import com.kurung.user.dto.UserDTO;
+import com.kurung.user.entity.UserEntity;
+import com.kurung.user.service.UserService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class HealthInfoServiceImpl implements HealthInfoService {
 
   private final HealthInfoRepository healthInfoRepository;
+  private final UserService userService;
 
   @Override
   public List<HealthInfoDTO> getHealthInfo() {
@@ -26,6 +30,9 @@ public class HealthInfoServiceImpl implements HealthInfoService {
 
   @Override
   public HealthInfoDTO getHealthInfoById(String userUuid, LocalDateTime targetDate) {
+
+    userService.getUserByUuid(userUuid);
+
     LocalDateTime startOfDay = targetDate.toLocalDate().atStartOfDay(); // 00:00:00
     LocalDateTime endOfDay = targetDate.toLocalDate().atTime(23, 59, 59); // 23:59:59
 
