@@ -1,22 +1,25 @@
 package com.kurung.exercise.service;
 
-import static com.kurung.exercise.entity.QExerciseLogEntity.exerciseLogEntity;
-
-import com.kurung.diet.dto.DietScoreDTO;
+import com.kurung.common.enumeration.CustomHttpStatus;
+import com.kurung.common.exception.CustomIllegalArgumentException;
+import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.exercise.dto.ExerciseDTO;
 import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
+import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
+import com.kurung.exercise.entity.ExerciseEntity;
 import com.kurung.exercise.entity.ExerciseLogEntity;
+import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.exercise.repository.ExerciseLogRepository;
 import com.kurung.exercise.repository.ExerciseRepository;
 import com.kurung.exercise.repository.ObjectiveRepository;
 import com.kurung.exercise.repository.RoutinesRepository;
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.repository.UserRepository;
 import com.kurung.user.service.UserService;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,39 +39,78 @@ public class ExerciseServiceImpl implements ExerciseService {
   private final ObjectiveRepository objectiveRepository;
   private final RoutinesRepository routinesRepository;
 
+
+  // Exercise create -------------------------------------------------------
+  @Transactional
   @Override
-  public SummaryDTO.ExerciseLogDTO createExerciseLog(SummaryDTO.ExerciseLogDTO dto) {
-    ExerciseLogEntity saved = exerciseLogRepository.save(ExerciseLogEntity.builder().build());
+  public void createExerciseLog(ExerciseLogDTO exerciseLogDTO) {
+    // 1. UserEntity 조회 (UserDTO에 userUuid가 반드시 들어와야 함)
+    UserDTO userByUuid = userService.getUserByUuid(exerciseLogDTO.getUser().getUserUuid());
+
+    ExerciseEntity exerciseById = exerciseRepository.getExerciseById(
+        exerciseLogDTO.getExercise().getExerciseId());
+    if (exerciseById != null) {
+      // 2. DB에 저장
+      exerciseLogRepository.save(ExerciseLogEntity.createExerciseLogBuilder()
+          .exerciseLogDTO(exerciseLogDTO)
+          .userDTO(userByUuid)
+          .exerciseEntity(exerciseById)
+          .build());
+    } else {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.EXERCISE_NOT_FOUND);
+    }
+  }
+
+  // Exercise Updated ---------------------------------
+  @Override
+  @Transactional
+  public SummaryDTO.ExerciseLogDTO updateExerciseLog(SummaryDTO.ExerciseLogDTO exerciseLogDTO) {
+    // 1. 기존 기록 조회
+    ExerciseLogEntity entity = exerciseLogRepository.getReferenceById(
+        exerciseLogDTO.getExerciseLogsId());
+    if (entity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.EXERCISELOG_NOT_FOUND);
+    }
+    try {
+      // 2. 엔티티에 값 반영
+      entity.updateFromDTO(exerciseLogDTO);
+    } catch (Exception e) {
+      throw new CustomRunTimeException(CustomHttpStatus.EXERCISE_UPDATE_ERROR);
+    }
     return SummaryDTO.ExerciseLogDTO.toExerciseLogBuilder()
-        .entity(saved)
+        .entity(entity)
         .build();
   }
 
+  // Exercise Delete ---------------------------------------
   @Override
-  public List<SummaryDTO.ExerciseLogDTO> getExerciseLogsByUser(String userUuid) {
-    return exerciseLogRepository.findAll().stream()
-        .filter(log -> log.getUser().equals(userUuid))
-        .map(entity -> SummaryDTO.ExerciseLogDTO.toExerciseLogBuilder()
-            .entity(entity)
-            .build())
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public SummaryDTO.ExerciseLogDTO getExerciseLogById(int id) {
-    return exerciseLogRepository.findById(id)
-        .map(entity -> SummaryDTO.ExerciseLogDTO.toExerciseLogBuilder()
-            .entity(entity)
-            .build())
-        .orElse(null);
-  }
-
-  @Override
+  @Transactional
   public void deleteExerciseLog(int id) {
-    exerciseLogRepository.deleteById(id);
+    Optional<ExerciseLogEntity> optionalEntity = exerciseLogRepository.findById(id);
+
+    if (!optionalEntity.isPresent()) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.EXERCISELOG_NOT_FOUND);
+    }
+
+    ExerciseLogEntity entity = optionalEntity.get();
+    exerciseLogRepository.delete(entity);
   }
 
-  // SUMMARY LINE -----------------------------------------------------------
+  // Exercise Selected ---------------------------------------
+  @Override
+  public ExerciseLogDTO getExerciseLogById(int id) {
+    ExerciseLogEntity entity = exerciseLogRepository.getExerciseLogById(id);
+
+    if (entity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.EXERCISELOG_NOT_FOUND);
+    }
+
+    return ExerciseLogDTO.toExerciseLogBuilder()
+        .entity(entity)
+        .build();
+  }
+
+  // SUMMARY  -----------------------------------------------------------
   @Override
   public SummaryDTO getSummaryByUser(String userUuid) {
     List<ExerciseLogEntity> logs = exerciseLogRepository.getLogsByUserUuid(userUuid);
@@ -88,25 +131,80 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   // Objective ----------------------------------------
   @Override
-  public ObjectiveDTO getObjectiveById(int id) {
-    return objectiveRepository.findById(id)
-        .map(entity -> ObjectiveDTO.builder()
-            .objectiveId(entity.getObjectiveId())
-            .user(UserDTO.toUserBuilder()
-                .userEntity(entity.getUser())
-                .build())
-            .objectiveTitle(entity.getObjectiveTitle())
-            .objectiveCount(entity.getObjectiveCount())
-            .objectiveDuration(entity.getObjectiveDuration())
-            .objectiveWeight(entity.getObjectiveWeight())
-            .startDate(entity.getStartDate())
-            .endDate(entity.getEndDate())
-            .memo(entity.getMemo())
-            .isActive(entity.getIsActive())
-            .createdAt(entity.getCreatedAt())
-            .lastUpdatedAt(entity.getLastUpdatedAt())
-            .build()).orElseThrow();
+  @Transactional
+  public void updateObjectiveaction(int objectiveId) {
+    ObjectiveEntity entity = objectiveRepository.findByObjectiveId(objectiveId);
+    if (entity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.OBJECTIVE_NOT_FOUND);
+    }
+    entity.updateIsActive(); // ← 여기가 핵심
   }
+
+
+  // Objective Monthly -------------------------------
+  @Override
+  public ObjectiveDTO getObjectiveByMonth(LocalDateTime date, String userUuid) {
+
+    UserDTO userByUuid = userService.getUserByUuid(userUuid);
+
+    // 1. 월 시작과 종료 날짜 계산
+    LocalDateTime startOfMonth = date.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
+    LocalDateTime endOfMonth = date.withDayOfMonth(date.toLocalDate().lengthOfMonth())
+        .withHour(23).withMinute(59).withSecond(59);
+
+    // 2. 해당 월에 해당하는 목표 엔티티 조회
+    ObjectiveEntity objectiveEntity = objectiveRepository.getObjectiveByMonth(startOfMonth, endOfMonth, userUuid);
+
+    // 3. 결과가 없으면 null 반환
+    if (objectiveEntity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.OBJECTIVE_NOT_FOUND);
+    }
+
+    // 5. ObjectiveDTO로 변환해서 반환
+    return ObjectiveDTO.toObjectiveBuilder()
+        .objectiveEntity(objectiveEntity)
+        .userDTO(userByUuid)
+        .build();
+  }
+
+
+  // Objective Updated -------------------------------
+  @Override
+  @Transactional
+  public void updateObjective(ObjectiveDTO objectiveDTO) {
+    // 1. 수정할 목표 조회
+    ObjectiveEntity objectiveEntity = objectiveRepository.getReferenceById(
+        objectiveDTO.getObjectiveId());
+
+    if (objectiveEntity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.OBJECTIVE_NOT_FOUND);
+    }
+
+    try {
+      // 2. 엔티티에 값 반영
+      objectiveEntity.updateObjective(objectiveDTO);
+    } catch (Exception e) {
+      throw new CustomRunTimeException(CustomHttpStatus.OBJECT_UPDATE_ERROR);
+    }
+  }
+
+
+  // Objective created -----------------------
+  @Transactional
+  @Override
+  public void createObjective(ObjectiveDTO objectiveDTO) {
+    // 1. UserDTO 조회 (userUuid 필요)
+    UserDTO userByUuid = userService.getUserByUuid(objectiveDTO.getUser().getUserUuid());
+
+    // 2. ObjectiveEntity 빌더 패턴 변환 및 저장
+    objectiveRepository.save(
+        ObjectiveEntity.createObjectiveBuilder()
+            .objectiveDTO(objectiveDTO)
+            .userDTO(userByUuid)
+            .build()
+    );
+  }
+
 
   // Routines ----------------------------------------------------------------------
   @Override

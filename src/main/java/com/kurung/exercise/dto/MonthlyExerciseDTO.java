@@ -13,9 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MonthlyExerciseDTO {
 
-  private UserDTO user;
-
-  private LocalDateTime date;
-
-  private int totalDuration;
+  protected UserDTO user;
+  protected LocalDateTime date;
+  protected int totalDuration;
 }

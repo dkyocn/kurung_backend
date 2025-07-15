@@ -1,5 +1,7 @@
 package com.kurung.exercise.dto;
 
+import com.kurung.common.dto.BaseDTO;
+import com.kurung.common.entity.BaseEntity;
 import com.kurung.exercise.entity.RoutinesEntity;
 import com.kurung.user.dto.UserDTO;
 import java.sql.Date;
@@ -15,13 +17,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class RoutinesDTO {
 
-  private int routinesId;
-  private String title;
-  private String routineLevel;
-  private String place;
-  private String videoUrl;
-  private LocalDateTime savedDate;
-  private UserDTO user;
+  protected int routinesId;
+  protected String title;
+  protected String routineLevel;
+  protected String place;
+  protected String videoUrl;
+  protected LocalDateTime savedDate;
+  protected UserDTO user;
 
   public RoutinesDTO(RoutinesEntity entity) {
     this.routinesId = entity.getRoutinesId();
