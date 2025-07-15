@@ -129,6 +129,15 @@ public class ExerciseServiceImpl implements ExerciseService {
         .build();
   }
 
+  // SummaryDailyList --------------------------------
+  @Override
+  public List<SummaryDTO.ExerciseLogDTO> getDailyLogs(String userUuid, LocalDate date) {
+    return exerciseLogRepository.findDailyLogsByUserUuid(userUuid, date)
+        .stream()
+        .map(SummaryDTO.ExerciseLogDTO::new)
+        .collect(Collectors.toList());
+  }
+
   // Objective ----------------------------------------
   @Override
   @Transactional
@@ -137,7 +146,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     if (entity == null) {
       throw new CustomIllegalArgumentException(CustomHttpStatus.OBJECTIVE_NOT_FOUND);
     }
-    entity.updateIsActive(); // ← 여기가 핵심
+    entity.updateIsActive();
   }
 
 

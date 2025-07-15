@@ -1,13 +1,10 @@
 package com.kurung.exercise.controller;
 
-import com.kurung.common.enumeration.CustomHttpStatus;
-import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.exercise.dto.ExerciseDTO;
 import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
-import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.exercise.service.ExerciseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,7 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -99,7 +96,22 @@ public class ExerciseController {
     return new ResponseEntity<>(exerciseService.getSummaryByUser(userUuid), HttpStatus.OK);
   }
 
-  // Objective -----------------------------
+  // SummaryDailyList ----------------------------
+  @GetMapping("/summary/daily")
+  @Operation(summary = "운동요약 DB 연동 확인", description = "운동요약 entity, dto 연동 확인")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "468", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  public ResponseEntity<List<SummaryDTO.ExerciseLogDTO>> getDailyLogs(
+      @RequestParam String userUuid,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+  ) {
+    List<SummaryDTO.ExerciseLogDTO> logs = exerciseService.getDailyLogs(userUuid, date);
+    return new ResponseEntity<>(logs, HttpStatus.OK);
+  }
+
+    // Objective -----------------------------
   @PostMapping("/objective/activation/{objectiveId}")
   @Operation(summary = "운동목표 활성화/비활성화", description = "목표 ID와 활성화 여부를 받아 상태를 변경합니다.")
   @ApiResponses(value = {

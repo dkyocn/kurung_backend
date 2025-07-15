@@ -28,8 +28,10 @@ public interface ExerciseService {
   // Summary --------------------------------------
   SummaryDTO getSummaryByUser(String uuid);
 
+  // SummaryDailyList -----------------------------
+  List<SummaryDTO.ExerciseLogDTO> getDailyLogs(String userUuid, LocalDate date);
+
   // Objective ------------------------------------
-  //void ObjectiveActivation(ObjectiveEntity objectiveEntity);
 
   ObjectiveDTO getObjectiveByMonth(LocalDateTime date, String userUuid);
 

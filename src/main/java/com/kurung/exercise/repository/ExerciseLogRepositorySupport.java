@@ -17,9 +17,13 @@ public interface ExerciseLogRepositorySupport {
   // SUMMARY
   List<ExerciseLogEntity> getLogsByUserUuid(String userUuid);
 
+  // SummaryDailyList ------------------------------------------
+  List<ExerciseLogEntity> findDailyLogsByUserUuid(String userUuid, LocalDate date);
+
   // ExerciseMonthlyTime ----------------------------------------
   List<ExerciseLogEntity> getMonthlyExerciseTime(String uuid, LocalDateTime startDateTime,
       LocalDateTime endDateTime);
+
 
 
 }
