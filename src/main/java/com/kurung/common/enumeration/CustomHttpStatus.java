@@ -78,7 +78,10 @@ public enum CustomHttpStatus {
 
   // Community
   COMMUNITY_SAVE_ERROR(566, "커뮤니티 보드 저장을 실패하였습니다."),
-  COMMUNITY_UPDATE_ERROR(567,"커뮤니티 수정을 실패하였습니다.");
+  COMMUNITY_UPDATE_ERROR(567,"커뮤니티 수정을 실패하였습니다."),
+
+  // HEALTH_INFO
+  HEALTH_INFO_UPDATE_ERROR(573,"커뮤니티 수정을 실패하였습니다.");
 
   private final int value;
   private final String message;

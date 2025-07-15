@@ -2,13 +2,10 @@ package com.kurung.healthinfo.service;
 
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
+import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.healthinfo.dto.HealthInfoDTO;
 import com.kurung.healthinfo.entity.HealthInfoEntity;
 import com.kurung.healthinfo.repository.HealthInfoRepository;
-import com.kurung.missions.dto.MissionsDTO;
-import com.kurung.missions.entity.MissionsEntity;
-import com.kurung.user.dto.UserDTO;
-import com.kurung.user.entity.UserEntity;
 import com.kurung.user.service.UserService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +64,25 @@ public class HealthInfoServiceImpl implements HealthInfoService {
         .collect(Collectors.toList());
   }
 
+  @Override
+  @Transactional
+  public HealthInfoDTO updateHealthInfo(HealthInfoDTO healthInfoDTO) {
+    // 수정 대상 엔티티 조회
+    HealthInfoEntity entity = healthInfoRepository.findById(healthInfoDTO.getHealthinfoId())
+        .orElseThrow(() -> new CustomIllegalArgumentException(CustomHttpStatus.HEALTH_INFO_NOT_FOUND));
 
-
-
+    try {
+      entity.updateHealthInfo(
+          healthInfoDTO.getHeight(),
+          healthInfoDTO.getWeight(),
+          healthInfoDTO.getBmi(),
+          healthInfoDTO.getBodyfatpercent(),
+          healthInfoDTO.getMemo()
+      );
+    } catch (Exception e) {
+      throw new CustomRunTimeException(CustomHttpStatus.HEALTH_INFO_UPDATE_ERROR);
+    }
+    return healthInfoDTO;
+  }
 }
+
