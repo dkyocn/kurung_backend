@@ -9,10 +9,12 @@ import com.kurung.community.entity.CommunityEntity;
 import com.kurung.community.repository.CommunityRepository;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,5 +52,25 @@ public class CommunityServiceImpl implements CommunityService {
       throw new CustomRunTimeException(CustomHttpStatus.COMMUNITY_SAVE_ERROR);
     }
 
+  }
+
+  @Override
+  @Transactional
+  public void updateCommunity(CommunityDTO communityDTO) {
+    UserDTO userByUuid = userService.getUserByUuid(communityDTO.getUser().getUserUuid());
+
+    CommunityEntity communityEntity = communityRepository.getCommunityById(
+        communityDTO.getCommunityId());
+
+    if (communityEntity == null || !Objects.equals(communityEntity.getUser().getUserUuid(),
+        userByUuid.getUserUuid())) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.COMMUNITY_NOT_FOUND);
+    }
+
+    try {
+      communityEntity.updateCommunity(communityDTO);
+    } catch (RuntimeException e) {
+      throw new CustomRunTimeException(CustomHttpStatus.COMMUNITY_UPDATE_ERROR);
+    }
   }
 }
