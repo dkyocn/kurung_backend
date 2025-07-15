@@ -58,4 +58,9 @@ public class CommunityEntity extends BaseEntity {
     this.user = UserEntity.createUserBuilder().userDTO(user).build();
     this.comment = new ArrayList<>();
   }
+
+  public void updateCommunity(CommunityDTO communityDTO) {
+    this.title = communityDTO.getTitle();
+    this.content = communityDTO.getContent();
+  }
 }

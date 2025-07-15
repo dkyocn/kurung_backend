@@ -13,4 +13,6 @@ public interface CommunityService {
 
   void createCommunity(CommunityDTO communityDTO);
 
+  void updateCommunity(CommunityDTO communityDTO);
+
 }

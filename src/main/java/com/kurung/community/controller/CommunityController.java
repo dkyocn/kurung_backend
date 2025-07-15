@@ -32,6 +32,9 @@ public class CommunityController {
   private final CommunityService communityService;
 
   @GetMapping("/{id}")
+  @Operation(summary = "커뮤니티 단일 조회", description = "커뮤니티를 조회할 때 사용하는 API")
+  @ApiResponse(responseCode = "200", description = "생성 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @Parameter(name = "id", description = "커뮤니티 아이디", example = "1")
   public ResponseEntity<CommunityDTO> getCommunityById(@PathVariable int id) {
     return new ResponseEntity<>(communityService.getCommunityById(id), HttpStatus.OK);
   }
@@ -51,9 +54,17 @@ public class CommunityController {
 
   @PostMapping("/create")
   @Operation(summary = "커뮤니티 생성", description = "커뮤니티를 생성할 때 사용하는 API")
-  @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @ApiResponse(responseCode = "200", description = "생성 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   public ResponseEntity<HttpStatus> createCommunity(@RequestBody CommunityDTO communityDTO) {
     communityService.createCommunity(communityDTO);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/update")
+  @Operation(summary = "커뮤니티 수정", description = "커뮤니티를 수정할 때 사용하는 API")
+  @ApiResponse(responseCode = "200", description = "수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  public ResponseEntity<HttpStatus> updateCommunity(@RequestBody CommunityDTO communityDTO) {
+    communityService.updateCommunity(communityDTO);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }
