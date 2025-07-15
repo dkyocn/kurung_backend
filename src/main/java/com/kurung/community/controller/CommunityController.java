@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,10 @@ public class CommunityController {
 
   @GetMapping("/{id}")
   @Operation(summary = "커뮤니티 단일 조회", description = "커뮤니티를 조회할 때 사용하는 API")
-  @ApiResponse(responseCode = "200", description = "생성 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "497", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
   @Parameter(name = "id", description = "커뮤니티 아이디", example = "1")
   public ResponseEntity<CommunityDTO> getCommunityById(@PathVariable int id) {
     return new ResponseEntity<>(communityService.getCommunityById(id), HttpStatus.OK);
@@ -54,7 +58,10 @@ public class CommunityController {
 
   @PostMapping("/create")
   @Operation(summary = "커뮤니티 생성", description = "커뮤니티를 생성할 때 사용하는 API")
-  @ApiResponse(responseCode = "200", description = "생성 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "생성 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "566", description = "생성 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
   public ResponseEntity<HttpStatus> createCommunity(@RequestBody CommunityDTO communityDTO) {
     communityService.createCommunity(communityDTO);
     return new ResponseEntity<>(HttpStatus.OK);
@@ -62,7 +69,11 @@ public class CommunityController {
 
   @PostMapping("/update")
   @Operation(summary = "커뮤니티 수정", description = "커뮤니티를 수정할 때 사용하는 API")
-  @ApiResponse(responseCode = "200", description = "수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "497", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "567", description = "수정 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
   public ResponseEntity<HttpStatus> updateCommunity(@RequestBody CommunityDTO communityDTO) {
     communityService.updateCommunity(communityDTO);
     return new ResponseEntity<>(HttpStatus.OK);
