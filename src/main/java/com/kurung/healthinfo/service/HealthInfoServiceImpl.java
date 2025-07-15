@@ -75,13 +75,7 @@ public class HealthInfoServiceImpl implements HealthInfoService {
     }
 
     try {
-      entity.updateHealthInfo(
-          healthInfoDTO.getHeight(),
-          healthInfoDTO.getWeight(),
-          healthInfoDTO.getBmi(),
-          healthInfoDTO.getBodyfatpercent(),
-          healthInfoDTO.getMemo()
-      );
+      entity.updateHealthInfo(healthInfoDTO);
     } catch (Exception e) {
       throw new CustomRunTimeException(CustomHttpStatus.HEALTH_INFO_UPDATE_ERROR);
     }

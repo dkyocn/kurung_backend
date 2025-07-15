@@ -48,12 +48,12 @@ public class HealthInfoEntity extends BaseEntity {
   private String memo;
 
 
-  public void updateHealthInfo(float height, float weight, float bmi, float bodyfatpercent, String memo) {
-    this.height = height;
-    this.weight = weight;
-    this.bmi = bmi;
-    this.bodyfatpercent = bodyfatpercent;
-    this.memo = memo;
+  public void updateHealthInfo(HealthInfoDTO healthInfoDTO) {
+    this.height = healthInfoDTO.getHeight();
+    this.weight = healthInfoDTO.getWeight();
+    this.bodyfatpercent = healthInfoDTO.getBodyfatpercent();
+    this.bmi = healthInfoDTO.getBmi();
+    this.memo = healthInfoDTO.getMemo();
   }
 
 }
