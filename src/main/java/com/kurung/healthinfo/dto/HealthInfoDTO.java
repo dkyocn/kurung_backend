@@ -1,9 +1,9 @@
 package com.kurung.healthinfo.dto;
 
+import com.kurung.common.dto.BaseDTO;
 import com.kurung.healthinfo.entity.HealthInfoEntity;
 import com.kurung.user.dto.UserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HealthInfoDTO {
+public class HealthInfoDTO extends BaseDTO {
 
   @Schema(description = "건강 정보 고유 ID", example = "1")
   protected int healthinfoId ;
@@ -30,8 +30,7 @@ public class HealthInfoDTO {
   protected float   bmi;
   @Schema(description = "메모", example = "건강 회복")
   protected String  memo;
-  @Schema(description = "최종 수정일자", example = "2025-07-14")
-  protected LocalDateTime updatedAt;
+
 
   @Builder(builderMethodName = "toHealthInfoBuilder", builderClassName = "toHealthInfoBuilder")
   public HealthInfoDTO(HealthInfoEntity entity) {
@@ -42,6 +41,6 @@ public class HealthInfoDTO {
     this.bodyfatpercent = entity.getBodyfatpercent();
     this.bmi = entity.getBmi();
     this.memo = entity.getMemo();
-    this.updatedAt = entity.getUpdatedAt();
+
   }
 }

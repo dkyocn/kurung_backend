@@ -1,5 +1,6 @@
 package com.kurung.healthinfo.entity;
 
+import com.kurung.common.entity.BaseEntity;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,19 +10,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.LastModifiedDate;
 
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "TB_HEALTH_INFO")
-public class HealthInfoEntity {
+public class HealthInfoEntity extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,9 +45,5 @@ public class HealthInfoEntity {
 
   @Column(name = "MEMO")
   private String memo;
-
-  @LastModifiedDate
-  @Column(name = "UPDATED_At", nullable = false)
-  private LocalDateTime updatedAt;
 
 }

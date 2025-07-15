@@ -6,6 +6,8 @@ import com.kurung.healthinfo.dto.HealthInfoDTO;
 import com.kurung.healthinfo.service.HealthInfoService;
 import com.kurung.missions.dto.MissionsDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -31,13 +33,13 @@ public class HealthInfoController {
   private final HealthInfoService healthInfoService;
 
   @GetMapping("/list")
-  @Operation(summary = "건강정보 전체 조회", description = "사용자의 건강정보 리스트를 조회하는 API")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "418", description = "조회 실패", content = @Content(mediaType = "application/json"))
-  })
-  public ResponseEntity<List<HealthInfoDTO>> getHealthInfoList() {
-    return new ResponseEntity<>(healthInfoService.getHealthInfo(), HttpStatus.OK);
+  @Operation(summary = "건강정보 단일 조회", description = "사용자의 건강정보를 조회할 때 사용하는 API")
+  public ResponseEntity<HealthInfoDTO> getHealthInfoById(
+      @RequestParam String userUuid,
+      @RequestParam LocalDateTime targetDate
+  ) {
+    return new ResponseEntity<>(healthInfoService.getHealthInfoById(userUuid, targetDate), HttpStatus.OK);
   }
+
 
 }
