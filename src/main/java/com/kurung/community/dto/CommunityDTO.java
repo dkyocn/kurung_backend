@@ -26,13 +26,12 @@ public class CommunityDTO extends BaseDTO {
   protected List<CommentDTO> comment;
 
   @Builder(builderMethodName = "toCommunityBuilder", builderClassName = "toCommunityBuilder")
-  public CommunityDTO(CommunityEntity communityEntity) {
+  public CommunityDTO(CommunityEntity communityEntity, UserDTO user) {
     this.communityId = communityEntity.getCommunityId();
     this.title = communityEntity.getTitle();
     this.content = communityEntity.getContent();
     this.category = communityEntity.getCategory();
-    this.user = communityEntity.getUser() != null ? UserDTO.toUserBuilder()
-        .userEntity(communityEntity.getUser()).build() : null;
+    this.user = user;
     this.comment = communityEntity.getComment() != null ? communityEntity.getComment().stream()
         .map(commentEntity -> CommentDTO.toCommentBuilder().commentEntity(commentEntity).build())
         .collect(

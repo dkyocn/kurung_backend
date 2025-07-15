@@ -72,10 +72,12 @@ public enum CustomHttpStatus {
   // LifeLog
   LIFELOG_SAVE_ERROR(536,"라이프 로그 저장을 실패하였습니다."),
   LIFELOG_UPDATE_ERROR(537,"라이프 로그 수정을 실패하였습니다."),
-  LIFELOG_DELETE_ERROR(538,"라이프 로그 삭제를 실패하였습니다.");
+  LIFELOG_DELETE_ERROR(538,"라이프 로그 삭제를 실패하였습니다."),
 
   // HealthReport
 
+  // Community
+  COMMUNITY_SAVE_ERROR(566, "커뮤니티 보드 저장을 실패하였습니다.");
 
   private final int value;
   private final String message;
