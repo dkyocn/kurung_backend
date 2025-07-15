@@ -5,6 +5,7 @@ import static com.kurung.exercise.entity.QExerciseLogEntity.exerciseLogEntity;
 import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -52,5 +53,15 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
         .fetch();
   }
 
-
+  @Override
+  public List<ExerciseLogEntity> findDailyLogsByUserUuid(String userUuid, LocalDateTime start, LocalDateTime end) {
+    return queryFactory
+        .selectFrom(exerciseLogEntity)
+        .where(
+            exerciseLogEntity.user.userUuid.eq(userUuid),
+            exerciseLogEntity.createdAt.between(start, end)
+        )
+        .fetch();
+  }
 }
+

@@ -1,16 +1,13 @@
 package com.kurung.exercise.service;
 
 import com.kurung.exercise.dto.ExerciseDTO;
-import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
-import com.kurung.exercise.entity.ObjectiveEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
 import java.util.List;
 
 public interface ExerciseService {
@@ -28,8 +25,10 @@ public interface ExerciseService {
   // Summary --------------------------------------
   SummaryDTO getSummaryByUser(String uuid);
 
+  // SummaryDailyList -----------------------------
+  SummaryDTO getSummaryDailyList(String userUuid, LocalDate date);
+
   // Objective ------------------------------------
-  //void ObjectiveActivation(ObjectiveEntity objectiveEntity);
 
   ObjectiveDTO getObjectiveByMonth(LocalDateTime date, String userUuid);
 
@@ -48,7 +47,7 @@ public interface ExerciseService {
   ExerciseDTO getExerciseById(int id);
 
   // ExerciseMonthlyTime --------------------------
-  List<MonthlyExerciseDTO> getMonthlyExerciseTime(LocalDateTime timeMonth, String userUuid);
+  List<SummaryDTO> getMonthlyExerciseTime(LocalDateTime timeMonth, String userUuid);
 
 
 }

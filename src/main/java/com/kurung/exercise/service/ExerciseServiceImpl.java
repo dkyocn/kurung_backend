@@ -4,7 +4,6 @@ import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.exercise.dto.ExerciseDTO;
-import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
@@ -113,6 +112,7 @@ public class ExerciseServiceImpl implements ExerciseService {
   // SUMMARY  -----------------------------------------------------------
   @Override
   public SummaryDTO getSummaryByUser(String userUuid) {
+
     List<ExerciseLogEntity> logs = exerciseLogRepository.getLogsByUserUuid(userUuid);
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
@@ -120,12 +120,34 @@ public class ExerciseServiceImpl implements ExerciseService {
     int routineCount = logs.size();
 
     return SummaryDTO.builder()
-        .date(LocalDate.now().toString())
         .totalDuration(totalDuration)
         .totalKcal(totalKcal)
         .routineCount(routineCount)
         .goalAchievementRate(80)
         .exerciseList(Collections.emptyList()) // 또는 나중에 실제 아이템 리스트
+        .build();
+  }
+
+  // SummaryDailyList --------------------------------
+  @Override
+  public SummaryDTO getSummaryDailyList(String userUuid, LocalDate date) {
+    LocalDateTime start = date.atStartOfDay();
+    LocalDateTime end = date.atTime(23, 59, 59);
+
+    List<ExerciseLogEntity> logs = exerciseLogRepository.findDailyLogsByUserUuid(userUuid, start, end);
+
+    int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
+    int totalKcal = logs.stream().mapToInt(ExerciseLogEntity::getCalories).sum();
+    int routineCount = logs.size();
+
+    return SummaryDTO.builder()
+        .date(date)
+        .totalDuration(totalDuration)
+        .totalKcal(totalKcal)
+        .routineCount(routineCount)
+        .exerciseList(logs.stream()
+            .map(SummaryDTO.ExerciseLogDTO::new)
+            .collect(Collectors.toList()))
         .build();
   }
 
@@ -137,7 +159,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     if (entity == null) {
       throw new CustomIllegalArgumentException(CustomHttpStatus.OBJECTIVE_NOT_FOUND);
     }
-    entity.updateIsActive(); // ← 여기가 핵심
+    entity.updateIsActive();
   }
 
 
@@ -238,23 +260,18 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   // ExerciseMonthlyTime -------------------------------------------------
   @Override
-  public List<MonthlyExerciseDTO> getMonthlyExerciseTime(LocalDateTime timeMonth, String userUuid) {
-    //  user는 무조건 조회해서 가져와야함
-
+  public List<SummaryDTO> getMonthlyExerciseTime(LocalDateTime timeMonth, String userUuid) {
     UserDTO userByUuid = userService.getUserByUuid(userUuid);
 
-    // [1] 반드시 userUuid 포함 3개 파라미터 전달!
     List<ExerciseLogEntity> exerciseMonthList = exerciseLogRepository.getMonthlyExerciseTime(
         userUuid, timeMonth.toLocalDate().withDayOfMonth(1).atStartOfDay(),
         timeMonth.toLocalDate().withDayOfMonth(timeMonth.toLocalDate().lengthOfMonth())
             .atStartOfDay()
     );
 
-    // [2] 반드시 MonthlyExerciseDTO, ExerciseLogEntity로 변환!
     return exerciseMonthList.stream()
-        .map(entity -> MonthlyExerciseDTO.builder()
-            .user(userByUuid)
-            .date(entity.getCreatedAt())
+        .map(entity -> SummaryDTO.builder()
+            .date(entity.getCreatedAt().toLocalDate())
             .totalDuration(entity.getDuration())
             .build())
         .collect(Collectors.toList());
