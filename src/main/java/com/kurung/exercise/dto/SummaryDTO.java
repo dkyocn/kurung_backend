@@ -4,6 +4,7 @@ package com.kurung.exercise.dto;
 import com.kurung.common.dto.BaseDTO;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.user.dto.UserDTO;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.*;
@@ -17,7 +18,7 @@ import java.util.List;
 @SuperBuilder
 public class SummaryDTO {
 
-    protected String date;
+    protected LocalDate date;
     protected int totalDuration;
     protected int totalKcal;
     protected int routineCount;

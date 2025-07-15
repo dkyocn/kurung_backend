@@ -1,7 +1,6 @@
 package com.kurung.exercise.controller;
 
 import com.kurung.exercise.dto.ExerciseDTO;
-import com.kurung.exercise.dto.MonthlyExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
@@ -97,21 +96,20 @@ public class ExerciseController {
   }
 
   // SummaryDailyList ----------------------------
-  @GetMapping("/summary/daily")
-  @Operation(summary = "운동요약 DB 연동 확인", description = "운동요약 entity, dto 연동 확인")
+  @GetMapping("/summary/daily/{userUuid}")
+  @Operation(summary = "운동일일요약 연동 확인", description = "운동일일 요약 데이터 확인.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "468", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "상태 변경 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "468", description = "해당 목표 없음", content = @Content(mediaType = "application/json"))
   })
-  public ResponseEntity<List<SummaryDTO.ExerciseLogDTO>> getDailyLogs(
-      @RequestParam String userUuid,
-      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+  public ResponseEntity<SummaryDTO> getSummaryDailyList(
+      @PathVariable String userUuid,
+      @RequestParam LocalDate date
   ) {
-    List<SummaryDTO.ExerciseLogDTO> logs = exerciseService.getDailyLogs(userUuid, date);
-    return new ResponseEntity<>(logs, HttpStatus.OK);
+    return new ResponseEntity<>(exerciseService.getSummaryDailyList(userUuid, date), HttpStatus.OK);
   }
 
-    // Objective -----------------------------
+  // Objective -----------------------------
   @PostMapping("/objective/activation/{objectiveId}")
   @Operation(summary = "운동목표 활성화/비활성화", description = "목표 ID와 활성화 여부를 받아 상태를 변경합니다.")
   @ApiResponses(value = {
@@ -185,7 +183,7 @@ public class ExerciseController {
     return new ResponseEntity<>(exerciseService.getExerciseById(id), HttpStatus.OK);
   }
 
-  // ExerciseMonthlyTime ---------------------------------
+  // ExerciseMonthlyTime(건강리포트) ---------------------------------
   @GetMapping("/exerciseMonthlyTime/{userUuid}")
   @Operation(summary = "월간 총 운동 시간 조회", description = "사용자의 월간 총 운동 시간을 조회합니다")
   @ApiResponses({
@@ -196,11 +194,11 @@ public class ExerciseController {
       @Parameter(name = "timeMonth", description = "오늘 날짜", example = "2025-05-19T00:00:00"),
       @Parameter(name = "userUuid", description = "회원 UUID", example = "2025061401")
   })
-  public ResponseEntity<List<MonthlyExerciseDTO>> getMonthlyExerciseTime(
+  public ResponseEntity<List<SummaryDTO>> getMonthlyExerciseTime(
       @RequestParam LocalDateTime timeMonth,
       @PathVariable String userUuid
   ) {
-    List<MonthlyExerciseDTO> result = exerciseService.getMonthlyExerciseTime(timeMonth, userUuid);
+    List<SummaryDTO> result = exerciseService.getMonthlyExerciseTime(timeMonth, userUuid);
     return ResponseEntity.ok(result);
   }
 

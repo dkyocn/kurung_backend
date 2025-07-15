@@ -58,7 +58,6 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
     LocalDateTime start = date.atStartOfDay();
     LocalDateTime end = date.atTime(23, 59, 59);
 
-    // 만약 QueryDSL이 아니라면 JPAQueryFactory + Expressions로 작성!
     return queryFactory
         .selectFrom(exerciseLogEntity)
         .where(
