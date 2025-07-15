@@ -54,10 +54,7 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
   }
 
   @Override
-  public List<ExerciseLogEntity> findDailyLogsByUserUuid(String userUuid, LocalDate date) {
-    LocalDateTime start = date.atStartOfDay();
-    LocalDateTime end = date.atTime(23, 59, 59);
-
+  public List<ExerciseLogEntity> findDailyLogsByUserUuid(String userUuid, LocalDateTime start, LocalDateTime end) {
     return queryFactory
         .selectFrom(exerciseLogEntity)
         .where(

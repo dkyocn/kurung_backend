@@ -112,6 +112,7 @@ public class ExerciseServiceImpl implements ExerciseService {
   // SUMMARY  -----------------------------------------------------------
   @Override
   public SummaryDTO getSummaryByUser(String userUuid) {
+
     List<ExerciseLogEntity> logs = exerciseLogRepository.getLogsByUserUuid(userUuid);
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
@@ -130,23 +131,23 @@ public class ExerciseServiceImpl implements ExerciseService {
   // SummaryDailyList --------------------------------
   @Override
   public SummaryDTO getSummaryDailyList(String userUuid, LocalDate date) {
-    List<ExerciseLogEntity> logs = exerciseLogRepository.findDailyLogsByUserUuid(userUuid, date);
+    LocalDateTime start = date.atStartOfDay();
+    LocalDateTime end = date.atTime(23, 59, 59);
+
+    List<ExerciseLogEntity> logs = exerciseLogRepository.findDailyLogsByUserUuid(userUuid, start, end);
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
     int totalKcal = logs.stream().mapToInt(ExerciseLogEntity::getCalories).sum();
     int routineCount = logs.size();
-
-    List<SummaryDTO.ExerciseLogDTO> exerciseList = logs.stream()
-        .map(SummaryDTO.ExerciseLogDTO::new)
-        .collect(Collectors.toList());
 
     return SummaryDTO.builder()
         .date(date)
         .totalDuration(totalDuration)
         .totalKcal(totalKcal)
         .routineCount(routineCount)
-        .goalAchievementRate(80) // 임시값, 필요시 계산
-        .exerciseList(exerciseList)
+        .exerciseList(logs.stream()
+            .map(SummaryDTO.ExerciseLogDTO::new)
+            .collect(Collectors.toList()))
         .build();
   }
 
