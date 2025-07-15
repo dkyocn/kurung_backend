@@ -8,6 +8,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.micrometer.common.util.StringUtils;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,12 +29,30 @@ public class FoodRepositorySupportImpl implements FoodRepositorySupport {
   @Override
   public List<FoodEntity> getFoodList(String keyword) {
     return queryFactory.selectFrom(foodEntity)
-        .where(eqKeyword(keyword))
+        .where(containKeyword(keyword))
         .fetch();
   }
 
+  @Override
+  public Page<FoodEntity> getFoodByPage(String keyword, Pageable pageable) {
+
+    List<FoodEntity> foodEntities = queryFactory.selectFrom(foodEntity)
+        .where(containKeyword(keyword))
+        .orderBy(foodEntity.foodId.desc())
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetch();
+
+    Long count = queryFactory.select(foodEntity.count())
+        .from(foodEntity)
+        .where(containKeyword(keyword))
+        .fetchOne();
+
+    return new PageImpl<>(foodEntities, pageable, count);
+  }
+
   // keyword 유무 조건 적용
-  private BooleanExpression eqKeyword(String keyword) {
-    return StringUtils.isNotBlank(keyword) ? foodEntity.foodName.eq(keyword) : null;
+  private BooleanExpression containKeyword(String keyword) {
+    return StringUtils.isNotBlank(keyword) ? foodEntity.foodName.contains(keyword) : null;
   }
 }
