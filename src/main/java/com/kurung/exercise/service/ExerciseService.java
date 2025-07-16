@@ -8,6 +8,7 @@ import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 public interface ExerciseService {
@@ -27,6 +28,9 @@ public interface ExerciseService {
 
   // SummaryDailyList -----------------------------
   SummaryDTO getSummaryDailyList(String userUuid, LocalDate date);
+
+  // SummaryMonthly --------------------------------
+  SummaryDTO.MonthlySummaryDTO getMonthlySummary(String userUuid, YearMonth month);
 
   // Objective ------------------------------------
 

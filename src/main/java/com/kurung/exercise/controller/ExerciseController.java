@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,8 +31,8 @@ public class ExerciseController {
 
   private final ExerciseService exerciseService;
 
-  // Exercise --------------------------------------------
-  @PostMapping("/create")
+  // ExerciseLog --------------------------------------------
+  @PostMapping("/log/create")
   @Operation(summary = "운동 기록 저장", description = "운동 기록을 저장하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -84,7 +85,7 @@ public class ExerciseController {
   // 아이디 받은걸로 조회 후 Entity로 해서 isAction 변경
 
   // SUMMARY ----------------------------------
-  @GetMapping("/summary/{userUuid}")
+  /* @GetMapping("/summary/{userUuid}")
   @Operation(summary = "운동요약 DB 연동 확인", description = "운동요약 entity, dto 연동 확인")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
@@ -93,7 +94,7 @@ public class ExerciseController {
   @Parameter(name = "userUuid", description = "회원 아이디", example = "2025061401")
   public ResponseEntity<SummaryDTO> getSummaryByUser(@PathVariable String userUuid) {
     return new ResponseEntity<>(exerciseService.getSummaryByUser(userUuid), HttpStatus.OK);
-  }
+  } */
 
   // SummaryDailyList ----------------------------
   @GetMapping("/summary/daily/{userUuid}")
@@ -107,6 +108,20 @@ public class ExerciseController {
       @RequestParam LocalDate date
   ) {
     return new ResponseEntity<>(exerciseService.getSummaryDailyList(userUuid, date), HttpStatus.OK);
+  }
+
+  // SummaryMonthly ---------------------------
+  @GetMapping("/summary/monthly/{userUuid}")
+  @Operation(summary = "운동월간요약 연동 확인", description = "운동월간 요약 데이터 확인")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "상태 변경 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "468", description = "해당 월 데이터 없음", content = @Content(mediaType = "application/json"))
+  })
+  public ResponseEntity<SummaryDTO.MonthlySummaryDTO> getMonthlySummary(
+      @PathVariable String userUuid,
+      @RequestParam YearMonth month
+  ) {
+    return new ResponseEntity<>(exerciseService.getMonthlySummary(userUuid, month), HttpStatus.OK);
   }
 
   // Objective -----------------------------
@@ -139,8 +154,8 @@ public class ExerciseController {
   @PostMapping("/objective/created")
   @Operation(summary = "목표 생성", description = "목표 정보를 저장합니다.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "532", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "532", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   })
   @Parameter(name = "userUuid", description = "회원 아이디", example = "2025061401")
   public ResponseEntity<HttpStatus> createObjective(@RequestBody ObjectiveDTO objectiveDTO) {
@@ -198,7 +213,7 @@ public class ExerciseController {
       @RequestParam LocalDateTime timeMonth,
       @PathVariable String userUuid
   ) {
-    List<SummaryDTO> result = exerciseService.getMonthlyExerciseTime(timeMonth, userUuid);
+    List<SummaryDTO> result = exerciseService.getMonthlyExerciseTime(timeMonth , userUuid);
     return ResponseEntity.ok(result);
   }
 
