@@ -6,6 +6,8 @@ import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.healthinfo.dto.HealthInfoDTO;
 import com.kurung.healthinfo.entity.HealthInfoEntity;
 import com.kurung.healthinfo.repository.HealthInfoRepository;
+import com.kurung.user.dto.UserDTO;
+import com.kurung.user.entity.UserEntity;
 import com.kurung.user.service.UserService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -81,5 +83,39 @@ public class HealthInfoServiceImpl implements HealthInfoService {
     }
     return healthInfoDTO;
   }
+
+  @Override
+  @Transactional
+  public void createHealthInfo(HealthInfoDTO healthInfoDTO) {
+    UserDTO userDTO = userService.getUserByUuid(healthInfoDTO.getUserDTO().getUserUuid());
+
+    try {
+      HealthInfoEntity entity = HealthInfoEntity.builder()
+          .height(healthInfoDTO.getHeight())
+          .weight(healthInfoDTO.getWeight())
+          .bmi(healthInfoDTO.getBmi())
+          .bodyfatpercent(healthInfoDTO.getBodyfatpercent())
+          .memo(healthInfoDTO.getMemo())
+          .user(UserEntity.builder()
+              .userUuid(userDTO.getUserUuid())
+              .userId(userDTO.getUserId())
+              .userFaceLoginRef(userDTO.getUserFaceLoginRef())
+              .userPwd(userDTO.getUserPwd())
+              .userNick(userDTO.getUserNick())
+              .userGender(userDTO.getUserGender())
+              .userAge(userDTO.getUserAge())
+              .userPath(userDTO.getUserPath())
+              .adminYN(userDTO.isAdminYN())
+              .isActive(userDTO.isActive())
+              .build())
+          .build();
+
+      healthInfoRepository.save(entity);
+    } catch (Exception e) {
+      throw new CustomRunTimeException(CustomHttpStatus.HEALTH_INFO_SAVE_ERROR);
+    }
+  }
+
+
 }
 

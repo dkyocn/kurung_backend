@@ -82,7 +82,9 @@ public enum CustomHttpStatus {
    COMMUNITY_DELETE_ERROR(568,"커뮤니티 삭제를 실패하였습니다."),
 
   // HEALTH_INFO
-  HEALTH_INFO_UPDATE_ERROR(573,"커뮤니티 수정을 실패하였습니다.");
+  HEALTH_INFO_UPDATE_ERROR(573," 건강정보 수정을 실패하였습니다."),
+  HEALTH_INFO_SAVE_ERROR(574,"건강정보 생성을 실패하였습니다.");
+
 
   private final int value;
   private final String message;

@@ -86,4 +86,17 @@ public class HealthInfoController {
     healthInfoService.updateHealthInfo(healthInfoDTO);
     return new ResponseEntity<>(HttpStatus.OK);
   }
+
+  @PostMapping("/create")
+  @Operation(summary = "건강정보 저장", description = "새 건강정보를 등록할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "535", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  public ResponseEntity<HttpStatus> createHealthInfo(@RequestBody HealthInfoDTO healthInfoDTO) {
+    healthInfoService.createHealthInfo(healthInfoDTO);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+
 }
