@@ -1,6 +1,8 @@
 package com.kurung.favorites.controller;
 
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.favorites.dto.FavoritesDTO;
+import com.kurung.favorites.enumeration.FavoritesType;
 import com.kurung.favorites.service.FavoritesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,17 +27,6 @@ public class FavoritesController {
 
   private final FavoritesService favoritesService;
 
-  @GetMapping("/list")
-  @Operation(summary = "즐겨찾기 조회", description = "하나의 즐겨찾기를 ID로 조회하는 API")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
-  })
-  @Parameter(name = "id", description = "즐겨찾기 ID", example = "1")
-  public ResponseEntity<List<FavoritesDTO>> getFavoriteById() {
-    return new ResponseEntity<>(favoritesService.getFavoriteList(), HttpStatus.OK);
-  }
-
   @PostMapping("/create")
   @Operation(summary = "즐겨찾기 저장", description = "새 즐겨찾기를 등록할 때 사용하는 API")
   @ApiResponses(value = {
@@ -47,12 +38,12 @@ public class FavoritesController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @GetMapping("/user")
+  @GetMapping("/list")
   @Operation(summary = "사용자 즐겨찾기 조회", description = "사용자의 즐겨찾기 전체 목록을 조회하는 API")
   @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json"))
   @Parameter(name = "userUuid", description = "사용자 UUID", example = "2025061406")
-  public ResponseEntity<List<FavoritesDTO>> getFavoritesByUser(@RequestParam String userUuid) {
-    return new ResponseEntity<>(favoritesService.getFavoritesList(userUuid), HttpStatus.OK);
+  public ResponseEntity<List<FavoritesDTO>> getFavoritesList(@RequestParam String userUuid , @RequestParam FavoritesType favoritesType) {
+    return new ResponseEntity<>(favoritesService.getFavoritesList(userUuid,favoritesType), HttpStatus.OK);
   }
 
 

@@ -1,6 +1,9 @@
 package com.kurung.favorites.repository;
 
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.favorites.entity.FavoritesEntity;
+import com.kurung.favorites.enumeration.FavoritesType;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -41,15 +44,21 @@ public class FavoritesRepositorySupportImpl implements FavoritesRepositorySuppor
   }
 
   @Override
-  public List<FavoritesEntity> getFavoritesList(String userUuid) {
+  public List<FavoritesEntity> getFavoritesList(String userUuid, FavoritesType favoritesType ) {
     return jpaQueryFactory
         .selectFrom(favoritesEntity)
         .where(
-            favoritesEntity.user.userUuid.eq(userUuid)
+            favoritesEntity.user.userUuid.eq(userUuid),notNullFavoritesType(favoritesType)
         )
         .fetch();
   }
 
-
-
+  BooleanExpression notNullFavoritesType(FavoritesType favoritesType) {
+    return switch (favoritesType) {
+      case STRESS -> favoritesEntity.stressRelief.isNotNull();
+      case RECIPE -> favoritesEntity.recipe.isNotNull();
+      case ROUTINES -> favoritesEntity.routines.isNotNull();
+      case COMMUNITY -> favoritesEntity.community.isNotNull();
+    };
+  }
 }

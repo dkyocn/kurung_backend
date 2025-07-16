@@ -1,10 +1,12 @@
 package com.kurung.favorites.service;
 
 import com.kurung.common.enumeration.CustomHttpStatus;
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.favorites.dto.FavoritesDTO;
 import com.kurung.favorites.entity.FavoritesEntity;
+import com.kurung.favorites.enumeration.FavoritesType;
 import com.kurung.favorites.repository.FavoritesRepository;
 import com.kurung.healthinfo.dto.HealthInfoDTO;
 import com.kurung.healthinfo.entity.HealthInfoEntity;
@@ -24,18 +26,6 @@ public class FavoritesServiceImpl implements FavoritesService {
 
   private final FavoritesRepository favoritesRepository;
   private final UserService userService;
-
-  @Override
-  public List<FavoritesDTO> getFavoriteList() {
-    List<FavoritesEntity> favoritesById = favoritesRepository.getFavoritesById();
-
-    if(favoritesById.isEmpty()){
-      throw new CustomIllegalArgumentException(CustomHttpStatus.FAVORITE_NOT_FOUND);
-    }
-
-    return favoritesById.stream().map(favoritesEntity -> FavoritesDTO.toFavoritesBuilder().favoritesEntity(favoritesEntity).build()).collect(Collectors.toList());
-  }
-
 
   @Override
   @Transactional
@@ -58,13 +48,13 @@ public class FavoritesServiceImpl implements FavoritesService {
   }
 
   @Override
-  public List<FavoritesDTO> getFavoritesList(String userUuid) {
+  public List<FavoritesDTO> getFavoritesList(String userUuid, FavoritesType favoritesType) {
 
     // 1. 사용자 확인
     UserDTO userDTO = userService.getUserByUuid(userUuid);
 
     // 2. 즐겨찾기 목록 조회
-    List<FavoritesEntity> favoritesList = favoritesRepository.getFavoritesList(userUuid);
+    List<FavoritesEntity> favoritesList = favoritesRepository.getFavoritesList(userUuid, favoritesType);
 
     // 3. DTO로 변환하여 리턴
     return favoritesList.stream()

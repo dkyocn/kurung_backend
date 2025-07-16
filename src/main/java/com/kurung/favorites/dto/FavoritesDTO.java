@@ -34,7 +34,7 @@ public class FavoritesDTO extends BaseDTO {
   public FavoritesDTO(FavoritesEntity favoritesEntity) {
     this.favoritesId = favoritesEntity.getFavoritesId();
     this.userDTO = favoritesEntity.getUser() != null ? UserDTO.toUserBuilder().userEntity(favoritesEntity.getUser()).build() : null;
-    this.routinesId = favoritesEntity.getRoutinesId() != null? favoritesEntity.getRoutinesId().getRoutinesId() : null;
+    this.routinesId = favoritesEntity.getRoutines() != null? favoritesEntity.getRoutines().getRoutinesId() : null;
     this.recipeId = favoritesEntity.getRecipe() != null ? favoritesEntity.getRecipe().getRecipeId() : null;
     this.stressReliefId = favoritesEntity.getStressRelief() != null ? favoritesEntity.getStressRelief().getStressReliefId() : null;
     this.communityId = favoritesEntity.getCommunity() != null ? favoritesEntity.getCommunity().getCommunityId() : null;

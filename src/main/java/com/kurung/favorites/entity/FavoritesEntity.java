@@ -35,7 +35,7 @@ public class FavoritesEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ROUTINES_ID")
-  private RoutinesEntity routinesId;
+  private RoutinesEntity routines;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "RECIPE_ID")
@@ -55,7 +55,7 @@ public class FavoritesEntity {
 
     this.user = UserEntity.createUserBuilder().userDTO(userDTO).build();
 
-    this.routinesId = favoritesDTO.getRoutinesId() != null
+    this.routines = favoritesDTO.getRoutinesId() != null
         ? RoutinesEntity.builder().routinesId(favoritesDTO.getRoutinesId()).build()
         : null;
 
