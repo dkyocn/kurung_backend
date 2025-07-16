@@ -1,6 +1,7 @@
 package com.kurung.exercise.service;
 
 import com.kurung.exercise.dto.ExerciseDTO;
+import com.kurung.exercise.dto.MonthlySummaryDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
@@ -8,6 +9,7 @@ import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 public interface ExerciseService {
@@ -27,6 +29,9 @@ public interface ExerciseService {
 
   // SummaryDailyList -----------------------------
   SummaryDTO getSummaryDailyList(String userUuid, LocalDate date);
+
+  // SummaryMonthly --------------------------------
+  MonthlySummaryDTO getMonthlySummary(String userUuid, YearMonth month);
 
   // Objective ------------------------------------
 

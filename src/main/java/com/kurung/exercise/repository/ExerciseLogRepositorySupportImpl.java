@@ -40,6 +40,18 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
         .fetch();
   }
 
+  // SummaryDaily -----------------------------------------
+  @Override
+  public List<ExerciseLogEntity> findSummarysByUserUuid(String userUuid, LocalDateTime start, LocalDateTime end) {
+    return queryFactory
+        .selectFrom(exerciseLogEntity)
+        .where(
+            exerciseLogEntity.user.userUuid.eq(userUuid),
+            exerciseLogEntity.createdAt.between(start, end)
+        )
+        .fetch();
+  }
+
   // ExerciseMonthlyTime ----------------------------
   @Override
   public List<ExerciseLogEntity> getMonthlyExerciseTime(String userUuid,
@@ -53,15 +65,5 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
         .fetch();
   }
 
-  @Override
-  public List<ExerciseLogEntity> findDailyLogsByUserUuid(String userUuid, LocalDateTime start, LocalDateTime end) {
-    return queryFactory
-        .selectFrom(exerciseLogEntity)
-        .where(
-            exerciseLogEntity.user.userUuid.eq(userUuid),
-            exerciseLogEntity.createdAt.between(start, end)
-        )
-        .fetch();
-  }
 }
 
