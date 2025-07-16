@@ -14,4 +14,6 @@ public interface HealthInfoService {
   List<HealthInfoDTO> getHealthInfoMonthList(LocalDate currentDate, String userUuid);
 
   HealthInfoDTO updateHealthInfo(HealthInfoDTO healthInfoDTO);
+
+  void createHealthInfo(HealthInfoDTO healthInfoDTO);
 }

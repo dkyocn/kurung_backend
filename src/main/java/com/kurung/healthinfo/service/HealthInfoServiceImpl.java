@@ -1,11 +1,16 @@
 package com.kurung.healthinfo.service;
 
+import static com.kurung.user.entity.QUserEntity.userEntity;
+
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.healthinfo.dto.HealthInfoDTO;
 import com.kurung.healthinfo.entity.HealthInfoEntity;
 import com.kurung.healthinfo.repository.HealthInfoRepository;
+import com.kurung.user.dto.UserDTO;
+import com.kurung.user.entity.UserEntity;
+import com.kurung.user.entity.UserEntity.createUserBuilder;
 import com.kurung.user.service.UserService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -81,5 +86,28 @@ public class HealthInfoServiceImpl implements HealthInfoService {
     }
     return healthInfoDTO;
   }
+
+  @Override
+  @Transactional
+  public void createHealthInfo(HealthInfoDTO healthInfoDTO) {
+
+    UserDTO userByUuid = userService.getUserByUuid(healthInfoDTO.getUserDTO().getUserUuid());
+
+    try {
+      // 건강정보 저장
+      HealthInfoEntity entity = healthInfoRepository.save(
+          HealthInfoEntity.createHealthInfoBuilder()
+              .healthInfoDTO(healthInfoDTO)
+              .userDTO(userByUuid)
+              .build()
+      );
+
+    } catch (Exception e) {
+      throw new CustomRunTimeException(CustomHttpStatus.HEALTH_INFO_SAVE_ERROR);
+    }
+  }
+
+
+
 }
 
