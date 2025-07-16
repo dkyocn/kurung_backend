@@ -11,7 +11,7 @@ import static com.kurung.favorites.entity.QFavoritesEntity.favoritesEntity;
 
 @Repository
 @RequiredArgsConstructor
-public class    FavoritesRepositorySupportImpl implements FavoritesRepositorySupport {
+public class FavoritesRepositorySupportImpl implements FavoritesRepositorySupport {
 
   private final JPAQueryFactory jpaQueryFactory;
 
@@ -39,4 +39,17 @@ public class    FavoritesRepositorySupportImpl implements FavoritesRepositorySup
         .selectFrom(favoritesEntity)
         .fetch();
   }
+
+  @Override
+  public List<FavoritesEntity> getFavoritesList(String userUuid) {
+    return jpaQueryFactory
+        .selectFrom(favoritesEntity)
+        .where(
+            favoritesEntity.user.userUuid.eq(userUuid)
+        )
+        .fetch();
+  }
+
+
+
 }

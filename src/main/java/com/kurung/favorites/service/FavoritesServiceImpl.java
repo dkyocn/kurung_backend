@@ -56,4 +56,20 @@ public class FavoritesServiceImpl implements FavoritesService {
       throw new CustomRunTimeException(CustomHttpStatus.FAVORITE_SAVE_ERROR);
     }
   }
+
+  @Override
+  public List<FavoritesDTO> getFavoritesList(String userUuid) {
+
+    // 1. 사용자 확인
+    UserDTO userDTO = userService.getUserByUuid(userUuid);
+
+    // 2. 즐겨찾기 목록 조회
+    List<FavoritesEntity> favoritesList = favoritesRepository.getFavoritesList(userUuid);
+
+    // 3. DTO로 변환하여 리턴
+    return favoritesList.stream()
+        .map(FavoritesDTO::new)
+        .collect(Collectors.toList());
+  }
+
 }

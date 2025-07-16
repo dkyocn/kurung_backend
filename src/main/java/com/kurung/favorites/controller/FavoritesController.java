@@ -47,6 +47,15 @@ public class FavoritesController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @GetMapping("/user")
+  @Operation(summary = "사용자 즐겨찾기 조회", description = "사용자의 즐겨찾기 전체 목록을 조회하는 API")
+  @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json"))
+  @Parameter(name = "userUuid", description = "사용자 UUID", example = "2025061406")
+  public ResponseEntity<List<FavoritesDTO>> getFavoritesByUser(@RequestParam String userUuid) {
+    return new ResponseEntity<>(favoritesService.getFavoritesList(userUuid), HttpStatus.OK);
+  }
+
+
 
 
 

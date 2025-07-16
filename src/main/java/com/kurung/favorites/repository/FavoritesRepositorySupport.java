@@ -6,4 +6,6 @@ import java.util.List;
 public interface FavoritesRepositorySupport {
 
   List<FavoritesEntity> getFavoritesById();
+
+  List<FavoritesEntity> getFavoritesList(String userUuid);
 }

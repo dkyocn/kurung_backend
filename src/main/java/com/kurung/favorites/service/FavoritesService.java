@@ -8,4 +8,6 @@ public interface FavoritesService {
   List<FavoritesDTO> getFavoriteList();
 
   void createFavorite(FavoritesDTO favoritesDTO);
+
+  List<FavoritesDTO> getFavoritesList(String userUuid);
 }
