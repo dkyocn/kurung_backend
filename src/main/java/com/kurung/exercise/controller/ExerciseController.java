@@ -213,7 +213,7 @@ public class ExerciseController {
       @RequestParam LocalDateTime timeMonth,
       @PathVariable String userUuid
   ) {
-    List<SummaryDTO> result = exerciseService.getMonthlyExerciseTime(timeMonth, userUuid);
+    List<SummaryDTO> result = exerciseService.getMonthlyExerciseTime(timeMonth , userUuid);
     return ResponseEntity.ok(result);
   }
 

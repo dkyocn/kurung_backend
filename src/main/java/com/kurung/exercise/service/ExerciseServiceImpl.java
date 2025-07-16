@@ -156,13 +156,14 @@ public class ExerciseServiceImpl implements ExerciseService {
       targetDuration = objective.getObjectiveDuration();
     }
 
-    int routineRate = targetRoutineCount > 0
-        ? (int) ((double) routineCount / targetRoutineCount * 100)
-        : 0;
-    int durationRate = targetDuration > 0
-        ? (int) ((double) totalDuration / targetDuration * 100)
-        : 0;
-    int goalAchievementRate = (routineRate + durationRate) / 2;
+    double routineRate = targetRoutineCount > 0
+        ? Math.round((double) routineCount / targetRoutineCount * 1000) / 10.0
+        : 0.0;
+    double durationRate = targetDuration > 0
+        ? Math.round((double) totalDuration / targetDuration * 1000) / 10.0
+        : 0.0;
+    double goalAchievementRate = Math.round((routineRate + durationRate) / 2 * 10) / 10.0;
+
 
     // 주차별 정보
     int[] weeklyRoutineCounts = new int[4];
@@ -326,7 +327,7 @@ public class ExerciseServiceImpl implements ExerciseService {
   public List<SummaryDTO> getMonthlyExerciseTime(LocalDateTime timeMonth, String userUuid) {
     UserDTO userByUuid = userService.getUserByUuid(userUuid);
 
-    List<ExerciseLogEntity> exerciseMonthList = exerciseLogRepository.getMonthlyExerciseTime(
+    List<ExerciseLogEntity> exerciseMonthList = exerciseLogRepository.findSummarysByUserUuid(
         userUuid, timeMonth.toLocalDate().withDayOfMonth(1).atStartOfDay(),
         timeMonth.toLocalDate().withDayOfMonth(timeMonth.toLocalDate().lengthOfMonth())
             .atStartOfDay()

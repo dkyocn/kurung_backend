@@ -22,7 +22,7 @@ public class SummaryDTO {
   protected int totalDuration;
   protected int totalKcal;
   protected int routineCount;
-  protected int goalAchievementRate;
+  protected double goalAchievementRate;
   protected List<SummaryDTO.ExerciseLogDTO> exerciseList;
 
   @Getter
