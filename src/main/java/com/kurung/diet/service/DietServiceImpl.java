@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -156,14 +158,14 @@ public class DietServiceImpl implements DietService {
   // 식단 영양성분 설정
   private NutritionDTO dietNutritionSetting(List<FoodEntity> foodEntityList) {
 
-    int sodium = 0;
-    int crab = 0;
-    int sugar = 0;
-    int transFat = 0;
-    int saturatedFat = 0;
-    int cholesterol = 0;
-    int protein = 0;
-    int kcal = 0;
+    int sodium;
+    int crab;
+    int sugar;
+    int transFat;
+    int saturatedFat;
+    int cholesterol;
+    int protein;
+    int kcal;
 
     sodium = foodEntityList.stream()
         .mapToInt(food -> nutritionalRepository.getNutritionalById(food.getFoodId(), DIETTYPE.FOOD)
@@ -252,6 +254,14 @@ public class DietServiceImpl implements DietService {
     return foodList.stream()
         .map(foodEntity -> FoodDTO.toFoodBuilder().foodEntity(foodEntity).build()).collect(
             Collectors.toList());
+  }
+
+  @Override
+  public Page<FoodDTO> getFoodByPage(String keyword, Pageable pageable) {
+
+    Page<FoodEntity> foodByPage = foodRepository.getFoodByPage(keyword, pageable);
+
+    return foodByPage.map(foodEntity -> FoodDTO.toFoodBuilder().foodEntity(foodEntity).build());
   }
 
 

@@ -17,15 +17,16 @@ import com.kurung.exercise.repository.ObjectiveRepository;
 import com.kurung.exercise.repository.RoutinesRepository;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -134,7 +135,8 @@ public class ExerciseServiceImpl implements ExerciseService {
     LocalDateTime start = date.atStartOfDay();
     LocalDateTime end = date.atTime(23, 59, 59);
 
-    List<ExerciseLogEntity> logs = exerciseLogRepository.findDailyLogsByUserUuid(userUuid, start, end);
+    List<ExerciseLogEntity> logs = exerciseLogRepository.findDailyLogsByUserUuid(userUuid, start,
+        end);
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
     int totalKcal = logs.stream().mapToInt(ExerciseLogEntity::getCalories).sum();
@@ -175,7 +177,8 @@ public class ExerciseServiceImpl implements ExerciseService {
         .withHour(23).withMinute(59).withSecond(59);
 
     // 2. 해당 월에 해당하는 목표 엔티티 조회
-    ObjectiveEntity objectiveEntity = objectiveRepository.getObjectiveByMonth(startOfMonth, endOfMonth, userUuid);
+    ObjectiveEntity objectiveEntity = objectiveRepository.getObjectiveByMonth(startOfMonth,
+        endOfMonth, userUuid);
 
     // 3. 결과가 없으면 null 반환
     if (objectiveEntity == null) {
@@ -275,6 +278,17 @@ public class ExerciseServiceImpl implements ExerciseService {
             .totalDuration(entity.getDuration())
             .build())
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public Page<ExerciseDTO> getExercisePage(String keyword, Pageable pageable) {
+
+    Page<ExerciseEntity> exercisePage = exerciseRepository.getExercisePage(keyword, pageable);
+    return exercisePage.map(
+        exerciseEntity -> ExerciseDTO.builder().exerciseId(exerciseEntity.getExerciseId())
+            .exerciseName(exerciseEntity.getExerciseName())
+            .exerciseCategory(exerciseEntity.getExerciseCategory())
+            .createdAt(exerciseEntity.getCreatedAt()).build());
   }
 
 

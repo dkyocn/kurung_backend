@@ -6,6 +6,8 @@ import com.kurung.diet.dto.FoodDTO;
 import com.kurung.diet.enumeration.MEAL;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface DietService {
 
@@ -25,5 +27,7 @@ public interface DietService {
     FoodDTO getFoodById(int id);
     // 음식 리스트 조회
     List<FoodDTO> getFoodList(String keyword);
+
+    Page<FoodDTO> getFoodByPage(String keyword, Pageable pageable);
 
 }

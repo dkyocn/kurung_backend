@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -125,5 +127,13 @@ public class DietController {
   @Parameter(name = "id", description = "음식 아이디", example = "1")
   public ResponseEntity<FoodDTO> getFoodById(@PathVariable int id) {
     return new ResponseEntity<>(dietService.getFoodById(id), HttpStatus.OK);
+  }
+
+  @GetMapping("/food/page")
+  @Operation(summary = "음식 페이지 조회", description = "음식 페이지 조회 시 사용하는 API")
+  @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @Parameter(name = "keyword", description = "검색어", example = "김치")
+  public ResponseEntity<Page<FoodDTO>> getFoodPage(@RequestParam(required = false) String keyword, Pageable pageable) {
+    return new ResponseEntity<>(dietService.getFoodByPage(keyword, pageable), HttpStatus.OK);
   }
 }

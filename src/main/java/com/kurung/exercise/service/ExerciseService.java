@@ -4,11 +4,12 @@ import com.kurung.exercise.dto.ExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
-
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ExerciseService {
 
@@ -49,5 +50,5 @@ public interface ExerciseService {
   // ExerciseMonthlyTime --------------------------
   List<SummaryDTO> getMonthlyExerciseTime(LocalDateTime timeMonth, String userUuid);
 
-
+  Page<ExerciseDTO> getExercisePage(String keyword, Pageable pageable);
 }
