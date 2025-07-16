@@ -10,4 +10,6 @@ public interface FavoritesRepositorySupport {
   List<FavoritesEntity> getFavoritesById();
 
   List<FavoritesEntity> getFavoritesList(String userUuid, FavoritesType favoritesType);
+
+  FavoritesEntity getFavoriteById(int id);
 }

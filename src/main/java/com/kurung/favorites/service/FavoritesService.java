@@ -10,4 +10,6 @@ public interface FavoritesService {
   void createFavorite(FavoritesDTO favoritesDTO);
 
   List<FavoritesDTO> getFavoritesList(String userUuid, FavoritesType favoritesType);
+
+  void deleteFavorite(int id);
 }
