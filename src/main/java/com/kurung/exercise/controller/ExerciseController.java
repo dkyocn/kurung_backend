@@ -1,7 +1,6 @@
 package com.kurung.exercise.controller;
 
 import com.kurung.exercise.dto.ExerciseDTO;
-import com.kurung.exercise.dto.MonthlySummaryDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
@@ -118,7 +117,7 @@ public class ExerciseController {
       @ApiResponse(responseCode = "200", description = "상태 변경 성공", content = @Content(mediaType = "application/json")),
       @ApiResponse(responseCode = "468", description = "해당 월 데이터 없음", content = @Content(mediaType = "application/json"))
   })
-  public ResponseEntity<MonthlySummaryDTO> getMonthlySummary(
+  public ResponseEntity<SummaryDTO.MonthlySummaryDTO> getMonthlySummary(
       @PathVariable String userUuid,
       @RequestParam YearMonth month
   ) {

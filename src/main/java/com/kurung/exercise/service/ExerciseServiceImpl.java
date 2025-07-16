@@ -4,11 +4,11 @@ import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.exercise.dto.ExerciseDTO;
-import com.kurung.exercise.dto.MonthlySummaryDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
+import com.kurung.exercise.dto.SummaryDTO.MonthlySummaryDTO;
 import com.kurung.exercise.entity.ExerciseEntity;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.exercise.entity.ObjectiveEntity;
@@ -133,43 +133,41 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   // SummaryMonthly ---------------------------------
   @Override
-  public MonthlySummaryDTO getMonthlySummary(String userUuid, YearMonth month) {
+  public SummaryDTO.MonthlySummaryDTO getMonthlySummary(String userUuid, YearMonth month) {
     LocalDate start = month.atDay(1);
     LocalDate end = month.atEndOfMonth();
 
     List<ExerciseLogEntity> logs = exerciseLogRepository.findSummarysByUserUuid(
-        userUuid, start.atStartOfDay(), end.atTime(23,59,59));
+        userUuid, start.atStartOfDay(), end.atTime(23, 59, 59)
+    );
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
     int totalKcal = logs.stream().mapToInt(ExerciseLogEntity::getCalories).sum();
-    int totalRoutineCount = (int) logs.stream()
-        .map(e -> e.getCreatedAt().toLocalDate())
-        .distinct()
-        .count();
+    int routineCount = logs.size(); // 운동 기록의 총 갯수로 변경
 
-    // ------ 목표값 조회 및 달성률 계산 ------
+    // 목표값 조회 및 달성률 계산
     ObjectiveEntity objective = objectiveRepository.getObjectiveByMonth(
-        start.atStartOfDay(), end.atTime(23,59,59), userUuid);
+        start.atStartOfDay(), end.atTime(23, 59, 59), userUuid);
 
     int targetRoutineCount = 0;
     int targetDuration = 0;
     if (objective != null) {
-      targetRoutineCount = objective.getObjectiveCount();      // 목표 횟수
-      targetDuration = objective.getObjectiveDuration();       // 목표 시간
+      targetRoutineCount = objective.getObjectiveCount();
+      targetDuration = objective.getObjectiveDuration();
     }
 
     int routineRate = targetRoutineCount > 0
-        ? (int) ((double) totalRoutineCount / targetRoutineCount * 100)
+        ? (int) ((double) routineCount / targetRoutineCount * 100)
         : 0;
     int durationRate = targetDuration > 0
         ? (int) ((double) totalDuration / targetDuration * 100)
         : 0;
     int goalAchievementRate = (routineRate + durationRate) / 2;
 
-    // ------ 주차별 카운트/합계 ------
-    int[] weeklyRoutineCounts = new int[4];  // 운동 기록 수
-    int[] weeklyDurations = new int[4];      // 운동 시간
-    int[] weeklyKcals = new int[4];          // 소모 칼로리
+    // 주차별 정보
+    int[] weeklyRoutineCounts = new int[4];
+    int[] weeklyDurations = new int[4];
+    int[] weeklyKcals = new int[4];
 
     for (ExerciseLogEntity log : logs) {
       int week = log.getCreatedAt().get(WeekFields.ISO.weekOfMonth()) - 1;
@@ -180,10 +178,10 @@ public class ExerciseServiceImpl implements ExerciseService {
       }
     }
 
-    return MonthlySummaryDTO.builder()
+    return SummaryDTO.MonthlySummaryDTO.builder()
         .totalDuration(totalDuration)
         .totalKcal(totalKcal)
-        .totalRoutineCount(totalRoutineCount)
+        .routineCount(routineCount)
         .goalAchievementRate(goalAchievementRate)
         .weeklyRoutineCounts(weeklyRoutineCounts)
         .weeklyDurations(weeklyDurations)
@@ -191,15 +189,14 @@ public class ExerciseServiceImpl implements ExerciseService {
         .build();
   }
 
-
-
   // SummaryDailyList --------------------------------
   @Override
   public SummaryDTO getSummaryDailyList(String userUuid, LocalDate date) {
     LocalDateTime start = date.atStartOfDay();
     LocalDateTime end = date.atTime(23, 59, 59);
 
-    List<ExerciseLogEntity> logs = exerciseLogRepository.findSummarysByUserUuid(userUuid, start, end);
+    List<ExerciseLogEntity> logs = exerciseLogRepository.findSummarysByUserUuid(userUuid, start,
+        end);
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
     int totalKcal = logs.stream().mapToInt(ExerciseLogEntity::getCalories).sum();
@@ -240,7 +237,8 @@ public class ExerciseServiceImpl implements ExerciseService {
         .withHour(23).withMinute(59).withSecond(59);
 
     // 2. 해당 월에 해당하는 목표 엔티티 조회
-    ObjectiveEntity objectiveEntity = objectiveRepository.getObjectiveByMonth(startOfMonth, endOfMonth, userUuid);
+    ObjectiveEntity objectiveEntity = objectiveRepository.getObjectiveByMonth(startOfMonth,
+        endOfMonth, userUuid);
 
     // 3. 결과가 없으면 null 반환
     if (objectiveEntity == null) {
