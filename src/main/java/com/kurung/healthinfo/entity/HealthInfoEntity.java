@@ -2,6 +2,7 @@ package com.kurung.healthinfo.entity;
 
 import com.kurung.common.entity.BaseEntity;
 import com.kurung.healthinfo.dto.HealthInfoDTO;
+import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,6 +47,16 @@ public class HealthInfoEntity extends BaseEntity {
 
   @Column(name = "MEMO")
   private String memo;
+
+  @Builder(builderMethodName = "createHealthInfoBuilder", builderClassName = "createHealthInfoBuilder")
+  public HealthInfoEntity(HealthInfoDTO healthInfoDTO, UserDTO userDTO) {
+    this.height = healthInfoDTO.getHeight();
+    this.weight = healthInfoDTO.getWeight();
+    this.bmi = healthInfoDTO.getBmi();
+    this.bodyfatpercent = healthInfoDTO.getBodyfatpercent();
+    this.memo = healthInfoDTO.getMemo();
+    this.user = UserEntity.createUserBuilder().userDTO(userDTO).build();
+  }
 
 
   public void updateHealthInfo(HealthInfoDTO healthInfoDTO) {
