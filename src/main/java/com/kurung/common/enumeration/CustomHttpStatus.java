@@ -76,10 +76,15 @@ public enum CustomHttpStatus {
 
   // HealthReport
 
+  //favorites
+  FAVORITE_SAVE_ERROR(556,"즐겨찾기 등록을 실패하였습니다."),
+
+
+
   // Community
   COMMUNITY_SAVE_ERROR(566, "커뮤니티 보드 저장을 실패하였습니다."),
   COMMUNITY_UPDATE_ERROR(567,"커뮤니티 수정을 실패하였습니다."),
-   COMMUNITY_DELETE_ERROR(568,"커뮤니티 삭제를 실패하였습니다."),
+  COMMUNITY_DELETE_ERROR(568,"커뮤니티 삭제를 실패하였습니다."),
 
   // HEALTH_INFO
   HEALTH_INFO_UPDATE_ERROR(573," 건강정보 수정을 실패하였습니다."),

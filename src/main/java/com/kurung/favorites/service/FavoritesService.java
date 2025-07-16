@@ -6,4 +6,6 @@ import java.util.List;
 public interface FavoritesService {
 
   List<FavoritesDTO> getFavoriteList();
+
+  void createFavorite(FavoritesDTO favoritesDTO);
 }

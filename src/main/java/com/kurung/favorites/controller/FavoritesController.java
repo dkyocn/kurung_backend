@@ -26,7 +26,7 @@ public class FavoritesController {
   private final FavoritesService favoritesService;
 
   @GetMapping("/list")
-  @Operation(summary = "즐겨찾기 단일 조회", description = "하나의 즐겨찾기를 ID로 조회하는 API")
+  @Operation(summary = "즐겨찾기 조회", description = "하나의 즐겨찾기를 ID로 조회하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
       @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
@@ -35,6 +35,18 @@ public class FavoritesController {
   public ResponseEntity<List<FavoritesDTO>> getFavoriteById() {
     return new ResponseEntity<>(favoritesService.getFavoriteList(), HttpStatus.OK);
   }
+
+  @PostMapping("/create")
+  @Operation(summary = "즐겨찾기 저장", description = "새 즐겨찾기를 등록할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "579", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  public ResponseEntity<HttpStatus> createFavorite(@RequestBody FavoritesDTO favoritesDTO) {
+    favoritesService.createFavorite(favoritesDTO);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
 
 
 
