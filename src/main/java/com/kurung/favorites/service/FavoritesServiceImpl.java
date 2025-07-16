@@ -62,4 +62,21 @@ public class FavoritesServiceImpl implements FavoritesService {
         .collect(Collectors.toList());
   }
 
+  @Override
+  public void deleteFavorite(int id) {
+    // 삭제할 즐겨찾기 조회
+    FavoritesEntity favoritesEntity = favoritesRepository.getFavoriteById(id);
+
+    if (favoritesEntity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.FAVORITE_NOT_FOUND);
+    }
+
+    try {
+      favoritesRepository.delete(favoritesEntity);
+    } catch (Exception e) {
+      throw new CustomRunTimeException(CustomHttpStatus.FAVORITES_DELETE_ERROR);
+    }
+  }
+
+
 }

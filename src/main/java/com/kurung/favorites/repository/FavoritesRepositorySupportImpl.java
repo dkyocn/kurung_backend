@@ -61,4 +61,13 @@ public class FavoritesRepositorySupportImpl implements FavoritesRepositorySuppor
       case COMMUNITY -> favoritesEntity.community.isNotNull();
     };
   }
+
+  @Override
+  public FavoritesEntity getFavoriteById(int id) {
+    return jpaQueryFactory
+        .selectFrom(favoritesEntity)
+        .where(favoritesEntity.favoritesId.eq(id))
+        .fetchOne();
+  }
+
 }

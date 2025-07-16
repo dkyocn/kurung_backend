@@ -78,6 +78,7 @@ public enum CustomHttpStatus {
 
   //favorites
   FAVORITE_SAVE_ERROR(556,"즐겨찾기 등록을 실패하였습니다."),
+  FAVORITES_DELETE_ERROR(557,"즐겨찾기 삭제를 실패하였습니다."),
 
 
 
