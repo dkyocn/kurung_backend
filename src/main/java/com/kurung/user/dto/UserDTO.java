@@ -4,10 +4,7 @@ import com.kurung.user.entity.UserEntity;
 import com.kurung.user.enumeration.Gender;
 import com.kurung.user.enumeration.UserPath;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.Date;
@@ -26,7 +23,7 @@ public class UserDTO {
     protected boolean userFaceLoginYN;
     @Schema(description = "페이스 로그인 백터", example = "0.1234, -0.5678, 0.8912, -0.2345, 0.6789, ... ,-0.4321, 0.0987, -0.6543, 0.3210, -0.9876")
     protected String userFaceLoginRef;
-    @Schema(description = "사용자 비밀번호", example = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918")
+    @Schema(description = "사용자 비밀번호", example = "SHA-256 암호화 비밀번호")
     protected String userPwd;
     @Schema(description = "사용자 닉네임",example = "송민서")
     protected String userNick;
@@ -44,6 +41,8 @@ public class UserDTO {
     protected boolean isActive;
     @Schema(description = "관리자 여부", example = "true")
     protected boolean adminYN;
+    @Schema(description = "리프레시 토큰 발급", example = "리프레시 토큰")
+    protected String userRefreshToken;
 
     @Builder(builderMethodName = "toUserBuilder", builderClassName = "toUserBuilder")
     public UserDTO(UserEntity userEntity) {
