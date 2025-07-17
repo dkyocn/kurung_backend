@@ -74,6 +74,7 @@ public class LifeLogServiceImpl implements LifeLogService{
 
     try {
       LifeLogEntity logEntity = LifeLogEntity.builder()
+          .lifelogDate(lifeLogDTO.getLifelogDate())
           .emotion(lifeLogDTO.getEmotion())
           .emotionWrite(lifeLogDTO.getEmotionWrite())
           .bedTime(lifeLogDTO.getBedTime())
