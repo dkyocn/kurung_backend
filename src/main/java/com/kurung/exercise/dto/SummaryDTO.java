@@ -45,6 +45,7 @@ public class SummaryDTO {
     protected String postFeeling;
     protected String physicalNote;
     protected String memo;
+    protected LocalDateTime exerciseDate;
     protected LocalDateTime createdAt;
 
     @Builder(builderMethodName = "toExerciseLogBuilder", builderClassName = "toExerciseLogBuilder")
@@ -67,6 +68,7 @@ public class SummaryDTO {
       this.postFeeling = entity.getPostFeeling();
       this.physicalNote = entity.getPhysicalNote();
       this.memo = entity.getMemo();
+      this.exerciseDate = entity.getExerciseDate();
       this.createdAt = entity.getCreatedAt();
     }
 

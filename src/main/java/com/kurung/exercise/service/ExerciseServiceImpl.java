@@ -171,7 +171,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     int[] weeklyKcals = new int[4];
 
     for (ExerciseLogEntity log : logs) {
-      int week = log.getCreatedAt().get(WeekFields.ISO.weekOfMonth()) - 1;
+      int week = log.getExerciseDate().get(WeekFields.ISO.weekOfMonth()) - 1;
       if (week >= 0 && week < 4) {
         weeklyRoutineCounts[week]++;
         weeklyDurations[week] += log.getDuration();
@@ -335,7 +335,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     return exerciseMonthList.stream()
         .map(entity -> SummaryDTO.builder()
-            .date(entity.getCreatedAt().toLocalDate())
+            .date(entity.getExerciseDate().toLocalDate())
             .totalDuration(entity.getDuration())
             .build())
         .collect(Collectors.toList());
