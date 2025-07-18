@@ -61,9 +61,6 @@ public class ExerciseLogEntity {
   @Column(name = "MEMO")
   private String memo;
 
-  @Column(name = "EXERCISE_DATE", nullable = false)
-  private LocalDateTime exerciseDate;
-
   @CreatedDate
   @Column(name = "CREATED_AT", nullable = false)
   private LocalDateTime createdAt;
@@ -91,7 +88,6 @@ public class ExerciseLogEntity {
     this.postFeeling = exerciseLogDTO.getPostFeeling();
     this.physicalNote = exerciseLogDTO.getPhysicalNote();
     this.memo = exerciseLogDTO.getMemo();
-    this.exerciseDate = exerciseLogDTO.getExerciseDate();
     this.user = UserEntity.createUserBuilder().userDTO(userDTO).build();
 
     // ExerciseDTO를 ExerciseEntity로 변환
@@ -111,6 +107,5 @@ public class ExerciseLogEntity {
     this.postFeeling = dto.getPostFeeling();
     this.physicalNote = dto.getPhysicalNote();
     this.memo = dto.getMemo();
-    this.exerciseDate = dto.getExerciseDate();
   }
 }
