@@ -42,12 +42,13 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
 
   // SummaryDaily(월간, 일일, 건강리포트) -----------------------------------------
   @Override
-  public List<ExerciseLogEntity> findSummarysByUserUuid(String userUuid, LocalDateTime start, LocalDateTime end) {
+  public List<ExerciseLogEntity> findSummarysByUserUuid(String userUuid, LocalDateTime start,
+      LocalDateTime end) {
     return queryFactory
         .selectFrom(exerciseLogEntity)
         .where(
             exerciseLogEntity.user.userUuid.eq(userUuid),
-            exerciseLogEntity.createdAt.between(start, end)
+            exerciseLogEntity.exerciseDate.between(start, end)
         )
         .fetch();
   }

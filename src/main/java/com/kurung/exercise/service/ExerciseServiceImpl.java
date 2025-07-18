@@ -164,14 +164,13 @@ public class ExerciseServiceImpl implements ExerciseService {
         : 0.0;
     double goalAchievementRate = Math.round((routineRate + durationRate) / 2 * 10) / 10.0;
 
-
     // 주차별 정보
     int[] weeklyRoutineCounts = new int[4];
     int[] weeklyDurations = new int[4];
     int[] weeklyKcals = new int[4];
 
     for (ExerciseLogEntity log : logs) {
-      int week = log.getCreatedAt().get(WeekFields.ISO.weekOfMonth()) - 1;
+      int week = log.getExerciseDate().get(WeekFields.ISO.weekOfMonth()) - 1;
       if (week >= 0 && week < 4) {
         weeklyRoutineCounts[week]++;
         weeklyDurations[week] += log.getDuration();
@@ -335,7 +334,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     return exerciseMonthList.stream()
         .map(entity -> SummaryDTO.builder()
-            .date(entity.getCreatedAt().toLocalDate())
+            .date(entity.getExerciseDate().toLocalDate())
             .totalDuration(entity.getDuration())
             .build())
         .collect(Collectors.toList());
