@@ -20,5 +20,14 @@ public class UserRepositorySupportImpl implements UserRepositorySupport {
                 .where(userEntity.userUuid.eq(userUuid))
                 .fetchOne();
     }
+
+    @Override
+    // 사용자 아이디로 조회
+    public UserEntity getByUserId(String userid) {
+        return jpaQueryFactory
+                .selectFrom(userEntity)
+                .where(userEntity.userId.eq(userid))
+                .fetchOne();
+    }
 }
 
