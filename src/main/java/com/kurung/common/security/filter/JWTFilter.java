@@ -1,6 +1,6 @@
-package com.kurung.security.filter;
+package com.kurung.common.security.filter;
 
-import com.kurung.security.jwt.JWTUtil;
+import com.kurung.common.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

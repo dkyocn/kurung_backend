@@ -1,10 +1,8 @@
-package com.kurung.security.filter;
+package com.kurung.common.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kurung.security.jwt.JWTUtil;
+import com.kurung.common.util.JWTUtil;
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.entity.UserEntity;
-import com.kurung.user.repository.UserRepository;
 import com.kurung.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,13 +13,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {

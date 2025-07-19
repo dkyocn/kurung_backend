@@ -13,6 +13,7 @@ import java.sql.Date;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class UserDTO {
 
     @Schema(description = "사용자 UUID", example = "2025061401")

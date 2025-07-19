@@ -1,8 +1,6 @@
-package com.kurung.security.model.service;
+package com.kurung.common.security.service;
 
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.entity.UserEntity;
-import com.kurung.user.repository.UserRepository;
 import com.kurung.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

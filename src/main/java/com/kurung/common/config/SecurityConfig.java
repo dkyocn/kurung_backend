@@ -1,12 +1,13 @@
-package com.kurung.security.core;
+package com.kurung.common.config;
 
-import com.kurung.security.filter.JWTFilter;
-import com.kurung.security.filter.LoginFilter;
-import com.kurung.security.handler.CustomLogoutHandler;
-import com.kurung.security.jwt.JWTUtil;
-import com.kurung.security.model.service.CustomUserDetailsService;
+import com.kurung.common.security.filter.JWTFilter;
+import com.kurung.common.security.filter.LoginFilter;
+import com.kurung.common.security.handler.CustomLogoutHandler;
+import com.kurung.common.util.JWTUtil;
+import com.kurung.common.security.service.CustomUserDetailsService;
 import com.kurung.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,18 +24,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
 
     private final JWTUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
     private final UserService userService;
-
-    public SecurityConfig(JWTUtil jwtUtil, CustomUserDetailsService userDetailsService
-                           ,UserService userService) {
-        this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
-        this.userService = userService;
-    }
 
     // 로그아웃 핸들러 Bean 등록
     @Bean

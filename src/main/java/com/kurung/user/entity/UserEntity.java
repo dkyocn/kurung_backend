@@ -143,5 +143,4 @@ public class UserEntity {
  public void updateRefresh(String refreshToken){
     this.userRefreshToken = refreshToken;
  }
-
 }

@@ -1,6 +1,6 @@
-package com.kurung.security.controller;
+package com.kurung.common.security.controller;
 
-import com.kurung.security.jwt.JWTUtil;
+import com.kurung.common.util.JWTUtil;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.service.UserService;
@@ -59,7 +59,7 @@ public class ReIssueController {
             // access 유효 + refresh 만료 + 로그인 연장 요청
             if (!isAccessTokenExpired && isRefreshTokenExpired) {
                 if ("true".equalsIgnoreCase(extendLogin)) {
-                    UserDTO userDTO = userService.getUserByUuid(userIdFromToken);
+                    UserDTO userDTO = userService.getUserByUuid(jwtUtil.getUserUuidFromToken(accessToken));
 
                     String newRefreshToken = jwtUtil.generateToken(userDTO, "refresh");
                     userService.updateRefresh(userDTO, newRefreshToken);

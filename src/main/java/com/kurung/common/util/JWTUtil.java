@@ -1,7 +1,6 @@
-package com.kurung.security.jwt;
+package com.kurung.common.util;
 
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.entity.UserEntity;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,6 +61,11 @@ public class JWTUtil {
     // 토큰 만료 여부 확인
     public boolean isTokenExpired(String token) {
         return getClaimsFromToken(token).getExpiration().before(new Date());
+    }
+
+    //토큰에서 Uuid 추출
+    public String getUserUuidFromToken(String token){
+        return getClaimsFromToken(token).get("userUuid", String.class);
     }
 
     // 토큰에서 사용자 ID 추출

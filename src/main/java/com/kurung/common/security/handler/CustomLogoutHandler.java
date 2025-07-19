@@ -1,6 +1,6 @@
-package com.kurung.security.handler;
+package com.kurung.common.security.handler;
 
-import com.kurung.security.jwt.JWTUtil;
+import com.kurung.common.util.JWTUtil;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,23 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 
-    /**
-     * SecurityFileterChain 의 LogoutFileter 가 LogoutHanlder (LogoutSuccessHandler 의 부모임)를 작동시키도록 기본 구조가 되어있음
-     * 이 프로젝트에서 요구되는 로그아웃 처리 코드를 별도로 작성해서,
-     * LogoutFilter 에 의해 자동 실행되게 하려면 LogoutHandler 를 상속받은 후손클래스 만들어서 메소드 오버라이딩시에
-     * 원하는 코드 작성해 넣으면 됨
-     * */
-
     public class CustomLogoutHandler implements LogoutHandler {
-
-        /**
-         * 로그인시 발급된 토큰을 제거하는 처리를 해야함
-         * 요청객체 (request) 에서 Header 에 기록된 인가(Authorization) 정보에서 토큰을 분리 추출함
-         * 토큰(json 구조)에서 userid 정보를 추출함 => userid 를 db로 보내서 RefreshToken 값을 조회해 옴
-         * 토큰 존재 확인하고 해당 토큰을 db에서 삭제 처리함
-         * 클라이언트에게 로그아웃 요청 성공 코드를 보냄 => response 를 통해 응답 처리함
-         * 오류 발생시에는 에러에 대한 http status code 를 선택해서 response 를 통해 응답 처리함
-         * */
 
         private final JWTUtil jwtUtil;
         private final UserService userService;
@@ -43,15 +27,14 @@ import org.springframework.stereotype.Component;
             String authorization = request.getHeader("Authorization");
 
             if (authorization != null && authorization.startsWith("Bearer ")) {
-                // accessToken 추출함
                 String accessToken = authorization.substring("Bearer ".length()).trim();
 
                 try {
-                    String userId = jwtUtil.getUseridFromToken(accessToken);
-                    if (userId != null) {
-                        UserDTO userByUserId = userService.getUserByUserId(userId);
-                        // userId 와 refreshToken 으로 id 조회해서 db 정보 삭제 처리
-                        userService.updateRefresh(userByUserId, new String());
+                    String userUuid = jwtUtil.getUserUuidFromToken(accessToken); //토큰에서 Uuid꺼냄
+
+                    if (userUuid != null) {
+                        UserDTO userByUserUuid = userService.getUserByUuid(userUuid); //Uuid로 유저 DTO 조회
+                        userService.updateRefresh(userByUserUuid, new String());
 
                         response.setStatus(HttpServletResponse.SC_OK);
                         response.getWriter().write("로그아웃 성공");
