@@ -22,12 +22,12 @@ import org.springframework.stereotype.Component;
 
         @Override
         public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-            log.info("로그아웃 커스텀 클래스의 logout() 메소드 실행됨....");
+
 
             String authorization = request.getHeader("Authorization");
 
-            if (authorization != null && authorization.startsWith("Bearer ")) {
-                String accessToken = authorization.substring("Bearer ".length()).trim();
+            if (authorization != null && !authorization.isEmpty()) {
+                String accessToken = authorization.trim();
 
                 try {
                     String userUuid = jwtUtil.getUserUuidFromToken(accessToken); //토큰에서 Uuid꺼냄

@@ -113,7 +113,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
                 // 로그아웃 설정
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
+                        .logoutUrl("api/v1/kurung/user/logout")
                         .addLogoutHandler(customLogoutHandler())
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(HttpServletResponse.SC_OK);
