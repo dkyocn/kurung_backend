@@ -48,21 +48,19 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // 토큰 추출
-        String accessTokenHeader = request.getHeader("Authorization");
-        String refreshTokenHeader = request.getHeader("RefreshToken");
+        String accessToken = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("RefreshToken");
 
-        if (accessTokenHeader == null || accessTokenHeader.isEmpty()) {
+        if (accessToken == null || accessToken.isEmpty()) {
             log.warn("Authorization 헤더가 비어있음");
         }
-        if (refreshTokenHeader == null || refreshTokenHeader.isEmpty()) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
             log.warn("RefreshToken 헤더가 비어있음");
         }
 
         try {
             // 토큰이 모두 있을 때만 검증
-            if (accessTokenHeader != null && refreshTokenHeader != null) {
-                String accessToken = accessTokenHeader.trim();
-                String refreshToken = refreshTokenHeader.trim();
+            if (accessToken != null && refreshToken != null) {
 
                 boolean isAccessExpired = jwtUtil.isTokenExpired(accessToken);
                 boolean isRefreshExpired = jwtUtil.isTokenExpired(refreshToken);
