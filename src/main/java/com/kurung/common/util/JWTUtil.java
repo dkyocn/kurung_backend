@@ -87,7 +87,6 @@ public class JWTUtil {
     public Long getAccessExpiration() {
         return accessExpiration;
     }
-
     public Long getRefreshExpiration() {
         return refreshExpiration;
     }

@@ -35,13 +35,10 @@ public class JWTFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-        log.info("JWTFilter 작동중 - requestURI: {}", requestURI);
 
         // 로그인, 회원가입 등은 필터 검사 없이 바로 통과
         if (isExcludedUrl(requestURI)) {
@@ -51,21 +48,19 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // 토큰 추출
-        String accessTokenHeader = request.getHeader("Authorization");
-        String refreshTokenHeader = request.getHeader("RefreshToken");
+        String accessToken = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("RefreshToken");
 
-        if (accessTokenHeader == null || accessTokenHeader.isEmpty()) {
+        if (accessToken == null || accessToken.isEmpty()) {
             log.warn("Authorization 헤더가 비어있음");
         }
-        if (refreshTokenHeader == null || refreshTokenHeader.isEmpty()) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
             log.warn("RefreshToken 헤더가 비어있음");
         }
 
         try {
             // 토큰이 모두 있을 때만 검증
-            if (accessTokenHeader != null && refreshTokenHeader != null) {
-                String accessToken = accessTokenHeader.replace("Bearer ", "");
-                String refreshToken = refreshTokenHeader.replace("Bearer ", "");
+            if (accessToken != null && refreshToken != null) {
 
                 boolean isAccessExpired = jwtUtil.isTokenExpired(accessToken);
                 boolean isRefreshExpired = jwtUtil.isTokenExpired(refreshToken);

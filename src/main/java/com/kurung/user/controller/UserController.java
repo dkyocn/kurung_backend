@@ -3,13 +3,14 @@ package com.kurung.user.controller;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.Map;
+import com.kurung.common.security.service.SessionService;
 
 @Slf4j
 @RestController
@@ -19,12 +20,14 @@ public class UserController {
 
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final SessionService sessionService;
 
-    // 사용자 조회 (기존 기능)
-    @GetMapping("/{userUuid}")
-    public ResponseEntity<UserDTO> getUserByUuid(@PathVariable String userUuid) {
-        return ResponseEntity.ok(userService.getUserByUuid(userUuid));
+    //SessionService 테스트
+    @GetMapping("/tokenuser")
+    public ResponseEntity<UserDTO> getMyInfo() {
+        return new ResponseEntity<>(sessionService.getUserFromToken(), HttpStatus.OK);
     }
+
 
 // 아이디 중복 체크
 // 회원 가입
