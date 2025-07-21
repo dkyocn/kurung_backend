@@ -24,8 +24,8 @@ public class UserController {
 
     //SessionService 테스트
     @GetMapping("/tokenuser")
-    public ResponseEntity<UserDTO> getMyInfo(HttpServletRequest request) {
-        return new ResponseEntity<>(sessionService.getUserFromToken(request), HttpStatus.OK);
+    public ResponseEntity<UserDTO> getMyInfo() {
+        return new ResponseEntity<>(sessionService.getUserFromToken(), HttpStatus.OK);
     }
 
 

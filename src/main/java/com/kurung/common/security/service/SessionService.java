@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -18,8 +20,15 @@ public class SessionService {
     private final UserService userService;
 
     //사용자 Uuid를 추출해서 정보를 가져오기
-    public UserDTO getUserFromToken(HttpServletRequest request){
-        String authorizationHeader = request.getHeader("Authorization");
+    public UserDTO getUserFromToken(){
+
+        // RequestContextHolder를 통해 현재 요청의 HttpServletRequest 가져오기
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            log.error("HttpServletRequest를 가져올 수 없습니다.");
+            return null;
+        }
+        String authorizationHeader = attributes.getRequest().getHeader("Authorization");
 
         try {
             //1단계. JWTUtil에서 Uuid 추출하기
