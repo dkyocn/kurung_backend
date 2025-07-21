@@ -39,7 +39,6 @@ public class JWTFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-        log.info("JWTFilter 작동중 - requestURI: {}", requestURI);
 
         // 로그인, 회원가입 등은 필터 검사 없이 바로 통과
         if (isExcludedUrl(requestURI)) {
@@ -62,8 +61,8 @@ public class JWTFilter extends OncePerRequestFilter {
         try {
             // 토큰이 모두 있을 때만 검증
             if (accessTokenHeader != null && refreshTokenHeader != null) {
-                String accessToken = accessTokenHeader.replace("Bearer ", "");
-                String refreshToken = refreshTokenHeader.replace("Bearer ", "");
+                String accessToken = accessTokenHeader.trim();
+                String refreshToken = refreshTokenHeader.trim();
 
                 boolean isAccessExpired = jwtUtil.isTokenExpired(accessToken);
                 boolean isRefreshExpired = jwtUtil.isTokenExpired(refreshToken);

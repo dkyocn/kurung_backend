@@ -76,7 +76,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/notice/detail/*", "/board/btop3", "/board/search/**").permitAll()
 
                         // 인증 필요
-                        .requestMatchers("/logout").authenticated()
+                        .requestMatchers("/api/v1/kurung/user/logout").authenticated()
 
                         // 관리자 권한 필요
                         .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -113,7 +113,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
                 // 로그아웃 설정
                 .logout(logout -> logout
-                        .logoutUrl("api/v1/kurung/user/logout")
+                        .logoutUrl("/api/v1/kurung/user/logout")
                         .addLogoutHandler(customLogoutHandler())
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(HttpServletResponse.SC_OK);

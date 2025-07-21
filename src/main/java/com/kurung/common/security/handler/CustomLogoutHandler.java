@@ -14,47 +14,46 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+public class CustomLogoutHandler implements LogoutHandler {
 
-    public class CustomLogoutHandler implements LogoutHandler {
+  private final JWTUtil jwtUtil;
+  private final UserService userService;
 
-        private final JWTUtil jwtUtil;
-        private final UserService userService;
+  @Override
+  public void logout(HttpServletRequest request, HttpServletResponse response,
+      Authentication authentication) {
 
-        @Override
-        public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    String authorization = request.getHeader("Authorization");
 
+    if (authorization != null && !authorization.isEmpty()) {
+      String accessToken = authorization.trim();
 
-            String authorization = request.getHeader("Authorization");
+      try {
+        String userUuid = jwtUtil.getUserUuidFromToken(accessToken); //토큰에서 Uuid꺼냄
 
-            if (authorization != null && !authorization.isEmpty()) {
-                String accessToken = authorization.trim();
+        if (userUuid != null) {
+          UserDTO userByUserUuid = userService.getUserByUuid(userUuid); //Uuid로 유저 DTO 조회
+          userService.updateRefresh(userByUserUuid, new String());
 
-                try {
-                    String userUuid = jwtUtil.getUserUuidFromToken(accessToken); //토큰에서 Uuid꺼냄
-
-                    if (userUuid != null) {
-                        UserDTO userByUserUuid = userService.getUserByUuid(userUuid); //Uuid로 유저 DTO 조회
-                        userService.updateRefresh(userByUserUuid, new String());
-
-                        response.setStatus(HttpServletResponse.SC_OK);
-                        response.getWriter().write("로그아웃 성공");
-                    }
-                } catch (Exception e) {
-                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                    try {
-                        response.getWriter().write("로그아웃 처리 중 오류 발생");
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            } else {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                try {
-                    response.getWriter().write("유효하지 않은 요청");
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
+          response.setStatus(HttpServletResponse.SC_OK);
+          response.getWriter().write("로그아웃 성공");
         }
+      } catch (Exception e) {
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        try {
+          response.getWriter().write("로그아웃 처리 중 오류 발생");
+        } catch (Exception e1) {
+          e1.printStackTrace();
+        }
+      }
+    } else {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      try {
+        response.getWriter().write("유효하지 않은 요청");
+      } catch (Exception e1) {
+        e1.printStackTrace();
+      }
     }
+  }
+}
 

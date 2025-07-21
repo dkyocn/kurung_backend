@@ -4,13 +4,13 @@ import com.kurung.common.util.JWTUtil;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
-@Service
+@RequiredArgsConstructor
 @Slf4j
+@Service
 
 public class SessionService {
 
@@ -26,7 +26,6 @@ public class SessionService {
             String userUuid = jwtUtil.getUserUuidFromToken(authorizationHeader.trim());
             //2단계. UserService로 사용자 정보 조회하기
             return userService.getUserByUuid(userUuid);
-            //예외 처리는 필수로 처리하자! ㅋㅋ
         } catch (Exception e) {
             log.error("토큰 분석 혹은 사용자 조회에 실패했습니다.", e);
             return null;
