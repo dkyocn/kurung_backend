@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.kurung.user.auth.dto.EmailRequestDTO;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,10 +38,9 @@ public class AuthController {
 
   // 인증 코드 검증
   @PostMapping("/verify-code")
-  public ResponseEntity<Map<String, Object>> verifyCode(@RequestParam String email,
-      @RequestParam String code) {
+  public ResponseEntity<Map<String, Object>> verifyCode(@RequestBody EmailRequestDTO request) {
     Map<String, Object> response = new HashMap<>();
-    boolean verified = emailService.verifyCode(email, code);
+    boolean verified = emailService.verifyCode(request.getEmail(), request.getCode());
     response.put("verified", verified);
     response.put("message", verified ? "인증 성공" : "인증 실패 - 코드가 일치하지 않거나 만료되었습니다.");
     return ResponseEntity.ok(response);
