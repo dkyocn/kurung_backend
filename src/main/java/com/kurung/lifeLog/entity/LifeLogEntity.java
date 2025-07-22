@@ -31,6 +31,8 @@ public class LifeLogEntity extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "LIFELOG_ID")
   private int lifelogId;
+  @Column(name = "LIFELOG_DATE")
+  private LocalDateTime lifelogDate;
   @Column(name = "EMOTION", length = 50, nullable = false)
   private String emotion;
   @Column(name = "EMOTION_WRITE", length = 300, nullable = false)
@@ -57,4 +59,5 @@ public class LifeLogEntity extends BaseEntity {
      this.activity = lifeLogDTO.getActivity();
      this.memo = lifeLogDTO.getMemo();
   }
-}
+
+ }

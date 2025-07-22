@@ -150,7 +150,6 @@ public class LifeLogServiceImpl implements LifeLogService{
       YearMonth yearMonth = YearMonth.parse(date);
       LocalDate firstDayOfMonth = yearMonth.atDay(1);
       LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
-
       LocalDateTime startDateTime = firstDayOfMonth.atStartOfDay();
       LocalDateTime endDateTime = lastDayOfMonth.atTime(23, 59, 59);
 
@@ -199,12 +198,12 @@ public class LifeLogServiceImpl implements LifeLogService{
           .countLifeLog(countLifeLog)
           .countHappy(emotionCount.getOrDefault("행복함", 0L).intValue())
           .countCalm(emotionCount.getOrDefault("평온함", 0L).intValue())
-          .countHappy(emotionCount.getOrDefault("행복함", 0L).intValue())
-          .countCalm(emotionCount.getOrDefault("평온함", 0L).intValue())
-          .countHappy(emotionCount.getOrDefault("행복함", 0L).intValue())
-          .countCalm(emotionCount.getOrDefault("평온함", 0L).intValue())
-          .countHappy(emotionCount.getOrDefault("행복함", 0L).intValue())
-          .countCalm(emotionCount.getOrDefault("평온함", 0L).intValue())
+          .countTired(emotionCount.getOrDefault("피곤함", 0L).intValue())
+          .countSad(emotionCount.getOrDefault("슬픔", 0L).intValue())
+          .countAngry(emotionCount.getOrDefault("화남", 0L).intValue())
+          .countAnxious(emotionCount.getOrDefault("불안함", 0L).intValue())
+          .countExcited(emotionCount.getOrDefault("신남", 0L).intValue())
+          .countDepressed(emotionCount.getOrDefault("우울함", 0L).intValue())
           .build();
     }catch (Exception e){
       throw new CustomRunTimeException(CustomHttpStatus.MONTHLYLIFELOG_NOT_FOUND);
