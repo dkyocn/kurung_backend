@@ -105,7 +105,7 @@ public class ExerciseController {
   })
   public ResponseEntity<SummaryDTO> getSummaryDailyList(
       @PathVariable String userUuid,
-      @RequestParam LocalDate date
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
   ) {
     return new ResponseEntity<>(exerciseService.getSummaryDailyList(userUuid, date), HttpStatus.OK);
   }
@@ -196,6 +196,17 @@ public class ExerciseController {
   @Parameter(name = "id", description = "회원 아이디", example = "1")
   public ResponseEntity<ExerciseDTO> getExerciseById(@PathVariable int id) {
     return new ResponseEntity<>(exerciseService.getExerciseById(id), HttpStatus.OK);
+  }
+
+  @GetMapping("/list")
+  @Operation(summary = "운동종목 및 url DB 연동 확인", description = "운동종목 및 url entity, dto 연동 확인")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "469", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  public ResponseEntity<List<ExerciseDTO>> getAllExercises() {
+    List<ExerciseDTO> list = exerciseService.getAllExercises();
+    return ResponseEntity.ok(list);
   }
 
   // ExerciseMonthlyTime(건강리포트) ---------------------------------
