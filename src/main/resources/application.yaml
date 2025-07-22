@@ -23,7 +23,6 @@ spring:
     #    password: oracle
     driver-class-name: oracle.jdbc.driver.OracleDriver
 
-
   jpa:
     hibernate:
       ddl-auto: none
@@ -53,3 +52,16 @@ jwt:
   access_expiration: 1800000
   # refresh token 1day (24h * 60min * 60sec * 1000milisec: 86400000)
   refresh_expiration: 84600000
+
+  spring:
+    mail:
+      host: smtp.gmail.com
+      port: 587
+      username: kurunghelpdesk@gmail.com
+      password: ilko lpxn eyti fmkh
+      properties:
+        mail:
+          smtp:
+            auth: true
+            starttls:
+              enable: true
