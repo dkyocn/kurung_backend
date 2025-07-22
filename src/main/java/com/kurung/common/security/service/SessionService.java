@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @AllArgsConstructor
 @Service
@@ -31,6 +33,16 @@ public class SessionService {
             return null;
         }
     }
+
+    public UserDTO getUserFromToken() {
+        HttpServletRequest request =
+            ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+
+        return getUserFromToken(request); // 기존에 있던 메서드 재사용!
+    }
+
+
+
 }
 
 

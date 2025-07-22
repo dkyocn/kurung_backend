@@ -9,6 +9,10 @@ public enum CustomHttpStatus {
   // User
   USER_NOT_FOUND(418, "해당 id의 사용자가 없습니다."),
 
+  //SNS Login
+  SOCIAL_LOGIN_FAILED(419,"카카오 로그인 처리 중 오류가 발생했습니다."),
+  DUPLICATE_EMAIL(420, "이미 해당 이메일로 가입된 계정이 있습니다."),
+
   // Stress
   STRESSRELIEF_NOT_FOUND(453, "해당 id의 사용자가 없습니다."),
 
@@ -48,10 +52,6 @@ public enum CustomHttpStatus {
   COMMUNITY_NOT_FOUND(497, "해당 id의 커뮤니티가 없습니다."),
 
   // 5XX Server Error 506, 512 ~ 599
-
-  // User
-
-  // Stress
 
   // Diagnosis
 

@@ -25,7 +25,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 url.equals("/favicon.ico") ||
                 url.equals("/api/v1/kurung/user/login") ||
                 url.equals("/api/v1/kurung/user/signup") ||
-                url.equals("/api/v1/kurung/user/idchk") ||
+                url.equals("/api/v1/kurung/user/check-userid") ||
                 url.equals("/reissue") ||
                 url.endsWith(".png") ||
                 url.startsWith("/js/") ||

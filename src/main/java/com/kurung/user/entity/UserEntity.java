@@ -143,4 +143,7 @@ public class UserEntity {
  public void updateRefresh(String refreshToken){
     this.userRefreshToken = refreshToken;
  }
+  public void assignUserUuid(String uuid) {
+    this.userUuid = uuid;
+  }
 }
