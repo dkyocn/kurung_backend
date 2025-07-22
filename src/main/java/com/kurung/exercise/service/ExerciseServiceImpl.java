@@ -193,11 +193,15 @@ public class ExerciseServiceImpl implements ExerciseService {
   // SummaryDailyList --------------------------------
   @Override
   public SummaryDTO getSummaryDailyList(String userUuid, LocalDate date) {
-    LocalDateTime start = date.atStartOfDay();
-    LocalDateTime end = date.atTime(23, 59, 59);
+    LocalDateTime start = date.atStartOfDay();           // 2025-06-02 00:00:00
+    LocalDateTime end = date.plusDays(1).atStartOfDay(); // 2025-06-03 00:00:00
 
     List<ExerciseLogEntity> logs = exerciseLogRepository.findSummarysByUserUuid(userUuid, start,
         end);
+
+    for (ExerciseLogEntity log : logs) {
+      System.out.println("exerciseLogsId: " + log.getExerciseLogsId() + ", date: " + log.getExerciseDate());
+    }
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
     int totalKcal = logs.stream().mapToInt(ExerciseLogEntity::getCalories).sum();
@@ -312,15 +316,26 @@ public class ExerciseServiceImpl implements ExerciseService {
   // Exercise ------------------------------------------------------------
   @Override
   public ExerciseDTO getExerciseById(int id) {
-    return exerciseRepository.findById(id)
-        .map(entity -> ExerciseDTO.builder()
-            .exerciseId(entity.getExerciseId())
-            .exerciseName(entity.getExerciseName())
-            .exerciseCategory(entity.getExerciseCategory())
-            .tool(entity.getTool())
-            .createdAt(entity.getCreatedAt())
-            .build()).orElseThrow();
+    ExerciseEntity entity = exerciseRepository.getExerciseById(id); // findByExerciseId가 null 반환하는 메서드여야 함
+    if (entity == null) return null;
+    return ExerciseDTO.builder()
+        .exerciseId(entity.getExerciseId())
+        .exerciseName(entity.getExerciseName())
+        .exerciseCategory(entity.getExerciseCategory())
+        .tool(entity.getTool())
+        .createdAt(entity.getCreatedAt())
+        .build();
   }
+
+  @Override
+  public List<ExerciseDTO> getAllExercises() {
+    return exerciseRepository.findAll()
+        .stream()
+        .map(ExerciseDTO::new) // entity → dto 변환
+        .collect(Collectors.toList());
+  }
+
+
 
   // ExerciseMonthlyTime -------------------------------------------------
   @Override

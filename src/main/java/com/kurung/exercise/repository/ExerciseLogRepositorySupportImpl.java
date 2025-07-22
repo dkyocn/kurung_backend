@@ -47,7 +47,8 @@ public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySu
         .selectFrom(exerciseLogEntity)
         .where(
             exerciseLogEntity.user.userUuid.eq(userUuid),
-            exerciseLogEntity.exerciseDate.between(start, end)
+            exerciseLogEntity.exerciseDate.goe(start),
+            exerciseLogEntity.exerciseDate.lt(end)
         )
         .fetch();
   }

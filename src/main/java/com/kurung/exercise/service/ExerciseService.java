@@ -49,6 +49,8 @@ public interface ExerciseService {
   // Exercise -------------------------------------
   ExerciseDTO getExerciseById(int id);
 
+  List<ExerciseDTO> getAllExercises();
+
   // ExerciseMonthlyTime --------------------------
   List<SummaryDTO> getMonthlyExerciseTime(LocalDateTime timeMonth);
 
