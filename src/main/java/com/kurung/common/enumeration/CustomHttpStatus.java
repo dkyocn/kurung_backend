@@ -30,8 +30,10 @@ public enum CustomHttpStatus {
 
   // LifeLog
   LIFELOG_NOT_FOUND(473,"해당 id의 라이프 로그가 없습니다."),
-  MONTHLYLIFELOG_NOT_FOUND(474,"해당 id의 라이프 로그가 없습니다."),
+  MONTHLYLIFELOG_NOT_FOUND(474,"해당 id의 월간리포트가 없습니다."),
+
   // HealthReport
+  HEALTHREPORT_NOT_FOUND(478,"해당 날짜의 건강 리포트가 없습니다." ),
 
   // Mission
   MISSIONS_NOT_FOUND(483, "해당 id의 미션이 없습니다."),
