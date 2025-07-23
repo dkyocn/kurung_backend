@@ -46,3 +46,10 @@ springdoc:
     operations-sorter: method  # delete - get - patch - post - put 순으로 정렬, alpha를 사용하면 알파벳 순으로 정렬 가능
   paths-to-match:
     - /api/v1/kurung/** # swagger-ui에 표시할 api의 엔드포인트 패턴
+
+jwt:
+  secret: vrDt6Hhffv9gPPEEHDBVhxY4W+gf//bxDgVljRr/+8z1ZxqEdgTmDDZ/UIquJuWQdZmJ8mz/DuzLF/pmcMFaqw==
+  # access token 30minute (1800000 : 30min * 60sec * 1000millisec)
+  access_expiration: 1800000
+  # refresh token 1day (24h * 60min * 60sec * 1000milisec: 86400000)
+  refresh_expiration: 84600000

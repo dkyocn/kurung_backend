@@ -2,6 +2,8 @@ package com.kurung.missions.service;
 
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
+import com.kurung.diet.dto.DietScoreDTO;
+import com.kurung.diet.entity.DietScoreEntity;
 import com.kurung.missions.dto.MissionsDTO;
 import com.kurung.missions.entity.MissionsEntity;
 import com.kurung.missions.repository.MissionsRepository;
@@ -9,6 +11,7 @@ import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -50,4 +53,24 @@ public class MissionsServiceImpl implements MissionsService {
         .map(MissionsDTO::new)
         .collect(Collectors.toList());
   }
+
+
+  @Override
+  public List<MissionsDTO> getMissionMonthList(LocalDate currentDate, String userUuid) {
+
+    // 현재 월의 시작과 끝 구하기
+    LocalDate startDate = LocalDate.from(currentDate.withDayOfMonth(1).atStartOfDay());
+    LocalDate endDate = LocalDate.from(
+        currentDate.withDayOfMonth(currentDate.lengthOfMonth()).atStartOfDay());
+
+    List<MissionsEntity> missionMonthList = missionsRepository.getMissionMonthList(
+        startDate, endDate, userUuid
+    );
+
+    return missionMonthList.stream()
+        .map(missionsEntity -> MissionsDTO.toMissionBuilder().missionEntity(missionsEntity).build())
+        .collect(Collectors.toList());
+  }
+
+
 }

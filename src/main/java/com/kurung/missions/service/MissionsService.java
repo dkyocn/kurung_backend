@@ -1,12 +1,16 @@
 package com.kurung.missions.service;
 
 import com.kurung.missions.dto.MissionsDTO;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import org.springframework.http.ResponseEntity;
 
 public interface MissionsService {
   List<MissionsDTO> getMissionsList();
 
   List<MissionsDTO> getTodayMissions(String userUuid);
+
+  List<MissionsDTO> getMissionMonthList(LocalDate currentDate, String userUuid);
+
+
 }

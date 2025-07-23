@@ -1,14 +1,17 @@
 package com.kurung.missions.controller;
 
+import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.missions.dto.MissionsDTO;
 import com.kurung.missions.service.MissionsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,4 +46,20 @@ public class MissionsController {
   public ResponseEntity<List<MissionsDTO>> getTodayMissions(@RequestParam String userUuid) {
     return new ResponseEntity<>(missionsService.getTodayMissions(userUuid), HttpStatus.OK);
   }
+
+  @GetMapping("/range")
+  @Operation(summary = "미션 한달 조회", description = "미션 한달 조회할 때 사용하는 API")
+  @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @Parameters({
+      @Parameter(name = "currentDate", description = "기준 날짜", example = "2025-06-01"),
+      @Parameter(name = "userUuid", description = "사용자 UUID", example = "2025061401")
+  })
+  public ResponseEntity<List<MissionsDTO>> getMissionMonthList(
+      @RequestParam LocalDate currentDate,
+      @RequestParam String userUuid
+  ) {
+
+    return new ResponseEntity<>(missionsService.getMissionMonthList(currentDate, userUuid), HttpStatus.OK);
+  }
+
 }

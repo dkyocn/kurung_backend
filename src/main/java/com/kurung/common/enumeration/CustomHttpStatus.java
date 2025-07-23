@@ -19,10 +19,14 @@ public enum CustomHttpStatus {
   SCORE_NOT_FOUND(464, "해당 id의 식단 점수가 없습니다."),
   FOOD_NOT_FOUND(465, "해당 id의 음식이 없습니다."),
 
+  // HEALTH_INFO
+  HEALTH_INFO_NOT_FOUND(466, "해당 id의 건강정보가 없습니다."),
+
   // Exercise
-  EXERCISE_NOT_FOUND(468, "해당 id의 운동기록이 없습니다."),
-  EXERCISESCORE_NOT_FOUND(469, "해당 id의 운동의 정보가 없습니다."),
+  EXERCISELOG_NOT_FOUND(468, "해당 id의 운동기록이 없습니다."),
+  EXERCISE_NOT_FOUND(469, "해당 id의 운동의 정보가 없습니다."),
   OBJECTIVE_NOT_FOUND(470, "해당 id의 운동목표가 없습니다."),
+  ROUTINE_NOT_FOUND(471, "해당 id의 운동루틴이 없습니다."),
 
   // LifeLog
   LIFELOG_NOT_FOUND(473,"해당 id의 라이프 로그가 없습니다."),
@@ -70,9 +74,24 @@ public enum CustomHttpStatus {
   // LifeLog
   LIFELOG_SAVE_ERROR(536,"라이프 로그 저장을 실패하였습니다."),
   LIFELOG_UPDATE_ERROR(537,"라이프 로그 수정을 실패하였습니다."),
-  LIFELOG_DELETE_ERROR(538,"라이프 로그 삭제를 실패하였습니다.");
+  LIFELOG_DELETE_ERROR(538,"라이프 로그 삭제를 실패하였습니다."),
 
   // HealthReport
+
+  //favorites
+  FAVORITE_SAVE_ERROR(556,"즐겨찾기 등록을 실패하였습니다."),
+  FAVORITES_DELETE_ERROR(557,"즐겨찾기 삭제를 실패하였습니다."),
+
+
+
+  // Community
+  COMMUNITY_SAVE_ERROR(566, "커뮤니티 보드 저장을 실패하였습니다."),
+  COMMUNITY_UPDATE_ERROR(567,"커뮤니티 수정을 실패하였습니다."),
+  COMMUNITY_DELETE_ERROR(568,"커뮤니티 삭제를 실패하였습니다."),
+
+  // HEALTH_INFO
+  HEALTH_INFO_UPDATE_ERROR(573," 건강정보 수정을 실패하였습니다."),
+  HEALTH_INFO_SAVE_ERROR(574,"건강정보 생성을 실패하였습니다.");
 
 
   private final int value;

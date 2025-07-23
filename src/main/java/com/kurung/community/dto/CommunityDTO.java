@@ -31,12 +31,13 @@ public class CommunityDTO extends BaseDTO {
     this.title = communityEntity.getTitle();
     this.content = communityEntity.getContent();
     this.category = communityEntity.getCategory();
-    this.user = communityEntity.getUser() != null ? UserDTO.toUserBuilder()
-        .userEntity(communityEntity.getUser()).build() : null;
+    this.user = UserDTO.toUserBuilder().userEntity(communityEntity.getUser()).build();
     this.comment = communityEntity.getComment() != null ? communityEntity.getComment().stream()
         .map(commentEntity -> CommentDTO.toCommentBuilder().commentEntity(commentEntity).build())
         .collect(
             Collectors.toList()) : null;
+    this.createdAt = communityEntity.getCreatedAt();
+    this.updatedAt = communityEntity.getUpdatedAt();
 
   }
 }
