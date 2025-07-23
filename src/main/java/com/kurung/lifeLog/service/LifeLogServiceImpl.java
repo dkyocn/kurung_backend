@@ -4,6 +4,7 @@ package com.kurung.lifeLog.service;
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
+import com.kurung.common.security.service.SessionService;
 import com.kurung.lifeLog.dto.LifeLogDTO;
 import com.kurung.lifeLog.dto.MonthlyLifeLogDTO;
 import com.kurung.lifeLog.entity.LifeLogEntity;
@@ -34,6 +35,7 @@ public class LifeLogServiceImpl implements LifeLogService{
   private final LifeLogRepository lifeLogRepository;
   private final MonthlyLifeLogRepository monthlyLifeLogRepository;
   private final UserService userService;
+  private final SessionService sessionService;
 
   // 라이프 로그 단일 조회
   @Override
@@ -46,7 +48,9 @@ public class LifeLogServiceImpl implements LifeLogService{
 
   // 라이프 로그 한 달 조회
   @Override
-  public List<LifeLogDTO> getLifeLogList(String userUuid, String date) {
+  public List<LifeLogDTO> getLifeLogList(String date) {
+    UserDTO userDTO = sessionService.getUserFromToken();
+
     Date sqlDate = Date.valueOf(date);
     LocalDate localDate = sqlDate.toLocalDate();
 
@@ -60,7 +64,7 @@ public class LifeLogServiceImpl implements LifeLogService{
 
     // 레포지토리 조회
     List<LifeLogEntity> lifeLogEntities =lifeLogRepository.findByUser_UserUuidAndCreatedAtBetween(
-        userUuid, startDateTime, endDateTime);
+        userDTO.getUserUuid(), startDateTime, endDateTime);
 
     return lifeLogEntities.stream()
         .map(LifeLogDTO::new)
@@ -70,7 +74,7 @@ public class LifeLogServiceImpl implements LifeLogService{
   // 라이프 로그 생성
   @Override
   public void createLifelog(LifeLogDTO lifeLogDTO) {
-    UserDTO userDTO = userService.getUserByUuid(lifeLogDTO.getUser().getUserUuid());
+    UserDTO userDTO = sessionService.getUserFromToken();
 
     try {
       LifeLogEntity logEntity = LifeLogEntity.builder()
@@ -138,9 +142,11 @@ public class LifeLogServiceImpl implements LifeLogService{
   }
 
   @Override
-  public MonthlyLifeLogDTO getMonthlyLifeLog(String userUuid, String date) {
+  public MonthlyLifeLogDTO getMonthlyLifeLog(String date) {
+    UserDTO userDTO = sessionService.getUserFromToken();
+
     // 월간 리포트 조회
-    MonthlyLifeLogEntity monthlyLifeLogEntity = monthlyLifeLogRepository.findByMonthlyLifeLog_UserUuidAndMonth(userUuid, date);
+    MonthlyLifeLogEntity monthlyLifeLogEntity = monthlyLifeLogRepository.findByMonthlyLifeLog_UserUuidAndMonth(userDTO.getUserUuid(), date);
 
     if(monthlyLifeLogEntity == null) {
       throw new CustomIllegalArgumentException(CustomHttpStatus.LIFELOG_NOT_FOUND);
@@ -154,11 +160,9 @@ public class LifeLogServiceImpl implements LifeLogService{
       LocalDateTime startDateTime = firstDayOfMonth.atStartOfDay();
       LocalDateTime endDateTime = lastDayOfMonth.atTime(23, 59, 59);
 
-      UserDTO userDTO = userService.getUserByUuid(userUuid);
-
       // 라이프 로그 엔티티 조회
       List<LifeLogEntity> lifeLogEntities = lifeLogRepository.findByUser_UserUuidAndCreatedAtBetween(
-          userUuid, startDateTime, endDateTime);
+          userDTO.getUserUuid(), startDateTime, endDateTime);
 
       List<LifeLogDTO> lifeLogList = lifeLogEntities.stream().map(LifeLogDTO::new).toList();
 
