@@ -105,7 +105,6 @@ public class LifeLogServiceImpl implements LifeLogService{
     } catch (Exception e) {
       throw new CustomRunTimeException(CustomHttpStatus.LIFELOG_SAVE_ERROR);
     }
-
   }
 
   @Override

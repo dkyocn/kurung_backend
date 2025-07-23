@@ -2,32 +2,56 @@ package com.kurung.user.repository;
 
 import static com.kurung.user.entity.QUserEntity.userEntity;
 
-import com.kurung.user.entity.UserEntity;  // ✅ 엔티티 import
-import com.querydsl.jpa.impl.JPAQueryFactory;  // ✅ QueryDSL용 쿼리팩토리 import
+import com.kurung.user.entity.UserEntity;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
 
 @Repository
 @RequiredArgsConstructor
 public class UserRepositorySupportImpl implements UserRepositorySupport {
 
+    @PersistenceContext
+    private final EntityManager em;
     private final JPAQueryFactory jpaQueryFactory;
 
+    //Uuid를 기준으로 사용자 정보 조회
     @Override
     public UserEntity getUserByUuid(String userUuid) {
-        return jpaQueryFactory.selectFrom(userEntity)
-                .where(userEntity.userUuid.eq(userUuid))
-                .fetchOne();
+        return jpaQueryFactory
+            .selectFrom(userEntity)
+            .where(userEntity.userUuid.eq(userUuid))
+            .fetchOne();
     }
 
+    //Id를 사용자 정보 조회
     @Override
-    // 사용자 아이디로 조회
-    public UserEntity getByUserId(String userid) {
+    public UserEntity getByUserId(String userId) {
         return jpaQueryFactory
-                .selectFrom(userEntity)
-                .where(userEntity.userId.eq(userid))
-                .fetchOne();
+            .selectFrom(userEntity)
+            .where(userEntity.userId.eq(userId))
+            .fetchOne();
+    }
+
+    //UserId가 db에 존재하는지 확인
+    @Override
+    public boolean existsByUserId(String userId) {
+        String jpql = "SELECT COUNT(u) > 0 FROM TB_USER u WHERE u.userId = :userId";
+        Boolean exists = em.createQuery(jpql, Boolean.class)
+            .setParameter("userId", userId)
+            .getSingleResult();
+        return exists;
+    }
+
+    //가입한 날짜 + 순번 형식의 UUID
+    @Override
+    public long countByUuidStartingWith(String datePrefix) {
+        String jpql = "SELECT COUNT(u) FROM TB_USER u WHERE u.userUuid LIKE :prefix";
+        TypedQuery<Long> query = em.createQuery(jpql, Long.class);
+        query.setParameter("prefix", datePrefix + "%");
+        return query.getSingleResult();
     }
 }
-

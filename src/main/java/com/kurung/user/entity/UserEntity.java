@@ -21,6 +21,7 @@ import com.kurung.user.dto.UserDTO;
 import com.kurung.user.enumeration.Gender;
 import com.kurung.user.enumeration.UserPath;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.*;
 
 import java.sql.Date;
@@ -58,7 +59,7 @@ public class UserEntity {
   private Gender userGender;
 
   @Column(name = "USER_AGE")
-  private Date userAge;
+  private LocalDateTime userAge;
 
   @Column(name = "USER_KEY")
   private String userKey;
@@ -143,4 +144,7 @@ public class UserEntity {
  public void updateRefresh(String refreshToken){
     this.userRefreshToken = refreshToken;
  }
+  public void assignUserUuid(String uuid) {
+    this.userUuid = uuid;
+  }
 }

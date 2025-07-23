@@ -24,7 +24,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JWTUtil jwtUtil;
     private final UserService userService;
-    private final ObjectMapper objectMapper = new ObjectMapper();  // ✅ 재사용 가능
+    private final ObjectMapper objectMapper = new ObjectMapper();  // 재사용 가능
 
     public LoginFilter(AuthenticationManager authenticationManager,
                        JWTUtil jwtUtil,
@@ -94,7 +94,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 "accessToken", accessToken,
                 "refreshToken", refreshToken,
                 "userId", userId,
-                "userName", user.getUserNick(),
+                "userName", user.getUserId(),
                 "role", user.isAdminYN() ? "ADMIN" : "USER"
         );
 
