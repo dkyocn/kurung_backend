@@ -10,7 +10,6 @@ import com.kurung.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +33,8 @@ public class UserController {
 
     // SessionService 테스트
     @GetMapping("/tokenuser")
-    public ResponseEntity<UserDTO> getMyInfo(HttpServletRequest request) {
-        return new ResponseEntity<>(sessionService.getUserFromToken(request), HttpStatus.OK);
+    public ResponseEntity<UserDTO> getMyInfo() {
+        return new ResponseEntity<>(sessionService.getUserFromToken(), HttpStatus.OK);
     }
 
     //회원가입
@@ -53,17 +52,12 @@ public class UserController {
             UserEntity user = UserEntity.builder()
                 .userId(userDTO.getUserId())
                 .userPwd(userDTO.getUserPwd())
-                .userNick(userDTO.getUserNick() != null ? userDTO.getUserNick() : userDTO.getUserId().split("@")[0]) // 닉네임이 없으면 이메일 앞부분 사용
+                .userNick(userDTO.getUserNick())
                 .userGender(userDTO.getUserGender() != null ? userDTO.getUserGender() : Gender.MALE) // 기본값 MALE
-                .userAge(userDTO.getUserAge()) // NULL 가능
-                .userKey(null) // 소셜 로그인 키 (일반 가입시 NULL)
                 .userPath(userDTO.getUserPath() != null ? userDTO.getUserPath() : UserPath.NORMAL)
-                .profileImg(null) // 프로필 이미지 (NULL 가능)
                 .isActive(true) // 기본값 1(활성)
                 .adminYN(false) // 기본값 0(일반사용자)
                 .userFaceLoginYN(false) // 기본값 0(FALSE)
-                .userFaceLoginRef(null) // 얼굴 인증 백터 (NULL 가능)
-                .userRefreshToken(null) // 리프레시 토큰 (NULL 가능)
                 .build();
 
             boolean registerUserResult = userService.registerUser(user);

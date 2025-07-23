@@ -19,30 +19,26 @@ public class SessionService {
     private final UserService userService;
 
     //사용자 Uuid를 추출해서 정보를 가져오기
-    public UserDTO getUserFromToken(HttpServletRequest request){
-        String authorizationHeader = request.getHeader("Authorization");
+    public UserDTO getUserFromToken(){
+
+        // RequestContextHolder를 통해 현재 요청의 HttpServletRequest 가져오기
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            log.error("HttpServletRequest를 가져올 수 없습니다.");
+            return null;
+        }
+        String authorizationHeader = attributes.getRequest().getHeader("Authorization");
 
         try {
             //1단계. JWTUtil에서 Uuid 추출하기
             String userUuid = jwtUtil.getUserUuidFromToken(authorizationHeader.trim());
             //2단계. UserService로 사용자 정보 조회하기
             return userService.getUserByUuid(userUuid);
-            //예외 처리는 필수로 처리하자! ㅋㅋ
         } catch (Exception e) {
             log.error("토큰 분석 혹은 사용자 조회에 실패했습니다.", e);
             return null;
         }
     }
-
-    public UserDTO getUserFromToken() {
-        HttpServletRequest request =
-            ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
-        return getUserFromToken(request); // 기존에 있던 메서드 재사용!
-    }
-
-
-
 }
 
 
