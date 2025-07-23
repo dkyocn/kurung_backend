@@ -71,8 +71,8 @@ public class SecurityConfig implements WebMvcConfigurer {
             .requestMatchers(
                 "/api/v1/kurung/login",
                 "/api/v1/kurung/reissue",
-                "/api/v1/kurung/auth/send-verification-email",
-                "/api/v1/kurung/auth/verify-code",
+                "/api/v1/kurung/user/send-verification-email",
+                "/api/v1/kurung/user/verify-code",
                 "/user/signup",
                 "/user/idchk",
                 "/notice/ntop3",

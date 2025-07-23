@@ -3,18 +3,14 @@ package com.kurung.user.controller;
 import com.kurung.common.security.service.SessionService;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
-import com.kurung.user.dto.WithdrawalRequestDTO;
-import com.kurung.user.dto.WithdrawalResponseDTO;
-import com.kurung.user.entity.UserEntity;
+import com.kurung.user.enumeration.Gender;
+import com.kurung.user.enumeration.UserPath;
 import com.kurung.user.repository.UserRepository;
 import com.kurung.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,31 +40,58 @@ public class UserController {
 
     //회원가입
     @PostMapping("/signup")
-    public ResponseEntity<Void> registerUser(@RequestBody UserEntity user) {
-        boolean registerUserResult = userService.registerUser(user);
-        log.info("회원 가입 요청 - 사용자 ID: {}", user.getUserId());
-        log.info("회원 가입 성공 여부: {}", registerUserResult);
-        return registerUserResult ?
-            new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Map<String, String>> registerUser(@RequestBody UserDTO userDTO) {
+        Map<String, String> response = new HashMap<>();
+
+        try {
+            // 이메일 형식 검증
+            if (userDTO.getUserId() == null || !userDTO.getUserId().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+
+            // UserDTO를 UserEntity로 변환
+            UserEntity user = UserEntity.builder()
+                .userId(userDTO.getUserId())
+                .userPwd(userDTO.getUserPwd())
+                .userNick(userDTO.getUserNick() != null ? userDTO.getUserNick() : userDTO.getUserId().split("@")[0]) // 닉네임이 없으면 이메일 앞부분 사용
+                .userGender(userDTO.getUserGender() != null ? userDTO.getUserGender() : Gender.MALE) // 기본값 MALE
+                .userAge(userDTO.getUserAge()) // NULL 가능
+                .userKey(null) // 소셜 로그인 키 (일반 가입시 NULL)
+                .userPath(userDTO.getUserPath() != null ? userDTO.getUserPath() : UserPath.NORMAL)
+                .profileImg(null) // 프로필 이미지 (NULL 가능)
+                .isActive(true) // 기본값 1(활성)
+                .adminYN(false) // 기본값 0(일반사용자)
+                .userFaceLoginYN(false) // 기본값 0(FALSE)
+                .userFaceLoginRef(null) // 얼굴 인증 백터 (NULL 가능)
+                .userRefreshToken(null) // 리프레시 토큰 (NULL 가능)
+                .build();
+
+            boolean registerUserResult = userService.registerUser(user);
+            log.info("회원 가입 요청 - 사용자 ID: {}", userDTO.getUserId());
+            log.info("회원 가입 성공 여부: {}", registerUserResult);
+
+            if (registerUserResult) {
+                response.put("message", "회원가입이 성공적으로 완료되었습니다.");
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                response.put("error", "이미 존재하는 이메일입니다.");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            log.error("회원가입 중 오류 발생", e);
+            response.put("error", "회원가입 처리 중 오류가 발생했습니다: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    // 아이디 중복 확인
+    // 아이디(이메일) 중복 확인
     @Operation(summary = "아이디 중복 확인", description = "사용 가능한 아이디인지 확인합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "확인 성공")
     })
     @GetMapping("/check-userid")
-    public ResponseEntity<Map<String, Object>> checkuserId(@RequestParam String userId) {
-
+    public ResponseEntity<Boolean> checkuserId(@RequestParam String userId) {
         boolean available = userService.checkUserIdAvailability(userId);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("available", available);
-        response.put("userid", userId);
-        response.put("message", available ? "사용 가능한 아이디입니다ㅣ." : "이미 사용 중인 아이디입니다."); //서비스 로직 + true
-        return new ResponseEntity<>(HttpStatus.OK); //response.ok 수정 필요
+        return new ResponseEntity<>(available, HttpStatus.OK); // 메시지 없이 true/false만 응답
     }
-
-
-
 }

@@ -1,9 +1,11 @@
 package com.kurung.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.enumeration.Gender;
 import com.kurung.user.enumeration.UserPath;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -31,7 +33,7 @@ public class UserDTO {
     @Schema(description = "사용자 성별", example = "FEMALE")
     protected Gender userGender;
     @Schema(description = "사용자 생일", example = "1996-01-01")
-    protected Date userAge;
+    protected LocalDateTime userAge;
     @Schema(description = "소셜 로그인 키")
     protected String userKey;
     @Schema(description = "사용자 로그인 경로", example = "NORMAL")

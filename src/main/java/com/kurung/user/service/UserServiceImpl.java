@@ -32,14 +32,6 @@ public class UserServiceImpl implements UserService {
 
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(user.getUserPwd());
-        user.updateUserDTO(UserDTO.builder()
-            .userPwd(encodedPassword)
-            .userNick(user.getUserNick())
-            .userGender(user.getUserGender())
-            .userAge(user.getUserAge())
-            .profileImg(user.getProfileImg())
-            .build());
-
         log.info("회원가입 - 사용자 ID: {}, 비밀번호 암호화 완료", user.getUserId());
 
         user.assignUserUuid(generateUuid()); // 또는 Builder 내부에서 uuid 설정되도록
@@ -54,8 +46,7 @@ public class UserServiceImpl implements UserService {
     }
     //중복 유저 검사 메소드!
     public boolean validateUser(UserEntity user) {
-        Optional<UserEntity> findUser = userRepository.findById(user.getUserId());
-        return findUser.isPresent();
+        return userRepository.existsByUserId(user.getUserId());
     }
 
     //신규 uuid 생성하는 메소드!

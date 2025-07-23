@@ -1,4 +1,4 @@
-package com.kurung.user.auth.service;
+package com.kurung.common.email.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
