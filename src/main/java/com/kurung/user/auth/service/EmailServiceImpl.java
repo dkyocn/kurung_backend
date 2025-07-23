@@ -36,25 +36,48 @@ public class EmailServiceImpl implements EmailService {
 
   @Override
   public void sendVerificationEmail(String toEmail) throws MessagingException {
-    String code = createVerificationCode();
-    emailCodeMap.put(toEmail, code);
+    log.info("이메일 전송 시작 - 수신자: {}", toEmail);
+    
+    // 이메일 주소 유효성 검사
+    if (toEmail == null || toEmail.trim().isEmpty()) {
+      throw new IllegalArgumentException("이메일 주소가 비어있습니다.");
+    }
+    
+    // 기본적인 이메일 형식 검사
+    if (!toEmail.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+      throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다: " + toEmail);
+    }
+    
+    try {
+      String code = createVerificationCode();
+      emailCodeMap.put(toEmail, code);
+      log.info("인증 코드 생성 완료 - 이메일: {}, 코드: {}", toEmail, code);
 
-    MimeMessage message = mailSender.createMimeMessage();
-    MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+      MimeMessage message = mailSender.createMimeMessage();
+      MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-    helper.setTo(toEmail);
-    helper.setSubject("[Kurung] 이메일 인증 코드입니다.");
-    helper.setText(
-        "<h2>안녕하세요!</h2>" +
-            "<p>Kurung 서비스를 이용해 주셔서 감사합니다.</p>" +
-            "<p>요청하신 인증 코드는 아래와 같습니다.</p>" +
-            "<h1 style='color:blue'>" + code + "</h1>" +
-            "<p>5분 이내에 인증을 완료해 주세요.</p>", true
-    );
-    helper.setFrom("kurunghelpdesk@gmail.com");
+      helper.setTo(toEmail);
+      helper.setSubject("[Kurung] 이메일 인증 코드입니다.");
+      helper.setText(
+          "<h2>안녕하세요!</h2>" +
+              "<p>Kurung 서비스를 이용해 주셔서 감사합니다.</p>" +
+              "<p>요청하신 인증 코드는 아래와 같습니다.</p>" +
+              "<h1 style='color:blue'>" + code + "</h1>" +
+              "<p>5분 이내에 인증을 완료해 주세요.</p>", true
+      );
+      helper.setFrom("kurunghelpdesk@gmail.com");
 
-    mailSender.send(message);
-    log.info("이메일 전송 완료 - 대상: {}, 인증 코드: {}", toEmail, code);
+      log.info("MimeMessage 생성 완료, 전송 시작...");
+      mailSender.send(message);
+      log.info("이메일 전송 성공! - 수신자: {}, 인증 코드: {}", toEmail, code);
+      
+    } catch (MessagingException e) {
+      log.error("이메일 전송 실패 - 수신자: {}, 오류: {}", toEmail, e.getMessage(), e);
+      throw e;
+    } catch (Exception e) {
+      log.error("예상치 못한 오류 - 수신자: {}, 오류: {}", toEmail, e.getMessage(), e);
+      throw new MessagingException("이메일 전송 중 오류 발생", e);
+    }
   }
 
   @Override

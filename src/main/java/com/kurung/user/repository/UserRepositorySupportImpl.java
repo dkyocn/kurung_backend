@@ -6,6 +6,7 @@ import com.kurung.user.entity.UserEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,9 +16,9 @@ public class UserRepositorySupportImpl implements UserRepositorySupport {
 
     @PersistenceContext
     private final EntityManager em;
-
     private final JPAQueryFactory jpaQueryFactory;
 
+    //Uuid를 기준으로 사용자 정보 조회
     @Override
     public UserEntity getUserByUuid(String userUuid) {
         return jpaQueryFactory
@@ -26,6 +27,7 @@ public class UserRepositorySupportImpl implements UserRepositorySupport {
             .fetchOne();
     }
 
+    //Id를 사용자 정보 조회
     @Override
     public UserEntity getByUserId(String userId) {
         return jpaQueryFactory
@@ -34,6 +36,7 @@ public class UserRepositorySupportImpl implements UserRepositorySupport {
             .fetchOne();
     }
 
+    //UserId가 db에 존재하는지 확인
     @Override
     public boolean existsByUserId(String userId) {
         String jpql = "SELECT COUNT(u) > 0 FROM TB_USER u WHERE u.userId = :userId";
@@ -41,5 +44,14 @@ public class UserRepositorySupportImpl implements UserRepositorySupport {
             .setParameter("userId", userId)
             .getSingleResult();
         return exists;
+    }
+
+    //가입한 날짜 + 순번 형식의 UUID
+    @Override
+    public long countByUuidStartingWith(String datePrefix) {
+        String jpql = "SELECT COUNT(u) FROM TB_USER u WHERE u.userUuid LIKE :prefix";
+        TypedQuery<Long> query = em.createQuery(jpql, Long.class);
+        query.setParameter("prefix", datePrefix + "%");
+        return query.getSingleResult();
     }
 }
