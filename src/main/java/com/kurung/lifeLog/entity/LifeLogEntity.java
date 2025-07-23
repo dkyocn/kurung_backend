@@ -59,4 +59,5 @@ public class LifeLogEntity extends BaseEntity {
      this.activity = lifeLogDTO.getActivity();
      this.memo = lifeLogDTO.getMemo();
   }
-}
+
+ }

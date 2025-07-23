@@ -23,7 +23,7 @@ public class ReIssueController {
     private final JWTUtil jwtUtil;
     private final UserService userService;
 
-    @PostMapping("api/v1/kurung/reissue")
+    @PostMapping("/api/v1/kurung/reissue")
     public ResponseEntity<?> reissueToken(HttpServletRequest request, HttpServletResponse response) {
         log.info("ReissueController 실행");
 

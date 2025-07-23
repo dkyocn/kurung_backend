@@ -4,15 +4,16 @@ import com.kurung.common.util.JWTUtil;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-@AllArgsConstructor
-@Service
+@RequiredArgsConstructor
 @Slf4j
+@Service
+
 public class SessionService {
 
     private final JWTUtil jwtUtil;

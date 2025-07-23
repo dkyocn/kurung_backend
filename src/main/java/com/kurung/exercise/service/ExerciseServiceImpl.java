@@ -3,12 +3,12 @@ package com.kurung.exercise.service;
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
+import com.kurung.common.security.service.SessionService;
 import com.kurung.exercise.dto.ExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
-import com.kurung.exercise.dto.SummaryDTO.MonthlySummaryDTO;
 import com.kurung.exercise.entity.ExerciseEntity;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.exercise.entity.ObjectiveEntity;
@@ -18,17 +18,16 @@ import com.kurung.exercise.repository.ObjectiveRepository;
 import com.kurung.exercise.repository.RoutinesRepository;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.temporal.WeekFields;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -36,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ExerciseServiceImpl implements ExerciseService {
 
   private final UserService userService;
+  private final SessionService sessionService;
   private final ExerciseRepository exerciseRepository;
   private final ExerciseLogRepository exerciseLogRepository;
   private final ObjectiveRepository objectiveRepository;
@@ -193,11 +193,15 @@ public class ExerciseServiceImpl implements ExerciseService {
   // SummaryDailyList --------------------------------
   @Override
   public SummaryDTO getSummaryDailyList(String userUuid, LocalDate date) {
-    LocalDateTime start = date.atStartOfDay();
-    LocalDateTime end = date.atTime(23, 59, 59);
+    LocalDateTime start = date.atStartOfDay();           // 2025-06-02 00:00:00
+    LocalDateTime end = date.plusDays(1).atStartOfDay(); // 2025-06-03 00:00:00
 
     List<ExerciseLogEntity> logs = exerciseLogRepository.findSummarysByUserUuid(userUuid, start,
         end);
+
+    for (ExerciseLogEntity log : logs) {
+      System.out.println("exerciseLogsId: " + log.getExerciseLogsId() + ", date: " + log.getExerciseDate());
+    }
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
     int totalKcal = logs.stream().mapToInt(ExerciseLogEntity::getCalories).sum();
@@ -312,23 +316,34 @@ public class ExerciseServiceImpl implements ExerciseService {
   // Exercise ------------------------------------------------------------
   @Override
   public ExerciseDTO getExerciseById(int id) {
-    return exerciseRepository.findById(id)
-        .map(entity -> ExerciseDTO.builder()
-            .exerciseId(entity.getExerciseId())
-            .exerciseName(entity.getExerciseName())
-            .exerciseCategory(entity.getExerciseCategory())
-            .tool(entity.getTool())
-            .createdAt(entity.getCreatedAt())
-            .build()).orElseThrow();
+    ExerciseEntity entity = exerciseRepository.getExerciseById(id); // findByExerciseId가 null 반환하는 메서드여야 함
+    if (entity == null) return null;
+    return ExerciseDTO.builder()
+        .exerciseId(entity.getExerciseId())
+        .exerciseName(entity.getExerciseName())
+        .exerciseCategory(entity.getExerciseCategory())
+        .tool(entity.getTool())
+        .createdAt(entity.getCreatedAt())
+        .build();
   }
+
+  @Override
+  public List<ExerciseDTO> getAllExercises() {
+    return exerciseRepository.findAll()
+        .stream()
+        .map(ExerciseDTO::new) // entity → dto 변환
+        .collect(Collectors.toList());
+  }
+
+
 
   // ExerciseMonthlyTime -------------------------------------------------
   @Override
-  public List<SummaryDTO> getMonthlyExerciseTime(LocalDateTime timeMonth, String userUuid) {
-    UserDTO userByUuid = userService.getUserByUuid(userUuid);
+  public List<SummaryDTO> getMonthlyExerciseTime(LocalDateTime timeMonth) {
+    UserDTO userDTO = sessionService.getUserFromToken();
 
     List<ExerciseLogEntity> exerciseMonthList = exerciseLogRepository.findSummarysByUserUuid(
-        userUuid, timeMonth.toLocalDate().withDayOfMonth(1).atStartOfDay(),
+        userDTO.getUserUuid(), timeMonth.toLocalDate().withDayOfMonth(1).atStartOfDay(),
         timeMonth.toLocalDate().withDayOfMonth(timeMonth.toLocalDate().lengthOfMonth())
             .atStartOfDay()
     );

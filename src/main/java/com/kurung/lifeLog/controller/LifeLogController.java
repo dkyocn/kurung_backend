@@ -47,8 +47,8 @@ public class LifeLogController {
   @GetMapping("/lifeLogList")
   @Operation(summary = "라이프 로그 리스트 조회", description = "라이프 로그 리스트를 조회할 때 사용하는 API")
   @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
-  public ResponseEntity<List<LifeLogDTO>> getLifeLogList(@RequestParam String userUuid, @RequestParam String date) {
-    List<LifeLogDTO> lifeLogList = lifeLogService.getLifeLogList(userUuid, date);
+  public ResponseEntity<List<LifeLogDTO>> getLifeLogList(@RequestParam String date) {
+    List<LifeLogDTO> lifeLogList = lifeLogService.getLifeLogList(date);
     return new ResponseEntity<>(lifeLogList, HttpStatus.OK);
   }
 
@@ -93,7 +93,7 @@ public class LifeLogController {
   @GetMapping("/monthly")
   @Operation(summary = "월간리포트 조회", description = "월간리포트 조회할 때 사용하는 API")
   @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
-  public ResponseEntity<MonthlyLifeLogDTO> getMonthlyLifeLog(@RequestParam String userUuid, @RequestParam String date) {
-    return new ResponseEntity<>(lifeLogService.getMonthlyLifeLog(userUuid, date), HttpStatus.OK);
+  public ResponseEntity<MonthlyLifeLogDTO> getMonthlyLifeLog(@RequestParam String date) {
+    return new ResponseEntity<>(lifeLogService.getMonthlyLifeLog(date), HttpStatus.OK);
   }
 }

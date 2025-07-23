@@ -20,7 +20,7 @@ public class LifeLogDTO extends BaseDTO {
 
   @Schema(description = "라이프 로그 아이디", example = "1")
   protected int lifelogId;
-  @Schema(description = "라이프 로그 작성 날짜")
+  @Schema(description = "라이프 로그 해당 날짜", example = "25/06/30")
   protected LocalDateTime lifelogDate;
   @Schema(description = "라이프 로그 감정", example = "1")
   protected String emotion;

@@ -4,7 +4,6 @@ import com.kurung.exercise.dto.ExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
-
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -50,8 +49,10 @@ public interface ExerciseService {
   // Exercise -------------------------------------
   ExerciseDTO getExerciseById(int id);
 
+  List<ExerciseDTO> getAllExercises();
+
   // ExerciseMonthlyTime --------------------------
-  List<SummaryDTO> getMonthlyExerciseTime(LocalDateTime timeMonth, String userUuid);
+  List<SummaryDTO> getMonthlyExerciseTime(LocalDateTime timeMonth);
 
 
 }

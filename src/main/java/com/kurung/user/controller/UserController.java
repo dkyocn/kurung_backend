@@ -17,8 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.Map;
+import com.kurung.common.security.service.SessionService;
 
 @Slf4j
 @RestController
@@ -30,13 +29,12 @@ public class UserController {
     private final BCryptPasswordEncoder passwordEncoder;
     private final SessionService sessionService;
     public final UserRepository userRepository;
-
-    // SessionService 테스트
+  
     @GetMapping("/tokenuser")
     public ResponseEntity<UserDTO> getMyInfo() {
         return new ResponseEntity<>(sessionService.getUserFromToken(), HttpStatus.OK);
     }
-
+  
     //회원가입
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> registerUser(@RequestBody UserDTO userDTO) {
