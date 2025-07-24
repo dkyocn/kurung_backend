@@ -3,6 +3,7 @@ package com.kurung.diet.service;
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
+import com.kurung.common.security.service.SessionService;
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.dto.FoodDTO;
@@ -32,7 +33,7 @@ import org.springframework.util.CollectionUtils;
 public class DietServiceImpl implements DietService {
 
   private final UserService userService;
-
+private final SessionService sessionService;
   private final DietRepository dietRepository;
   private final FoodRepository foodRepository;
   private final DietScoreRepository dietScoreRepository;
@@ -41,9 +42,11 @@ public class DietServiceImpl implements DietService {
   // DIET
 
   @Override
-  public DietDTO getCurrentDiet(LocalDateTime currentDate, String userUuid,  MEAL meal) {
+  public DietDTO getCurrentDiet(LocalDateTime currentDate, MEAL meal) {
 
-    DietEntity dietById = dietRepository.getCurrentDiet(currentDate,userUuid, meal);
+    UserDTO userDTO = sessionService.getUserFromToken();
+
+    DietEntity dietById = dietRepository.getCurrentDiet(currentDate,userDTO.getUserUuid(), meal);
 
     if (dietById != null) {
       return DietDTO.toDietBuilder().dietEntity(dietById).build();
@@ -220,18 +223,18 @@ public class DietServiceImpl implements DietService {
   }
 
   @Override
-  public List<DietScoreDTO> getDietScoreMonthList(LocalDateTime currentDate, String userUuid) {
+  public List<DietScoreDTO> getDietScoreMonthList(LocalDateTime currentDate) {
+
+    UserDTO userDTO = sessionService.getUserFromToken();
+
 
     List<DietScoreEntity> dietScoreMonthList = dietScoreRepository.getDietScoreMonthList(
         currentDate.toLocalDate().withDayOfMonth(1).atStartOfDay(),
-        currentDate.toLocalDate().withDayOfMonth(currentDate.toLocalDate().lengthOfMonth()).atStartOfDay(), userUuid);
-
+        currentDate.toLocalDate().withDayOfMonth(currentDate.toLocalDate().lengthOfMonth()).atStartOfDay(), userDTO.getUserUuid());
     return dietScoreMonthList.stream().map(
         dietScoreEntity -> DietScoreDTO.toDietScoreBuilder().dietScoreEntity(dietScoreEntity)
             .build()).collect(Collectors.toList());
   }
-
-  // FOOD
 
   @Override
   public FoodDTO getFoodById(int id) {

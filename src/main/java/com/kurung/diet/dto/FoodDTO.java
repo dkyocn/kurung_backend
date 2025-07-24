@@ -40,5 +40,6 @@ public class FoodDTO {
             .recipeId(recipeEntity.getRecipeId())
             .order(recipeEntity.getOrder())
             .recipeContent(recipeEntity.getRecipeContent()).build()).collect(Collectors.toList()) : null ;
+        this.nutrition = foodEntity.getNutritional() != null ? NutritionDTO.toNutritionalBuilder().nutritionalEntity(foodEntity.getNutritional()).build() : null;
     }
 }
