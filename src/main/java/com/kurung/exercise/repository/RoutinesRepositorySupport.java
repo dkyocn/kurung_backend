@@ -8,6 +8,7 @@ public interface RoutinesRepositorySupport {
 
   RoutinesEntity getRoutinesById(int id);
 
-  List<RoutinesEntity> findRoutinesByUser(String userUuid, LocalDateTime start,
+  List<RoutinesEntity> findRoutinesByUserAndDate(String userUuid, LocalDateTime start,
       LocalDateTime end);
+
 }

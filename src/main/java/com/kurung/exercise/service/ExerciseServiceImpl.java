@@ -9,6 +9,7 @@ import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
+import com.kurung.exercise.dto.SummaryDTO.MonthlySummaryDTO;
 import com.kurung.exercise.entity.ExerciseEntity;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.exercise.entity.ObjectiveEntity;
@@ -19,16 +20,17 @@ import com.kurung.exercise.repository.ObjectiveRepository;
 import com.kurung.exercise.repository.RoutinesRepository;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.temporal.WeekFields;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -36,11 +38,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ExerciseServiceImpl implements ExerciseService {
 
   private final UserService userService;
-  private final SessionService sessionService;
   private final ExerciseRepository exerciseRepository;
   private final ExerciseLogRepository exerciseLogRepository;
   private final ObjectiveRepository objectiveRepository;
   private final RoutinesRepository routinesRepository;
+  private final SessionService sessionService;
 
 
   // ExerciseLog create -------------------------------------------------------
@@ -165,6 +167,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         : 0.0;
     double goalAchievementRate = Math.round((routineRate + durationRate) / 2 * 10) / 10.0;
 
+
     // 주차별 정보
     int[] weeklyRoutineCounts = new int[4];
     int[] weeklyDurations = new int[4];
@@ -200,8 +203,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         end);
 
     for (ExerciseLogEntity log : logs) {
-      System.out.println(
-          "exerciseLogsId: " + log.getExerciseLogsId() + ", date: " + log.getExerciseDate());
+      System.out.println("exerciseLogsId: " + log.getExerciseLogsId() + ", date: " + log.getExerciseDate());
     }
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
@@ -296,7 +298,6 @@ public class ExerciseServiceImpl implements ExerciseService {
     );
   }
 
-  // Objective select -------------------------
   @Override
   public ObjectiveDTO getObjectiveById(int objectiveId) {
     ObjectiveEntity entity = objectiveRepository.findByObjectiveId(objectiveId);
@@ -305,6 +306,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
     return ObjectiveDTO.toObjectiveBuilder().objectiveEntity(entity).build();
   }
+
 
   // Routines ----------------------------------------------------------------------
   @Override
@@ -315,9 +317,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
     return RoutinesDTO.builder()
         .routinesId(entity.getRoutinesId())
-        .user(
-            entity.getUser() != null ? UserDTO.toUserBuilder().userEntity(entity.getUser()).build()
-                : null)
+        .user(entity.getUser() != null ? UserDTO.toUserBuilder().userEntity(entity.getUser()).build() : null)
         .title(entity.getTitle())
         .routineLevel(entity.getRoutineLevel())
         .place(entity.getPlace())
@@ -326,12 +326,12 @@ public class ExerciseServiceImpl implements ExerciseService {
         .build();
   }
 
-  // RoutinesSelect ---------------------------------------------------------------
+  @Override
   public List<RoutinesDTO> getRoutinesByUserAndDate(String userUuid, LocalDate date) {
     LocalDateTime start = date.atStartOfDay();
     LocalDateTime end = date.plusDays(1).atStartOfDay();
 
-    List<RoutinesEntity> list = routinesRepository.findRoutinesByUser(userUuid, start, end);
+    List<RoutinesEntity> list = routinesRepository.findRoutinesByUserAndDate(userUuid, start, end);
 
     return list.stream()
         .map(RoutinesDTO::new)
@@ -354,14 +354,25 @@ public class ExerciseServiceImpl implements ExerciseService {
     );
   }
 
+  // RoutinesDelete -------------------------------------------------------------------
+  @Transactional
+  @Override
+  public void deleteRoutine(int routinesId) {
+    Optional<RoutinesEntity> optionalEntity = routinesRepository.findById(routinesId);
+
+    if (!optionalEntity.isPresent()) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.ROUTINE_NOT_FOUND);
+    }
+
+    RoutinesEntity entity = optionalEntity.get();
+    routinesRepository.delete(entity);
+  }
+
   // Exercise ------------------------------------------------------------
   @Override
   public ExerciseDTO getExerciseById(int id) {
-    ExerciseEntity entity = exerciseRepository.getExerciseById(
-        id); // findByExerciseId가 null 반환하는 메서드여야 함
-    if (entity == null) {
-      return null;
-    }
+    ExerciseEntity entity = exerciseRepository.getExerciseById(id); // findByExerciseId가 null 반환하는 메서드여야 함
+    if (entity == null) return null;
     return ExerciseDTO.builder()
         .exerciseId(entity.getExerciseId())
         .exerciseName(entity.getExerciseName())

@@ -25,8 +25,8 @@ public class RoutinesRepositorySupportImpl implements RoutinesRepositorySupport 
         .fetchOne();
   }
 
-  // RoutinesSelect(운동 기록 조회부분) ----------------------------------
-  public List<RoutinesEntity> findRoutinesByUser(String userUuid, LocalDateTime start,
+
+  public List<RoutinesEntity> findRoutinesByUserAndDate(String userUuid, LocalDateTime start,
       LocalDateTime end) {
     return queryFactory
         .selectFrom(routinesEntity)
