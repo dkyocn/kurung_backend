@@ -89,20 +89,6 @@ public class ExerciseController {
     return new ResponseEntity<>(exerciseService.getExerciseLogById(id), HttpStatus.OK);
   }
 
-  // 아이디 받은걸로 조회 후 Entity로 해서 isAction 변경
-
-  // SUMMARY ----------------------------------
-  /* @GetMapping("/summary/{userUuid}")
-  @Operation(summary = "운동요약 DB 연동 확인", description = "운동요약 entity, dto 연동 확인")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "468", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
-  })
-  @Parameter(name = "userUuid", description = "회원 아이디", example = "2025061401")
-  public ResponseEntity<SummaryDTO> getSummaryByUser(@PathVariable String userUuid) {
-    return new ResponseEntity<>(exerciseService.getSummaryByUser(userUuid), HttpStatus.OK);
-  } */
-
   // SummaryDailyList ----------------------------
   @GetMapping("/summary/daily/{userUuid}")
   @Operation(summary = "운동일일요약 연동 확인", description = "운동일일 요약 데이터 확인.")
