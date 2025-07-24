@@ -1,9 +1,5 @@
 package com.kurung.diet.dto;
 
-import com.kurung.common.dto.BaseDTO;
-import com.kurung.diet.dto.DietDTO.toDietBuilder;
-import com.kurung.diet.dto.FoodDTO.toFoodBuilder;
-import com.kurung.diet.entity.IngredEntity;
 import com.kurung.diet.entity.NutritionalEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +17,7 @@ public class NutritionDTO {
   protected int sodium;
   protected int carb;
   protected int sugar;
+  protected int totalFat;
   protected int transFat;
   protected int saturatedFat;
   protected int cholesterol;
@@ -33,6 +30,7 @@ public class NutritionDTO {
     this.sodium = nutritionalEntity.getSodium();
     this.carb = nutritionalEntity.getCarb();
     this.sugar = nutritionalEntity.getSugar();
+    this.totalFat = nutritionalEntity.getTransFat() + nutritionalEntity.getSaturatedFat();
     this.transFat = nutritionalEntity.getTransFat();
     this.saturatedFat = nutritionalEntity.getSaturatedFat();
     this.cholesterol = nutritionalEntity.getCholesterol();
