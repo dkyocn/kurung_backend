@@ -12,6 +12,7 @@ import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
 import com.kurung.exercise.entity.ExerciseEntity;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.exercise.entity.ObjectiveEntity;
+import com.kurung.exercise.entity.RoutinesEntity;
 import com.kurung.exercise.repository.ExerciseLogRepository;
 import com.kurung.exercise.repository.ExerciseRepository;
 import com.kurung.exercise.repository.ObjectiveRepository;
@@ -42,7 +43,7 @@ public class ExerciseServiceImpl implements ExerciseService {
   private final RoutinesRepository routinesRepository;
 
 
-  // Exercise create -------------------------------------------------------
+  // ExerciseLog create -------------------------------------------------------
   @Transactional
   @Override
   public void createExerciseLog(ExerciseLogDTO exerciseLogDTO) {
@@ -63,7 +64,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
   }
 
-  // Exercise Updated ---------------------------------
+  // ExerciseLog Updated ---------------------------------
   @Override
   @Transactional
   public SummaryDTO.ExerciseLogDTO updateExerciseLog(SummaryDTO.ExerciseLogDTO exerciseLogDTO) {
@@ -84,7 +85,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         .build();
   }
 
-  // Exercise Delete ---------------------------------------
+  // ExerciseLog Delete ---------------------------------------
   @Override
   @Transactional
   public void deleteExerciseLog(int id) {
@@ -98,7 +99,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     exerciseLogRepository.delete(entity);
   }
 
-  // Exercise Selected ---------------------------------------
+  // ExerciseLog Selected ---------------------------------------
   @Override
   public ExerciseLogDTO getExerciseLogById(int id) {
     ExerciseLogEntity entity = exerciseLogRepository.getExerciseLogById(id);
@@ -295,22 +296,32 @@ public class ExerciseServiceImpl implements ExerciseService {
     );
   }
 
+  // Objective select -------------------------
+  @Override
+  public ObjectiveDTO getObjectiveById(int objectiveId) {
+    ObjectiveEntity entity = objectiveRepository.findByObjectiveId(objectiveId);
+    if (entity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.OBJECTIVE_NOT_FOUND);
+    }
+    return ObjectiveDTO.toObjectiveBuilder().objectiveEntity(entity).build();
+  }
 
   // Routines ----------------------------------------------------------------------
   @Override
   public RoutinesDTO getRoutinesById(int id) {
-    return routinesRepository.findById(id)
-        .map(entity -> RoutinesDTO.builder()
-            .routinesId(entity.getRoutinesId())
-            .user(UserDTO.toUserBuilder()
-                .userEntity(entity.getUser())
-                .build())
-            .title(entity.getTitle())
-            .routineLevel(entity.getRoutineLevel())
-            .place(entity.getPlace())
-            .videoUrl(entity.getVideoUrl())
-            .savedDate(entity.getSavedDate())
-            .build()).orElseThrow();
+    RoutinesEntity entity = routinesRepository.getRoutinesById(id);
+    if (entity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.ROUTINE_NOT_FOUND);
+    }
+    return RoutinesDTO.builder()
+        .routinesId(entity.getRoutinesId())
+        .user(entity.getUser() != null ? UserDTO.toUserBuilder().userEntity(entity.getUser()).build() : null)
+        .title(entity.getTitle())
+        .routineLevel(entity.getRoutineLevel())
+        .place(entity.getPlace())
+        .videoUrl(entity.getVideoUrl())
+        .savedDate(entity.getSavedDate())
+        .build();
   }
 
   // Exercise ------------------------------------------------------------
@@ -334,7 +345,6 @@ public class ExerciseServiceImpl implements ExerciseService {
         .map(ExerciseDTO::new) // entity → dto 변환
         .collect(Collectors.toList());
   }
-
 
 
   // ExerciseMonthlyTime -------------------------------------------------

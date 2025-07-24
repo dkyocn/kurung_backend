@@ -41,7 +41,8 @@ public interface ExerciseService {
 
   void updateObjectiveaction(int objectiveId);
 
-//    ObjectiveEntity getObjectiveById(int id);
+  ObjectiveDTO getObjectiveById(int objectiveId);
+
 
   // Routines -------------------------------------
   RoutinesDTO getRoutinesById(int id);
