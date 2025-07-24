@@ -47,6 +47,8 @@ public interface ExerciseService {
   // Routines -------------------------------------
   RoutinesDTO getRoutinesById(int id);
 
+  List<RoutinesDTO> getRoutinesByUserAndDate(String userUuid, LocalDate date);
+
   // Exercise -------------------------------------
   ExerciseDTO getExerciseById(int id);
 

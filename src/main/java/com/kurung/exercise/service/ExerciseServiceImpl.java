@@ -165,7 +165,6 @@ public class ExerciseServiceImpl implements ExerciseService {
         : 0.0;
     double goalAchievementRate = Math.round((routineRate + durationRate) / 2 * 10) / 10.0;
 
-
     // 주차별 정보
     int[] weeklyRoutineCounts = new int[4];
     int[] weeklyDurations = new int[4];
@@ -201,7 +200,8 @@ public class ExerciseServiceImpl implements ExerciseService {
         end);
 
     for (ExerciseLogEntity log : logs) {
-      System.out.println("exerciseLogsId: " + log.getExerciseLogsId() + ", date: " + log.getExerciseDate());
+      System.out.println(
+          "exerciseLogsId: " + log.getExerciseLogsId() + ", date: " + log.getExerciseDate());
     }
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
@@ -315,7 +315,9 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
     return RoutinesDTO.builder()
         .routinesId(entity.getRoutinesId())
-        .user(entity.getUser() != null ? UserDTO.toUserBuilder().userEntity(entity.getUser()).build() : null)
+        .user(
+            entity.getUser() != null ? UserDTO.toUserBuilder().userEntity(entity.getUser()).build()
+                : null)
         .title(entity.getTitle())
         .routineLevel(entity.getRoutineLevel())
         .place(entity.getPlace())
@@ -324,11 +326,26 @@ public class ExerciseServiceImpl implements ExerciseService {
         .build();
   }
 
+  // RoutinesSelect ---------------------------------------------------------------
+  public List<RoutinesDTO> getRoutinesByUserAndDate(String userUuid, LocalDate date) {
+    LocalDateTime start = date.atStartOfDay();
+    LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+    List<RoutinesEntity> list = routinesRepository.findRoutinesByUser(userUuid, start, end);
+
+    return list.stream()
+        .map(RoutinesDTO::new)
+        .collect(Collectors.toList());
+  }
+
   // Exercise ------------------------------------------------------------
   @Override
   public ExerciseDTO getExerciseById(int id) {
-    ExerciseEntity entity = exerciseRepository.getExerciseById(id); // findByExerciseId가 null 반환하는 메서드여야 함
-    if (entity == null) return null;
+    ExerciseEntity entity = exerciseRepository.getExerciseById(
+        id); // findByExerciseId가 null 반환하는 메서드여야 함
+    if (entity == null) {
+      return null;
+    }
     return ExerciseDTO.builder()
         .exerciseId(entity.getExerciseId())
         .exerciseName(entity.getExerciseName())
