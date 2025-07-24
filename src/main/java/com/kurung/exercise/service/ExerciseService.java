@@ -24,17 +24,17 @@ public interface ExerciseService {
 
 
   // Summary --------------------------------------
-  SummaryDTO getSummaryByUser(String uuid);
+  SummaryDTO getSummaryByUser();
 
   // SummaryDailyList -----------------------------
-  SummaryDTO getSummaryDailyList(String userUuid, LocalDate date);
+  SummaryDTO getSummaryDailyList(LocalDate date);
 
   // SummaryMonthly --------------------------------
-  SummaryDTO.MonthlySummaryDTO getMonthlySummary(String userUuid, YearMonth month);
+  SummaryDTO.MonthlySummaryDTO getMonthlySummary(YearMonth month);
 
   // Objective ------------------------------------
 
-  ObjectiveDTO getObjectiveByMonth(LocalDateTime date, String userUuid);
+  ObjectiveDTO getObjectiveByMonth(LocalDateTime date);
 
   void createObjective(ObjectiveDTO objectiveDTO);
 
@@ -53,7 +53,7 @@ public interface ExerciseService {
 
   void deleteRoutine(int routinesId);
 
-  List<RoutinesDTO> getRoutinesByUserAndDate(String userUuid, LocalDate date);
+  List<RoutinesDTO> getRoutinesByUserAndDate(LocalDate date);
 
   // Exercise -------------------------------------
   ExerciseDTO getExerciseById(int id);
