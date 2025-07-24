@@ -26,12 +26,12 @@ public class FoodRepositorySupportImpl implements FoodRepositorySupport {
   @Override
   public List<FoodEntity> getFoodList(String keyword) {
     return queryFactory.selectFrom(foodEntity)
-        .where(eqKeyword(keyword))
+        .where(containKeyword(keyword))
         .fetch();
   }
 
   // keyword 유무 조건 적용
-  private BooleanExpression eqKeyword(String keyword) {
-    return StringUtils.isNotBlank(keyword) ? foodEntity.foodName.eq(keyword) : null;
+  private BooleanExpression containKeyword(String keyword) {
+    return StringUtils.isNotBlank(keyword) ? foodEntity.foodName.contains(keyword) : null;
   }
 }
