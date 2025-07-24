@@ -4,6 +4,7 @@ import com.kurung.exercise.dto.ExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
+
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,13 +44,16 @@ public interface ExerciseService {
 
   ObjectiveDTO getObjectiveById(int objectiveId);
 
+//    ObjectiveEntity getObjectiveById(int id);
 
   // Routines -------------------------------------
   RoutinesDTO getRoutinesById(int id);
 
-  List<RoutinesDTO> getRoutinesByUserAndDate(String userUuid, LocalDate date);
-
   void createRoutine(RoutinesDTO routinesDTO);
+
+  void deleteRoutine(int routinesId);
+
+  List<RoutinesDTO> getRoutinesByUserAndDate(String userUuid, LocalDate date);
 
   // Exercise -------------------------------------
   ExerciseDTO getExerciseById(int id);
