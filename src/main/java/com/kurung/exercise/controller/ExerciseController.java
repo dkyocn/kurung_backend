@@ -257,7 +257,7 @@ public class ExerciseController {
       @Parameter(name = "timeMonth", description = "오늘 날짜", example = "2025-05-19T00:00:00"),
   })
   public ResponseEntity<List<SummaryDTO>> getMonthlyExerciseTime(
-      @RequestParam LocalDateTime timeMonth
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime timeMonth
   ) {
     return new ResponseEntity<>(exerciseService.getMonthlyExerciseTime(timeMonth), HttpStatus.OK);
   }
