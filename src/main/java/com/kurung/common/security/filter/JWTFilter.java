@@ -28,6 +28,9 @@ public class JWTFilter extends OncePerRequestFilter {
             url.equals("/api/v1/kurung/user/check-userid") ||
             url.equals("/api/v1/kurung/user/send-verification-email") ||
             url.equals("/api/v1/kurung/user/verify-code") ||
+            url.startsWith("/api-test") ||
+            url.startsWith("/swagger-ui/") ||
+            url.startsWith("/v3/api-docs") ||
             url.equals("/reissue") ||
             url.endsWith(".png") ||
             url.startsWith("/js/") ||
