@@ -338,6 +338,22 @@ public class ExerciseServiceImpl implements ExerciseService {
         .collect(Collectors.toList());
   }
 
+  // RoutinesCreate ---------------------------------------------------------------
+  @Transactional
+  @Override
+  public void createRoutine(RoutinesDTO routinesDTO) {
+    // 1. userUuid로 UserDTO 조회
+    UserDTO userByUuid = userService.getUserByUuid(routinesDTO.getUser().getUserUuid());
+
+    // 2. 빌더로 Entity 생성 후 저장
+    routinesRepository.save(
+        RoutinesEntity.createRoutinesBuilder()
+            .routinesDTO(routinesDTO)
+            .userDTO(userByUuid)
+            .build()
+    );
+  }
+
   // Exercise ------------------------------------------------------------
   @Override
   public ExerciseDTO getExerciseById(int id) {
