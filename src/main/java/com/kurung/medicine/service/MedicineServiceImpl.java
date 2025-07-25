@@ -5,8 +5,6 @@ import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.medicine.dto.SubstanceDTO;
 import com.kurung.medicine.entity.SupplementsEntity;
 import com.kurung.medicine.enumeration.MEDICINE;
-import com.kurung.medicine.repository.MedicineRepository;
-import com.kurung.medicine.repository.SupplementsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
