@@ -1,5 +1,6 @@
 package com.kurung.missions.controller;
 
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.missions.dto.MissionsDTO;
 import com.kurung.missions.service.MissionsService;
@@ -32,7 +33,11 @@ public class MissionsController {
   @Operation(summary = "미션 단일 조회", description = "하나의 미션을 ID로 조회하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "418", description = "조회 실패", content = @Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "418", description = "조회"
+          + ""
+          + ""
+          + ""
+          + " 실패", content = @Content(mediaType = "application/json"))
   })
   public ResponseEntity<List<MissionsDTO>> getMissionById() {
     return new ResponseEntity<>(missionsService.getMissionsList(), HttpStatus.OK);
@@ -56,10 +61,10 @@ public class MissionsController {
   })
   public ResponseEntity<List<MissionsDTO>> getMissionMonthList(
       @RequestParam LocalDate currentDate,
-      @RequestParam String userUuid
+      @RequestParam HealthType displayType
   ) {
 
-    return new ResponseEntity<>(missionsService.getMissionMonthList(currentDate, userUuid), HttpStatus.OK);
+    return new ResponseEntity<>(missionsService.getMissionMonthList(currentDate, displayType), HttpStatus.OK);
   }
 
 }

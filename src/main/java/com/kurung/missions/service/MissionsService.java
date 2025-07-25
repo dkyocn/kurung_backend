@@ -1,5 +1,6 @@
 package com.kurung.missions.service;
 
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.missions.dto.MissionsDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ public interface MissionsService {
 
   List<MissionsDTO> getTodayMissions(String userUuid);
 
-  List<MissionsDTO> getMissionMonthList(LocalDate currentDate, String userUuid);
+  List<MissionsDTO> getMissionMonthList(LocalDate currentDate, HealthType displayType);
 
 
 }
