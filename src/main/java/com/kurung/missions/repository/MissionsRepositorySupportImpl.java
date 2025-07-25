@@ -1,5 +1,6 @@
 package com.kurung.missions.repository;
 
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.diet.entity.DietScoreEntity;
 import com.kurung.missions.entity.MissionsEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -42,16 +43,14 @@ public class MissionsRepositorySupportImpl implements MissionsRepositorySupport 
   }
 
   @Override
-  public List<MissionsEntity> getMissionMonthList(LocalDate startDate, LocalDate endDate, String userUuid) {
+  public List<MissionsEntity> getMissionMonthList(LocalDate startDate, LocalDate endDate, String userUuid, HealthType displayType) {
     return jpaQueryFactory
         .selectFrom(missionsEntity)
         .where(
             missionsEntity.user.userUuid.eq(userUuid),
-            missionsEntity.startedDate.between(startDate.atStartOfDay(),endDate.atTime(23, 59, 59))
+            missionsEntity.startedDate.between(startDate.atStartOfDay(), endDate.atTime(23, 59, 59)),
+            missionsEntity.displayType.eq(displayType)
         )
         .fetch();
   }
-
-
-
 }

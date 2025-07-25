@@ -33,7 +33,7 @@ import org.springframework.util.CollectionUtils;
 public class DietServiceImpl implements DietService {
 
   private final UserService userService;
-private final SessionService sessionService;
+  private final SessionService sessionService;
   private final DietRepository dietRepository;
   private final FoodRepository foodRepository;
   private final DietScoreRepository dietScoreRepository;
@@ -224,9 +224,7 @@ private final SessionService sessionService;
 
   @Override
   public List<DietScoreDTO> getDietScoreMonthList(LocalDateTime currentDate) {
-
     UserDTO userDTO = sessionService.getUserFromToken();
-
 
     List<DietScoreEntity> dietScoreMonthList = dietScoreRepository.getDietScoreMonthList(
         currentDate.toLocalDate().withDayOfMonth(1).atStartOfDay(),

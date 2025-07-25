@@ -64,7 +64,7 @@ public class DietController {
   @Operation(summary = "식단 점수 한달 조회", description = "식단 점수 한달치를 조회할 때 사용하는 API")
   @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   @Parameters({
-      @Parameter(name = "currentDate", description = "오늘 날짜", example = "2025-05-19T00:00:00")
+      @Parameter(name = "currentDate", description = "오늘 날짜", example = "2025-05-19T00:00:00"),
   })
   public ResponseEntity<List<DietScoreDTO>> getDietScoreMonthList(@RequestParam LocalDateTime currentDate) {
     return new ResponseEntity<>(dietService.getDietScoreMonthList(currentDate), HttpStatus.OK);
