@@ -7,6 +7,9 @@ import com.kurung.medicine.entity.SupplementsEntity;
 import com.kurung.medicine.enumeration.MEDICINE;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.kurung.medicine.repository.MedicineRepository;
+import com.kurung.medicine.repository.SupplementsRepository;
+
 
 @Service
 @RequiredArgsConstructor
