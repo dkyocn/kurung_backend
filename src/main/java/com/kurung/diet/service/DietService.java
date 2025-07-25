@@ -3,6 +3,7 @@ package com.kurung.diet.service;
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.dto.FoodDTO;
+import com.kurung.diet.dto.NutritionDTO;
 import com.kurung.diet.enumeration.MEAL;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,4 +27,5 @@ public interface DietService {
     // 음식 리스트 조회
     List<FoodDTO> getFoodList(String keyword);
 
+    NutritionDTO.TodayNutritionDTO getTodayNutrition(LocalDateTime currentDate);
 }
