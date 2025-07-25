@@ -29,6 +29,7 @@ public class DietRepositorySupportImpl implements DietRepositorySupport{
             .fetchOne();
     }
 
+
     @Override
     public List<DietEntity> getTodayDiet(LocalDateTime startTime, LocalDateTime endTime, String userUuid) {
         return jpaQueryFactory.selectFrom(dietEntity)

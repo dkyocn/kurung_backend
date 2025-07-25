@@ -34,6 +34,8 @@ public class HealthOptionEntity {
   @JoinColumn(name = "QUESTION_ID")
   @ManyToOne(fetch = FetchType.LAZY)
   private HealthQuestionEntity question;
+  @Column(name = "TEXT_OPTION")
+  private int textOption;
   @Column(name = "HEALTH_ANSWER")
   @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private List<HealthAnswerEntity> answers;
