@@ -14,26 +14,26 @@ import com.kurung.medicine.repository.SupplementsRepository;
 @Service
 @RequiredArgsConstructor
 public class MedicineServiceImpl implements MedicineService {
-  private final MedicineRepository medicineRepository;
-  private final SupplementsRepository supplementsRepository;
+  // private final MedicineRepository medicineRepository;
+  // private final SupplementsRepository supplementsRepository;
 
-  @Override
-  public SubstanceDTO getSuppById(int suppId) {
+  // @Override
+  // public SubstanceDTO getSuppById(int suppId) {
 
-    SupplementsEntity supplementsEntity = supplementsRepository.getSuppById(suppId);
+  //   SupplementsEntity supplementsEntity = supplementsRepository.getSuppById(suppId);
 
-    if (supplementsEntity == null) {
-      throw new CustomIllegalArgumentException(CustomHttpStatus.DIET_NOT_FOUND);
-    }
+  //   if (supplementsEntity == null) {
+  //     throw new CustomIllegalArgumentException(CustomHttpStatus.DIET_NOT_FOUND);
+  //   }
 
-    return SubstanceDTO.builder()
-        .substanceId(supplementsEntity.getSuppId())
-        .name(supplementsEntity.getSuppName())
-        .nameKo(supplementsEntity.getSuppNameKo())
-        .imagePath(supplementsEntity.getImagePath())
-        .category(supplementsEntity.getCategory())
-        .company(supplementsEntity.getCompany())
-        .medicine(MEDICINE.SUPPLEMENTS)
-        .build();
-  }
+  //   return SubstanceDTO.builder()
+  //       .substanceId(supplementsEntity.getSuppId())
+  //       .name(supplementsEntity.getSuppName())
+  //       .nameKo(supplementsEntity.getSuppNameKo())
+  //       .imagePath(supplementsEntity.getImagePath())
+  //       .category(supplementsEntity.getCategory())
+  //       .company(supplementsEntity.getCompany())
+  //       .medicine(MEDICINE.SUPPLEMENTS)
+  //       .build();
+  // }
 }
