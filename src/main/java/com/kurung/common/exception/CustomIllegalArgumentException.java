@@ -7,11 +7,11 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class CustomIllegalArgumentException extends IllegalArgumentException {
 
-    private final int statusCode;
+  private final int statusCode;
 
-    public CustomIllegalArgumentException(CustomHttpStatus customHttpStatus) {
-        super(customHttpStatus.getMessage());
-        this.statusCode = customHttpStatus.getValue();
+  public CustomIllegalArgumentException(CustomHttpStatus customHttpStatus) {
+    super(customHttpStatus.getMessage());
+    this.statusCode = customHttpStatus.getValue();
 
-    }
+  }
 }

@@ -6,6 +6,7 @@ import com.kurung.diet.entity.DietEntity;
 import com.kurung.diet.enumeration.MEAL;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -22,9 +23,18 @@ public class DietRepositorySupportImpl implements DietRepositorySupport{
     }
 
     @Override
-    public DietEntity getCurrentDiet(LocalDateTime currentDate, String userUuid, MEAL meal) {
+    public DietEntity getCurrentDiet(LocalDateTime startTime, LocalDateTime endTime, String userUuid, MEAL meal) {
         return jpaQueryFactory.selectFrom(dietEntity)
-            .where(dietEntity.dietDate.eq(currentDate).and(dietEntity.user.userUuid.eq(userUuid)).and(dietEntity.meal.eq(meal)))
+            .where(dietEntity.dietDate.between(startTime,endTime).and(dietEntity.user.userUuid.eq(userUuid)).and(dietEntity.meal.eq(meal)))
             .fetchOne();
+    }
+}
+
+
+    @Override
+    public List<DietEntity> getTodayDiet(LocalDateTime startTime, LocalDateTime endTime, String userUuid) {
+        return jpaQueryFactory.selectFrom(dietEntity)
+            .where(dietEntity.dietDate.between(startTime,endTime).and(dietEntity.user.userUuid.eq(userUuid)))
+            .fetch();
     }
 }

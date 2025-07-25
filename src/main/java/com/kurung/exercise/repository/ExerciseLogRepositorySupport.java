@@ -1,17 +1,19 @@
 package com.kurung.exercise.repository;
 
-import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ExerciseLogRepositorySupport {
-  List<SummaryDTO.ExerciseLogDTO> getLogsByConditionAndDate(String uuid, String condition, Date from, Date to);
 
+  // Exercise --------------------------------
+  ExerciseLogEntity getExerciseLogById(int id);
 
   // SUMMARY
-    List<ExerciseLogEntity> getLogsByUserUuid(String userUuid);
+  List<ExerciseLogEntity> getLogsByUserUuid(String userUuid);
 
+  // SummaryDailyList ------------------------------------------
+  List<ExerciseLogEntity> findSummarysByUserUuid(String userUuid, LocalDateTime start, LocalDateTime date);
 
 }

@@ -5,6 +5,7 @@ import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.user.dto.UserDTO;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +17,11 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class ExerciseDTO {
 
-  private int exerciseId;
-  private String exerciseName;
-  private String exerciseCategory;
-  private String tool;
-  private Date createdAt;
+  protected int exerciseId;
+  protected String exerciseName;
+  protected String exerciseCategory;
+  protected String tool;
+  protected LocalDateTime createdAt;
 
   public ExerciseDTO(ExerciseEntity entity) {
     this.exerciseId = entity.getExerciseId();
@@ -29,4 +30,6 @@ public class ExerciseDTO {
     this.tool = entity.getTool();
     this.createdAt = entity.getCreatedAt();
   }
+
+
 }

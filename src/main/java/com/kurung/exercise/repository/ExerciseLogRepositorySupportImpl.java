@@ -5,6 +5,8 @@ import static com.kurung.exercise.entity.QExerciseLogEntity.exerciseLogEntity;
 import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -14,33 +16,43 @@ import java.util.List;
 
 
 @Repository
-@Primary
 @RequiredArgsConstructor
 public class ExerciseLogRepositorySupportImpl implements ExerciseLogRepositorySupport {
 
-    private final JPAQueryFactory jpaQueryFactory;
+  private final JPAQueryFactory queryFactory;
 
-    @Override
-    public List<SummaryDTO.ExerciseLogDTO> getLogsByConditionAndDate(String uuid, String condition, Date from, Date to) {
-        return null;
-//        return jpaQueryFactory
-//                .selectFrom(log)
-//                .where(
-//                        Expressions.stringPath(log, "userUuid").eq(uuid),
-//                        condition != null ? Expressions.stringPath(log, "condition").eq(condition) : null,
-//                        Expressions.datePath(Date.class, log, "createdAt").between(from, to)
-//                )
-//                .fetch()
-//                .stream()
-//                .map(entity -> ExerciseDTO.toExerciseLogBuilder().entity((ExerciseLogEntity) entity).build())
-//                .collect(Collectors.toList());
-    }
+  // Exercise --------------------------------------
+  @Override
+  public ExerciseLogEntity getExerciseLogById(int id) {
+    return queryFactory
+        .selectFrom(exerciseLogEntity)
+        .where(exerciseLogEntity.exerciseLogsId.eq(id))
+        .fetchOne();
+  }
 
-    @Override
-    public List<ExerciseLogEntity> getLogsByUserUuid(String userUuid) {
-            return jpaQueryFactory
-            .selectFrom(exerciseLogEntity)
-            .where(exerciseLogEntity.user.userUuid.eq(userUuid))
-            .fetch();
-    }
+
+  // Summary ---------------------------------------
+  @Override
+  public List<ExerciseLogEntity> getLogsByUserUuid(String userUuid) {
+    return queryFactory
+        .selectFrom(exerciseLogEntity)
+        .where(exerciseLogEntity.user.userUuid.eq(userUuid))
+        .fetch();
+  }
+
+  // SummaryDaily(월간, 일일, 건강리포트) -----------------------------------------
+  @Override
+  public List<ExerciseLogEntity> findSummarysByUserUuid(String userUuid, LocalDateTime start, LocalDateTime end) {
+    return queryFactory
+        .selectFrom(exerciseLogEntity)
+        .where(
+            exerciseLogEntity.user.userUuid.eq(userUuid),
+            exerciseLogEntity.exerciseDate.goe(start),
+            exerciseLogEntity.exerciseDate.lt(end)
+        )
+        .fetch();
+  }
+
+
 }
+

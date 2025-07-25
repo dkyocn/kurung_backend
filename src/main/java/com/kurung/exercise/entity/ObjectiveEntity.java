@@ -1,7 +1,11 @@
 package com.kurung.exercise.entity;
 
+import com.kurung.common.entity.BaseEntity;
+import com.kurung.exercise.dto.ObjectiveDTO;
+import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,13 +13,14 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import org.springframework.data.annotation.CreatedDate;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "TB_OBJECTIVE")
-public class ObjectiveEntity {
+public class ObjectiveEntity extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,26 +37,47 @@ public class ObjectiveEntity {
   private int objectiveDuration;
 
   @Column(name = "OBJECTIVE_WEIGHT")
-  private BigDecimal objectiveWeight;
+  private float objectiveWeight;
 
   @Column(name = "START_DATE", nullable = false)
-  @Temporal(TemporalType.DATE)
-  private Date startDate;
+  private LocalDateTime startDate;
+
   @Column(name = "END_DATE", nullable = false)
-  @Temporal(TemporalType.DATE)
-  private Date endDate;
+  private LocalDateTime endDate;
+
   @Column(name = "MEMO")
   private String memo;
+
   @Column(name = "IS_ACTIVE", nullable = false)
-  private Boolean isActive;
-  @Column(name = "CREATED_AT")
-  @Temporal(TemporalType.DATE)
-  private Date createdAt;
-  @Column(name = "LAST_UPDATED_AT")
-  @Temporal(TemporalType.DATE)
-  private Date lastUpdatedAt;
+  private boolean isActive;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_UUID")
   private UserEntity user;
 
+  @Builder(builderMethodName = "createObjectiveBuilder", builderClassName = "CreateObjectiveBuilder")
+  public ObjectiveEntity(ObjectiveDTO objectiveDTO, UserDTO userDTO) {
+    this.objectiveTitle = objectiveDTO.getObjectiveTitle();
+    this.objectiveCount = objectiveDTO.getObjectiveCount();
+    this.objectiveDuration = objectiveDTO.getObjectiveDuration();
+    this.objectiveWeight = objectiveDTO.getObjectiveWeight();
+    this.startDate = objectiveDTO.getStartDate();
+    this.endDate = objectiveDTO.getEndDate();
+    this.memo = objectiveDTO.getMemo();
+    this.user = UserEntity.createUserBuilder().userDTO(userDTO).build();
+  }
+
+  public void updateObjective(ObjectiveDTO objectiveDTO) {
+    this.objectiveTitle = objectiveDTO.getObjectiveTitle();
+    this.objectiveCount = objectiveDTO.getObjectiveCount();
+    this.objectiveDuration = objectiveDTO.getObjectiveDuration();
+    this.objectiveWeight = objectiveDTO.getObjectiveWeight();
+    this.startDate = objectiveDTO.getStartDate();
+    this.endDate = objectiveDTO.getEndDate();
+    this.memo = objectiveDTO.getMemo();
+  }
+
+  public void updateIsActive() {
+    this.isActive = this.isActive ? false : true;
+  }
 }

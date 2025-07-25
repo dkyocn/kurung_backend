@@ -3,14 +3,9 @@ package com.kurung.missions.entity;
 import com.kurung.common.enumeration.HealthType;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import jakarta.persistence.Id;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.MappedSuperclass;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import lombok.*;
 
 import java.sql.Date;
 
@@ -27,7 +22,7 @@ public class MissionsEntity {
   private int missionId;
 
   @Column(name = "STARTED_DATE")
-  private Date startedDate;
+  private LocalDateTime startedDate;
 
   @Column(name = "IS_COMPLETED", nullable = false)
   private boolean isComplete;

@@ -3,10 +3,12 @@ package com.kurung.diet.service;
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
+import com.kurung.common.security.service.SessionService;
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.dto.FoodDTO;
 import com.kurung.diet.dto.NutritionDTO;
+import com.kurung.diet.dto.NutritionDTO.TodayNutritionDTO;
 import com.kurung.diet.entity.DietEntity;
 import com.kurung.diet.entity.DietScoreEntity;
 import com.kurung.diet.entity.FoodEntity;
@@ -32,7 +34,7 @@ import org.springframework.util.CollectionUtils;
 public class DietServiceImpl implements DietService {
 
   private final UserService userService;
-
+  private final SessionService sessionService;
   private final DietRepository dietRepository;
   private final FoodRepository foodRepository;
   private final DietScoreRepository dietScoreRepository;
@@ -41,9 +43,12 @@ public class DietServiceImpl implements DietService {
   // DIET
 
   @Override
-  public DietDTO getCurrentDiet(LocalDateTime currentDate, String userUuid,  MEAL meal) {
+  public DietDTO getCurrentDiet(LocalDateTime currentDate, MEAL meal) {
 
-    DietEntity dietById = dietRepository.getCurrentDiet(currentDate,userUuid, meal);
+    UserDTO userDTO = sessionService.getUserFromToken();
+
+    DietEntity dietById = dietRepository.getCurrentDiet(currentDate.withHour(0).withMinute(0).withSecond(0),
+        currentDate.withHour(23).withMinute(59).withSecond(59),userDTO.getUserUuid(), meal);
 
     if (dietById != null) {
       return DietDTO.toDietBuilder().dietEntity(dietById).build();
@@ -220,12 +225,12 @@ public class DietServiceImpl implements DietService {
   }
 
   @Override
-  public List<DietScoreDTO> getDietScoreMonthList(LocalDateTime currentDate, String userUuid) {
+  public List<DietScoreDTO> getDietScoreMonthList(LocalDateTime currentDate) {
+    UserDTO userDTO = sessionService.getUserFromToken();
 
     List<DietScoreEntity> dietScoreMonthList = dietScoreRepository.getDietScoreMonthList(
         currentDate.toLocalDate().withDayOfMonth(1).atStartOfDay(),
-        currentDate.toLocalDate().withDayOfMonth(currentDate.toLocalDate().lengthOfMonth()).atStartOfDay(), userUuid);
-
+        currentDate.toLocalDate().withDayOfMonth(currentDate.toLocalDate().lengthOfMonth()).atStartOfDay(), userDTO.getUserUuid());
     return dietScoreMonthList.stream().map(
         dietScoreEntity -> DietScoreDTO.toDietScoreBuilder().dietScoreEntity(dietScoreEntity)
             .build()).collect(Collectors.toList());
@@ -252,6 +257,55 @@ public class DietServiceImpl implements DietService {
     return foodList.stream()
         .map(foodEntity -> FoodDTO.toFoodBuilder().foodEntity(foodEntity).build()).collect(
             Collectors.toList());
+  }
+
+  @Override
+  public TodayNutritionDTO getTodayNutrition(LocalDateTime currentDate) {
+
+    int sodium = 0;
+    int carb = 0;
+    int sugar = 0;
+    int totalFat = 0;
+    int transFat = 0;
+    int saturatedFat = 0;
+    int cholesterol = 0;
+    int protein = 0;
+
+    UserDTO userDTO = sessionService.getUserFromToken();
+
+    List<DietEntity> todayDietList = dietRepository.getTodayDiet(currentDate.withHour(0).withMinute(0).withSecond(0),
+        currentDate.withHour(23).withMinute(59).withSecond(59), userDTO.getUserUuid());
+
+    // 지방 2200kcal -> 48.9 g
+    // 나트륨 2200kcal -> 2000 mg
+    // 탄수화물 2200kcal -> 330 g
+    // 단백질 2200kcal -> 68.75 g
+
+    for (DietEntity diet : todayDietList) {
+      sodium += diet.getNutritional().getSodium();
+      carb += diet.getNutritional().getCarb();
+      sugar += diet.getNutritional().getSugar();
+      totalFat += (diet.getNutritional().getTransFat() + diet.getNutritional().getSaturatedFat());
+      transFat += diet.getNutritional().getTransFat();
+      saturatedFat += diet.getNutritional().getSaturatedFat();
+      cholesterol += diet.getNutritional().getCholesterol();
+      protein += diet.getNutritional().getProtein();
+    }
+
+    return TodayNutritionDTO.builder()
+        .objectiveSodium(Math.round(((float) sodium /2000) * 100))
+        .objectiveCarb(Math.round(((float) carb /330) * 100))
+        .objectiveFat((int) Math.round((totalFat/48.9)* 100))
+        .objectiveProtein((int) Math.round((protein /68.75) * 100))
+        .sodium(sodium)
+        .carb(carb)
+        .sugar(sugar)
+        .totalFat(totalFat)
+        .transFat(transFat)
+        .saturatedFat(saturatedFat)
+        .cholesterol(cholesterol)
+        .protein(protein)
+        .build();
   }
 
 

@@ -1,5 +1,6 @@
 package com.kurung.lifeLog.repository;
 
+
 import static com.kurung.lifeLog.entity.QLifeLogEntity.lifeLogEntity;
 
 import com.kurung.lifeLog.entity.LifeLogEntity;
@@ -24,14 +25,12 @@ public class LifeLogRepositorySupportImpl implements LifeLogRepositorySupport {
   @Override
   public List<LifeLogEntity> findByUser_UserUuidAndCreatedAtBetween(
       String userUuid, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-    Date startDate = Date.valueOf(startDateTime.toLocalDate());
-    Date endDate = Date.valueOf(endDateTime.toLocalDate());
 
     return jpaQueryFactory
         .selectFrom(lifeLogEntity)
         .where(
             lifeLogEntity.user.userUuid.eq(userUuid),
-            lifeLogEntity.createdAt.between(startDateTime, endDateTime)
+            lifeLogEntity.lifelogDate.between(startDateTime, endDateTime)
         )
         .fetch();
   }

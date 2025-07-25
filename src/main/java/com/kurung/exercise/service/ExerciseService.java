@@ -5,27 +5,63 @@ import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 
+import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 public interface ExerciseService {
 
 
-    SummaryDTO.ExerciseLogDTO createExerciseLog(SummaryDTO.ExerciseLogDTO exerciseLogDTO);
-    List<SummaryDTO.ExerciseLogDTO> getExerciseLogsByUser(String uuid);
-    SummaryDTO.ExerciseLogDTO getExerciseLogById(int id);
-    void deleteExerciseLog(int id);
-    // Summary --------------------------------------
-    SummaryDTO getSummaryByUser(String uuid);
+  void createExerciseLog(ExerciseLogDTO exerciseLogDTO);
 
-    // Objective ------------------------------------
-    ObjectiveDTO getObjectiveById(int id);
+  SummaryDTO.ExerciseLogDTO getExerciseLogById(int id);
 
-    // Routines -------------------------------------
-    RoutinesDTO getRoutinesById(int id);
+  SummaryDTO.ExerciseLogDTO updateExerciseLog(SummaryDTO.ExerciseLogDTO exerciseLogDTO);
 
-    // Exercise -------------------------------------
-    ExerciseDTO getExerciseById(int id);
+  void deleteExerciseLog(int id);
 
+
+  // Summary --------------------------------------
+  SummaryDTO getSummaryByUser();
+
+  // SummaryDailyList -----------------------------
+  SummaryDTO getSummaryDailyList(LocalDate date);
+
+  // SummaryMonthly --------------------------------
+  SummaryDTO.MonthlySummaryDTO getMonthlySummary(YearMonth month);
+
+  // Objective ------------------------------------
+
+  ObjectiveDTO getObjectiveByMonth(LocalDateTime date);
+
+  void createObjective(ObjectiveDTO objectiveDTO);
+
+  void updateObjective(ObjectiveDTO objectiveDTO);
+
+  void updateObjectiveaction(int objectiveId);
+
+  ObjectiveDTO getObjectiveById(int objectiveId);
+
+//    ObjectiveEntity getObjectiveById(int id);
+
+  // Routines -------------------------------------
+  RoutinesDTO getRoutinesById(int id);
+
+  void createRoutine(RoutinesDTO routinesDTO);
+
+  void deleteRoutine(int routinesId);
+
+  List<RoutinesDTO> getRoutinesByUserAndDate(LocalDate date);
+
+  // Exercise -------------------------------------
+  ExerciseDTO getExerciseById(int id);
+
+  List<ExerciseDTO> getAllExercises();
+
+  // ExerciseMonthlyTime --------------------------
+  List<SummaryDTO> getMonthlyExerciseTime(LocalDateTime timeMonth);
 
 
 }

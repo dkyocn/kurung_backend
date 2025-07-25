@@ -1,48 +1,48 @@
 package com.kurung.exercise.dto;
 
+import com.kurung.common.dto.BaseDTO;
 import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.user.dto.UserDTO;
+import com.kurung.user.entity.UserEntity;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.math.BigDecimal;
-import java.util.Date;
 
 @Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ObjectiveDTO extends RoutinesDTO {
+public class ObjectiveDTO extends BaseDTO {
 
-    private int objectiveId;
-    private UserDTO user;
-    private String objectiveTitle;
-    private int objectiveCount;
-    private int objectiveDuration;
-    private BigDecimal objectiveWeight;
-    private Date startDate;
-    private Date endDate;
-    private String memo;
-    private Boolean isActive;
-    private Date createdAt;
-    private Date lastUpdatedAt;
+  protected int objectiveId;
+  protected UserDTO user;
+  protected String objectiveTitle;
+  protected int objectiveCount;
+  protected int objectiveDuration;
+  protected float objectiveWeight;
+  protected LocalDateTime startDate;
+  protected LocalDateTime endDate;
+  protected String memo;
+  protected boolean isActive;
 
-    public ObjectiveDTO(ObjectiveEntity entity) {
-        this.objectiveId = entity.getObjectiveId();
-        this.user = entity.getUser() != null
-            ? UserDTO.toUserBuilder().userEntity(entity.getUser()).build()
-            : null;;
-        this.objectiveTitle = entity.getObjectiveTitle();
-        this.objectiveCount = entity.getObjectiveCount();
-        this.objectiveDuration = entity.getObjectiveDuration();
-        this.objectiveWeight = entity.getObjectiveWeight();
-        this.startDate = entity.getStartDate();
-        this.endDate = entity.getEndDate();
-        this.memo = entity.getMemo();
-        this.isActive = entity.getIsActive();
-        this.createdAt = entity.getCreatedAt();
-        this.lastUpdatedAt = entity.getLastUpdatedAt();
-    }
+  @Builder(builderMethodName = "toObjectiveBuilder", builderClassName = "toObjectiveBuilder")
+  public ObjectiveDTO(ObjectiveEntity objectiveEntity, UserDTO userDTO) {
+    this.objectiveId = objectiveEntity.getObjectiveId();
+    this.user = userDTO;
+    this.objectiveTitle = objectiveEntity.getObjectiveTitle();
+    this.objectiveCount = objectiveEntity.getObjectiveCount();
+    this.objectiveDuration = objectiveEntity.getObjectiveDuration();
+    this.objectiveWeight = objectiveEntity.getObjectiveWeight();
+    this.startDate = objectiveEntity.getStartDate();
+    this.endDate = objectiveEntity.getEndDate();
+    this.memo = objectiveEntity.getMemo();
+    this.createdAt = objectiveEntity.getCreatedAt();
+    this.updatedAt = objectiveEntity.getUpdatedAt();
+    this.isActive = objectiveEntity.isActive();
+  }
+
+
 }

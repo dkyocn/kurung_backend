@@ -9,6 +9,7 @@ server:
 spring:
   application:
     name: kurung_backend
+
   servlet:
     multipart:
       max-file-size: 1MB
@@ -19,10 +20,7 @@ spring:
     url: jdbc:oracle:thin:@127.0.0.1:1521:XE
     username: c##kurung
     password: kurung2025
-    #    username: system
-    #    password: oracle
     driver-class-name: oracle.jdbc.driver.OracleDriver
-
 
   jpa:
     hibernate:
@@ -38,6 +36,18 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.OracleDialect
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kurunghelpdesk@gmail.com
+    password: ilko lpxn eyti fmkh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 springdoc:
   swagger-ui:
     path: /api-test  # swagger-ui 접근 경로에 대한 별칭, 해당 주소로 접속해도 http://localhost:8080/swagger-ui/index.html로 리다이렉션 됨.
@@ -46,3 +56,8 @@ springdoc:
     operations-sorter: method  # delete - get - patch - post - put 순으로 정렬, alpha를 사용하면 알파벳 순으로 정렬 가능
   paths-to-match:
     - /api/v1/kurung/** # swagger-ui에 표시할 api의 엔드포인트 패턴
+
+jwt:
+  secret: vrDt6Hhffv9gPPEEHDBVhxY4W+gf//bxDgVljRr/+8z1ZxqEdgTmDDZ/UIquJuWQdZmJ8mz/DuzLF/pmcMFaqw==
+  access_expiration: 1800000
+  refresh_expiration: 84600000

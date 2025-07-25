@@ -4,5 +4,6 @@ public enum HealthType {
   DIET,
   EXERCISE,
   RECIPE,
-  STRESS
+  STRESS,
+  DAILY
 }

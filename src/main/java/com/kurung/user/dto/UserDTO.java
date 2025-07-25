@@ -1,13 +1,12 @@
 package com.kurung.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.enumeration.Gender;
 import com.kurung.user.enumeration.UserPath;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.Date;
@@ -16,6 +15,7 @@ import java.sql.Date;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class UserDTO {
 
     @Schema(description = "사용자 UUID", example = "2025061401")
@@ -26,14 +26,14 @@ public class UserDTO {
     protected boolean userFaceLoginYN;
     @Schema(description = "페이스 로그인 백터", example = "0.1234, -0.5678, 0.8912, -0.2345, 0.6789, ... ,-0.4321, 0.0987, -0.6543, 0.3210, -0.9876")
     protected String userFaceLoginRef;
-    @Schema(description = "사용자 비밀번호", example = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918")
+    @Schema(description = "사용자 비밀번호", example = "SHA-256 암호화 비밀번호")
     protected String userPwd;
     @Schema(description = "사용자 닉네임",example = "송민서")
     protected String userNick;
     @Schema(description = "사용자 성별", example = "FEMALE")
     protected Gender userGender;
     @Schema(description = "사용자 생일", example = "1996-01-01")
-    protected Date userAge;
+    protected LocalDateTime userAge;
     @Schema(description = "소셜 로그인 키")
     protected String userKey;
     @Schema(description = "사용자 로그인 경로", example = "NORMAL")
@@ -44,6 +44,8 @@ public class UserDTO {
     protected boolean isActive;
     @Schema(description = "관리자 여부", example = "true")
     protected boolean adminYN;
+    @Schema(description = "리프레시 토큰 발급", example = "리프레시 토큰")
+    protected String userRefreshToken;
 
     @Builder(builderMethodName = "toUserBuilder", builderClassName = "toUserBuilder")
     public UserDTO(UserEntity userEntity) {

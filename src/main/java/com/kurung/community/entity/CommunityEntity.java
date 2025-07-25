@@ -2,6 +2,8 @@ package com.kurung.community.entity;
 
 import com.kurung.common.entity.BaseEntity;
 import com.kurung.common.enumeration.HealthType;
+import com.kurung.community.dto.CommunityDTO;
+import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,4 +49,18 @@ public class CommunityEntity extends BaseEntity {
   @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private List<CommentEntity> comment;
 
+  @Builder(builderMethodName = "toCommunityBuilder", builderClassName = "toCommunityBuilder")
+  public CommunityEntity(CommunityDTO communityDTO, UserDTO user) {
+    this.communityId = communityDTO.getCommunityId();
+    this.title = communityDTO.getTitle();
+    this.content = communityDTO.getContent();
+    this.category = communityDTO.getCategory();
+    this.user = UserEntity.createUserBuilder().userDTO(user).build();
+    this.comment = new ArrayList<>();
+  }
+
+  public void updateCommunity(CommunityDTO communityDTO) {
+    this.title = communityDTO.getTitle();
+    this.content = communityDTO.getContent();
+  }
 }
