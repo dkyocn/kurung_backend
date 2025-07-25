@@ -4,6 +4,7 @@ import com.kurung.exercise.dto.ExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
+
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,17 +24,17 @@ public interface ExerciseService {
 
 
   // Summary --------------------------------------
-  SummaryDTO getSummaryByUser(String uuid);
+  SummaryDTO getSummaryByUser();
 
   // SummaryDailyList -----------------------------
-  SummaryDTO getSummaryDailyList(String userUuid, LocalDate date);
+  SummaryDTO getSummaryDailyList(LocalDate date);
 
   // SummaryMonthly --------------------------------
-  SummaryDTO.MonthlySummaryDTO getMonthlySummary(String userUuid, YearMonth month);
+  SummaryDTO.MonthlySummaryDTO getMonthlySummary(YearMonth month);
 
   // Objective ------------------------------------
 
-  ObjectiveDTO getObjectiveByMonth(LocalDateTime date, String userUuid);
+  ObjectiveDTO getObjectiveByMonth(LocalDateTime date);
 
   void createObjective(ObjectiveDTO objectiveDTO);
 
@@ -41,10 +42,18 @@ public interface ExerciseService {
 
   void updateObjectiveaction(int objectiveId);
 
+  ObjectiveDTO getObjectiveById(int objectiveId);
+
 //    ObjectiveEntity getObjectiveById(int id);
 
   // Routines -------------------------------------
   RoutinesDTO getRoutinesById(int id);
+
+  void createRoutine(RoutinesDTO routinesDTO);
+
+  void deleteRoutine(int routinesId);
+
+  List<RoutinesDTO> getRoutinesByUserAndDate(LocalDate date);
 
   // Exercise -------------------------------------
   ExerciseDTO getExerciseById(int id);

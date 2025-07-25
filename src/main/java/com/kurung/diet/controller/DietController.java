@@ -43,11 +43,10 @@ public class DietController {
   })
   @Parameters({
       @Parameter(name = "currentDate", description = "오늘 날짜", example = "2025-05-19T00:00:00"),
-      @Parameter(name = "userUuid", description = "사용자 UUID", example = "2025061401"),
       @Parameter(name = "meal", description = "아침, 점심, 저녁", example = "DINNER")
   })
-  public ResponseEntity<DietDTO> getDietById(@RequestParam LocalDateTime currentDate, @RequestParam String userUuid, @RequestParam MEAL meal) {
-    return new ResponseEntity<>(dietService.getCurrentDiet(currentDate,userUuid,meal), HttpStatus.OK);
+  public ResponseEntity<DietDTO> getDietById(@RequestParam LocalDateTime currentDate, @RequestParam MEAL meal) {
+    return new ResponseEntity<>(dietService.getCurrentDiet(currentDate,meal), HttpStatus.OK);
   }
 
   @GetMapping("/score/{id}")

@@ -9,25 +9,28 @@ import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
+import com.kurung.exercise.dto.SummaryDTO.MonthlySummaryDTO;
 import com.kurung.exercise.entity.ExerciseEntity;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.exercise.entity.ObjectiveEntity;
+import com.kurung.exercise.entity.RoutinesEntity;
 import com.kurung.exercise.repository.ExerciseLogRepository;
 import com.kurung.exercise.repository.ExerciseRepository;
 import com.kurung.exercise.repository.ObjectiveRepository;
 import com.kurung.exercise.repository.RoutinesRepository;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.temporal.WeekFields;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -35,19 +38,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class ExerciseServiceImpl implements ExerciseService {
 
   private final UserService userService;
-  private final SessionService sessionService;
   private final ExerciseRepository exerciseRepository;
   private final ExerciseLogRepository exerciseLogRepository;
   private final ObjectiveRepository objectiveRepository;
   private final RoutinesRepository routinesRepository;
+  private final SessionService sessionService;
 
 
-  // Exercise create -------------------------------------------------------
+  // ExerciseLog create -------------------------------------------------------
   @Transactional
   @Override
   public void createExerciseLog(ExerciseLogDTO exerciseLogDTO) {
-    // 1. UserEntity 조회 (UserDTO에 userUuid가 반드시 들어와야 함)
-    UserDTO userByUuid = userService.getUserByUuid(exerciseLogDTO.getUser().getUserUuid());
+    UserDTO userDTO = sessionService.getUserFromToken();
 
     ExerciseEntity exerciseById = exerciseRepository.getExerciseById(
         exerciseLogDTO.getExercise().getExerciseId());
@@ -55,7 +57,7 @@ public class ExerciseServiceImpl implements ExerciseService {
       // 2. DB에 저장
       exerciseLogRepository.save(ExerciseLogEntity.createExerciseLogBuilder()
           .exerciseLogDTO(exerciseLogDTO)
-          .userDTO(userByUuid)
+          .userDTO(userDTO)
           .exerciseEntity(exerciseById)
           .build());
     } else {
@@ -63,7 +65,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
   }
 
-  // Exercise Updated ---------------------------------
+  // ExerciseLog Updated ---------------------------------
   @Override
   @Transactional
   public SummaryDTO.ExerciseLogDTO updateExerciseLog(SummaryDTO.ExerciseLogDTO exerciseLogDTO) {
@@ -84,7 +86,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         .build();
   }
 
-  // Exercise Delete ---------------------------------------
+  // ExerciseLog Delete ---------------------------------------
   @Override
   @Transactional
   public void deleteExerciseLog(int id) {
@@ -98,7 +100,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     exerciseLogRepository.delete(entity);
   }
 
-  // Exercise Selected ---------------------------------------
+  // ExerciseLog Selected ---------------------------------------
   @Override
   public ExerciseLogDTO getExerciseLogById(int id) {
     ExerciseLogEntity entity = exerciseLogRepository.getExerciseLogById(id);
@@ -114,9 +116,11 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   // SUMMARY  -----------------------------------------------------------
   @Override
-  public SummaryDTO getSummaryByUser(String userUuid) {
+  public SummaryDTO getSummaryByUser() {
+    // 1. 로그인 유저의 userUuid를 토큰에서 추출
+    UserDTO userDTO = sessionService.getUserFromToken();
 
-    List<ExerciseLogEntity> logs = exerciseLogRepository.getLogsByUserUuid(userUuid);
+    List<ExerciseLogEntity> logs = exerciseLogRepository.getLogsByUserUuid(userDTO.getUserUuid());
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
     int totalKcal = logs.stream().mapToInt(ExerciseLogEntity::getCalories).sum();
@@ -133,12 +137,14 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   // SummaryMonthly ---------------------------------
   @Override
-  public SummaryDTO.MonthlySummaryDTO getMonthlySummary(String userUuid, YearMonth month) {
+  public SummaryDTO.MonthlySummaryDTO getMonthlySummary(YearMonth month) {
+    UserDTO userDTO = sessionService.getUserFromToken();
+
     LocalDate start = month.atDay(1);
     LocalDate end = month.atEndOfMonth();
 
     List<ExerciseLogEntity> logs = exerciseLogRepository.findSummarysByUserUuid(
-        userUuid, start.atStartOfDay(), end.atTime(23, 59, 59)
+        userDTO.getUserUuid(), start.atStartOfDay(), end.atTime(23, 59, 59)
     );
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
@@ -147,7 +153,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     // 목표값 조회 및 달성률 계산
     ObjectiveEntity objective = objectiveRepository.getObjectiveByMonth(
-        start.atStartOfDay(), end.atTime(23, 59, 59), userUuid);
+        start.atStartOfDay(), end.atTime(23, 59, 59), userDTO.getUserUuid());
 
     int targetRoutineCount = 0;
     int targetDuration = 0;
@@ -163,7 +169,6 @@ public class ExerciseServiceImpl implements ExerciseService {
         ? Math.round((double) totalDuration / targetDuration * 1000) / 10.0
         : 0.0;
     double goalAchievementRate = Math.round((routineRate + durationRate) / 2 * 10) / 10.0;
-
 
     // 주차별 정보
     int[] weeklyRoutineCounts = new int[4];
@@ -192,15 +197,18 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   // SummaryDailyList --------------------------------
   @Override
-  public SummaryDTO getSummaryDailyList(String userUuid, LocalDate date) {
+  public SummaryDTO getSummaryDailyList(LocalDate date) {
+    UserDTO userDTO = sessionService.getUserFromToken();
+
     LocalDateTime start = date.atStartOfDay();           // 2025-06-02 00:00:00
     LocalDateTime end = date.plusDays(1).atStartOfDay(); // 2025-06-03 00:00:00
 
-    List<ExerciseLogEntity> logs = exerciseLogRepository.findSummarysByUserUuid(userUuid, start,
-        end);
+    List<ExerciseLogEntity> logs = exerciseLogRepository.findSummarysByUserUuid(
+        userDTO.getUserUuid(), start, end);
 
     for (ExerciseLogEntity log : logs) {
-      System.out.println("exerciseLogsId: " + log.getExerciseLogsId() + ", date: " + log.getExerciseDate());
+      System.out.println(
+          "exerciseLogsId: " + log.getExerciseLogsId() + ", date: " + log.getExerciseDate());
     }
 
     int totalDuration = logs.stream().mapToInt(ExerciseLogEntity::getDuration).sum();
@@ -232,9 +240,9 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   // Objective Monthly -------------------------------
   @Override
-  public ObjectiveDTO getObjectiveByMonth(LocalDateTime date, String userUuid) {
+  public ObjectiveDTO getObjectiveByMonth(LocalDateTime date) {
 
-    UserDTO userByUuid = userService.getUserByUuid(userUuid);
+    UserDTO userDTO = sessionService.getUserFromToken();
 
     // 1. 월 시작과 종료 날짜 계산
     LocalDateTime startOfMonth = date.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
@@ -243,7 +251,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
     // 2. 해당 월에 해당하는 목표 엔티티 조회
     ObjectiveEntity objectiveEntity = objectiveRepository.getObjectiveByMonth(startOfMonth,
-        endOfMonth, userUuid);
+        endOfMonth, userDTO.getUserUuid());
 
     // 3. 결과가 없으면 null 반환
     if (objectiveEntity == null) {
@@ -253,7 +261,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     // 5. ObjectiveDTO로 변환해서 반환
     return ObjectiveDTO.toObjectiveBuilder()
         .objectiveEntity(objectiveEntity)
-        .userDTO(userByUuid)
+        .userDTO(userDTO)
         .build();
   }
 
@@ -295,29 +303,89 @@ public class ExerciseServiceImpl implements ExerciseService {
     );
   }
 
+  @Override
+  public ObjectiveDTO getObjectiveById(int objectiveId) {
+    ObjectiveEntity entity = objectiveRepository.findByObjectiveId(objectiveId);
+    if (entity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.OBJECTIVE_NOT_FOUND);
+    }
+    return ObjectiveDTO.toObjectiveBuilder().objectiveEntity(entity).build();
+  }
+
 
   // Routines ----------------------------------------------------------------------
   @Override
   public RoutinesDTO getRoutinesById(int id) {
-    return routinesRepository.findById(id)
-        .map(entity -> RoutinesDTO.builder()
-            .routinesId(entity.getRoutinesId())
-            .user(UserDTO.toUserBuilder()
-                .userEntity(entity.getUser())
-                .build())
-            .title(entity.getTitle())
-            .routineLevel(entity.getRoutineLevel())
-            .place(entity.getPlace())
-            .videoUrl(entity.getVideoUrl())
-            .savedDate(entity.getSavedDate())
-            .build()).orElseThrow();
+    RoutinesEntity entity = routinesRepository.getRoutinesById(id);
+    if (entity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.ROUTINE_NOT_FOUND);
+    }
+    return RoutinesDTO.builder()
+        .routinesId(entity.getRoutinesId())
+        .user(
+            entity.getUser() != null ? UserDTO.toUserBuilder().userEntity(entity.getUser()).build()
+                : null)
+        .title(entity.getTitle())
+        .routineLevel(entity.getRoutineLevel())
+        .place(entity.getPlace())
+        .videoUrl(entity.getVideoUrl())
+        .savedDate(entity.getSavedDate())
+        .build();
+  }
+
+  @Override
+  public List<RoutinesDTO> getRoutinesByUserAndDate(LocalDate date) {
+    UserDTO userDTO = sessionService.getUserFromToken();
+
+    LocalDateTime start = date.atStartOfDay();
+    LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+    List<RoutinesEntity> list = routinesRepository.findRoutinesByUserAndDate(userDTO.getUserUuid(),
+        start, end);
+
+    return list.stream()
+        .map(RoutinesDTO::new)
+        .collect(Collectors.toList());
+  }
+
+  // RoutinesCreate ---------------------------------------------------------------
+  @Transactional
+  @Override
+  public void createRoutine(RoutinesDTO routinesDTO) {
+    // 1. userUuid로 UserDTO 조회
+    UserDTO userDTO = sessionService.getUserFromToken();
+
+    // 2. 빌더로 Entity 생성 후 저장
+    routinesRepository.save(
+        RoutinesEntity.createRoutinesBuilder()
+            .routinesDTO(routinesDTO)
+            .userDTO(userDTO)
+            .build()
+    );
+  }
+
+  // RoutinesDelete -------------------------------------------------------------------
+  @Transactional
+  @Override
+  public void deleteRoutine(int routinesId) {
+    Optional<RoutinesEntity> optionalEntity = routinesRepository.findById(routinesId);
+
+    if (!optionalEntity.isPresent()) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.ROUTINE_NOT_FOUND);
+    }
+
+    RoutinesEntity entity = optionalEntity.get();
+    routinesRepository.delete(entity);
   }
 
   // Exercise ------------------------------------------------------------
   @Override
   public ExerciseDTO getExerciseById(int id) {
-    ExerciseEntity entity = exerciseRepository.getExerciseById(id); // findByExerciseId가 null 반환하는 메서드여야 함
-    if (entity == null) return null;
+    ExerciseEntity entity = exerciseRepository.getExerciseById(
+        id); // findByExerciseId가 null 반환하는 메서드여야 함
+    if (entity == null) {
+      return null;
+    }
     return ExerciseDTO.builder()
         .exerciseId(entity.getExerciseId())
         .exerciseName(entity.getExerciseName())
@@ -334,7 +402,6 @@ public class ExerciseServiceImpl implements ExerciseService {
         .map(ExerciseDTO::new) // entity → dto 변환
         .collect(Collectors.toList());
   }
-
 
 
   // ExerciseMonthlyTime -------------------------------------------------

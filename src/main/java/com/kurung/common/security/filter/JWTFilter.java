@@ -22,16 +22,21 @@ public class JWTFilter extends OncePerRequestFilter {
     // 토큰 검사를 생략할 URL 목록 정의
     private boolean isExcludedUrl(String url) {
         return url.equals("/") ||
-                url.equals("/favicon.ico") ||
-                url.equals("/api/v1/kurung/user/login") ||
-                url.equals("/api/v1/kurung/user/signup") ||
-                url.equals("/api/v1/kurung/user/idchk") ||
-                url.equals("/reissue") ||
-                url.endsWith(".png") ||
-                url.startsWith("/js/") ||
-                url.startsWith("/css/") ||
-                url.startsWith("/api/personality-test/") ||
-                url.startsWith("/api/psychological-test/");
+            url.equals("/favicon.ico") ||
+            url.equals("/api/v1/kurung/user/login") ||
+            url.equals("/api/v1/kurung/user/signup") ||
+            url.equals("/api/v1/kurung/user/check-userid") ||
+            url.equals("/api/v1/kurung/user/send-verification-email") ||
+            url.equals("/api/v1/kurung/user/verify-code") ||
+            url.startsWith("/api-test") ||
+            url.startsWith("/swagger-ui/") ||
+            url.startsWith("/v3/api-docs") ||
+            url.equals("/reissue") ||
+            url.endsWith(".png") ||
+            url.startsWith("/js/") ||
+            url.startsWith("/css/") ||
+            url.startsWith("/api/personality-test/") ||
+            url.startsWith("/api/psychological-test/");
     }
 
     @Override

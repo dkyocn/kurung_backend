@@ -42,9 +42,11 @@ public class DietServiceImpl implements DietService {
   // DIET
 
   @Override
-  public DietDTO getCurrentDiet(LocalDateTime currentDate, String userUuid,  MEAL meal) {
+  public DietDTO getCurrentDiet(LocalDateTime currentDate, MEAL meal) {
 
-    DietEntity dietById = dietRepository.getCurrentDiet(currentDate,userUuid, meal);
+    UserDTO userDTO = sessionService.getUserFromToken();
+
+    DietEntity dietById = dietRepository.getCurrentDiet(currentDate,userDTO.getUserUuid(), meal);
 
     if (dietById != null) {
       return DietDTO.toDietBuilder().dietEntity(dietById).build();
@@ -227,13 +229,10 @@ public class DietServiceImpl implements DietService {
     List<DietScoreEntity> dietScoreMonthList = dietScoreRepository.getDietScoreMonthList(
         currentDate.toLocalDate().withDayOfMonth(1).atStartOfDay(),
         currentDate.toLocalDate().withDayOfMonth(currentDate.toLocalDate().lengthOfMonth()).atStartOfDay(), userDTO.getUserUuid());
-
     return dietScoreMonthList.stream().map(
         dietScoreEntity -> DietScoreDTO.toDietScoreBuilder().dietScoreEntity(dietScoreEntity)
             .build()).collect(Collectors.toList());
   }
-
-  // FOOD
 
   @Override
   public FoodDTO getFoodById(int id) {
