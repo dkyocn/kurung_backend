@@ -28,7 +28,6 @@ public class DietRepositorySupportImpl implements DietRepositorySupport{
             .where(dietEntity.dietDate.between(startTime,endTime).and(dietEntity.user.userUuid.eq(userUuid)).and(dietEntity.meal.eq(meal)))
             .fetchOne();
     }
-}
 
 
     @Override
