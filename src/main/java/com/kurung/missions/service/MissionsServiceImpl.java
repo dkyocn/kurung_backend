@@ -1,7 +1,9 @@
 package com.kurung.missions.service;
 
 import com.kurung.common.enumeration.CustomHttpStatus;
+import com.kurung.common.enumeration.HealthType;
 import com.kurung.common.exception.CustomIllegalArgumentException;
+import com.kurung.common.security.service.SessionService;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.entity.DietScoreEntity;
 import com.kurung.missions.dto.MissionsDTO;
@@ -24,6 +26,7 @@ public class MissionsServiceImpl implements MissionsService {
 
   private final MissionsRepository missionsRepository;
   private final UserService userService;
+  private final SessionService sessionService;
 
   @Override
   public List<MissionsDTO> getMissionsList() {
@@ -56,15 +59,15 @@ public class MissionsServiceImpl implements MissionsService {
 
 
   @Override
-  public List<MissionsDTO> getMissionMonthList(LocalDate currentDate, String userUuid) {
-
+  public List<MissionsDTO> getMissionMonthList(LocalDate currentDate, HealthType displayType) {
+    UserDTO userDTO = sessionService.getUserFromToken();
     // 현재 월의 시작과 끝 구하기
     LocalDate startDate = LocalDate.from(currentDate.withDayOfMonth(1).atStartOfDay());
     LocalDate endDate = LocalDate.from(
         currentDate.withDayOfMonth(currentDate.lengthOfMonth()).atStartOfDay());
 
     List<MissionsEntity> missionMonthList = missionsRepository.getMissionMonthList(
-        startDate, endDate, userUuid
+        startDate, endDate, userDTO.getUserUuid(), displayType
     );
 
     return missionMonthList.stream()

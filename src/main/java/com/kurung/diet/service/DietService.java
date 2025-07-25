@@ -13,7 +13,7 @@ public interface DietService {
     DietDTO getCurrentDiet(LocalDateTime currentDate, String userUuid, MEAL meal);
     // 식단 점수 조회
     DietScoreDTO getDietScoreById(int id);
-    List<DietScoreDTO> getDietScoreMonthList(LocalDateTime currentDate, String userUuid);
+    List<DietScoreDTO> getDietScoreMonthList(LocalDateTime currentDate);
     // 식단 저장
     void createDiet(DietDTO dietDTO);
     // 식단 수정

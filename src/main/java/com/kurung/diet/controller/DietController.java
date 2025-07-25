@@ -66,10 +66,9 @@ public class DietController {
   @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   @Parameters({
       @Parameter(name = "currentDate", description = "오늘 날짜", example = "2025-05-19T00:00:00"),
-      @Parameter(name = "userUuid", description = "사용자 UUID", example = "2025061401")
   })
-  public ResponseEntity<List<DietScoreDTO>> getDietScoreMonthList(@RequestParam LocalDateTime currentDate, @RequestParam String userUuid) {
-    return new ResponseEntity<>(dietService.getDietScoreMonthList(currentDate,userUuid), HttpStatus.OK);
+  public ResponseEntity<List<DietScoreDTO>> getDietScoreMonthList(@RequestParam LocalDateTime currentDate) {
+    return new ResponseEntity<>(dietService.getDietScoreMonthList(currentDate), HttpStatus.OK);
   }
 
   @PostMapping("")
