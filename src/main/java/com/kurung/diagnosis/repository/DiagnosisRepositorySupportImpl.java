@@ -13,6 +13,7 @@ public class DiagnosisRepositorySupportImpl implements DiagnosisRepositorySuppor
 
   private final JPAQueryFactory jpaQueryFactory;
 
+  @Override
   public HealthDiagnosisEntity getDiagnosisByUserUuid(String userUuid) {
     return jpaQueryFactory.selectFrom(healthDiagnosisEntity)
         .where(healthDiagnosisEntity.user.userUuid.eq(userUuid))

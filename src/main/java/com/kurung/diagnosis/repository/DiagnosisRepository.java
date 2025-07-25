@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DiagnosisRepository extends JpaRepository<HealthDiagnosisEntity,Integer>, DiagnosisRepositorySupport {
 
-  String user(UserEntity user);
 }

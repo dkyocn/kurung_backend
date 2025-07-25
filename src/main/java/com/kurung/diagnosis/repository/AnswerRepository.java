@@ -1,5 +1,8 @@
 package com.kurung.diagnosis.repository;
 
-public interface AnswerRepository {
+import com.kurung.diagnosis.entity.HealthAnswerEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AnswerRepository extends JpaRepository<HealthAnswerEntity, Integer>, AnswerRepositorySupport {
 
 }

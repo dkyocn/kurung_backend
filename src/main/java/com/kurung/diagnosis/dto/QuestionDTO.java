@@ -16,6 +16,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class QuestionDTO extends BaseDTO {
 
+  @Schema(description = "문항 ID", example = "1")
+  protected int questionId;
   @Schema(description = "문항 번호", example = "1")
   protected int questionCode;
   @Schema(description = "카테고리", example = "식습관")
@@ -24,18 +26,17 @@ public class QuestionDTO extends BaseDTO {
   protected String questionText;
   @Schema(description = "다중선택 여부", example = "0")
   protected int isMultiple;
-  @Schema(description = "서술형 여부", example = "0")
-  protected int textOption;
+
   @Schema(description = "선지 정보")
   protected List<OptionDTO> options;
 
   @Builder(builderMethodName = "toQuestionBuilder", builderClassName = "toQuestionBuilder")
   public QuestionDTO(HealthQuestionEntity healthQuestionEntity) {
+    this.questionId = healthQuestionEntity.getQuestionId();
     this.questionCode = healthQuestionEntity.getQuestionCode();
     this.category = healthQuestionEntity.getCategory().getValue();
     this.questionText = healthQuestionEntity.getQuestionText();
     this.isMultiple = healthQuestionEntity.getIsMultiple();
-    this.textOption = healthQuestionEntity.getTextOption();
 //    this.options = OptionDTO.toOptionBuilder()
 //        .healthOptionEntity(healthQuestionEntity.getHealthOption())
 //        .build();
