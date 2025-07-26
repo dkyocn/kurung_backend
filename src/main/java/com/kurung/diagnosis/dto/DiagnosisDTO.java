@@ -1,6 +1,7 @@
 package com.kurung.diagnosis.dto;
 
 import com.kurung.common.dto.BaseDTO;
+import com.kurung.diagnosis.enumeration.Category;
 import com.kurung.user.dto.UserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -36,5 +37,7 @@ public class DiagnosisDTO extends BaseDTO {
     protected String goalTitle;
     @Schema(description = "목표 내용", example = "가벼운 산책을 해보세요.")
     protected String goalText;
+    @Schema(description = "카테고리", example = "DIET")
+    protected Category category;
   }
 }

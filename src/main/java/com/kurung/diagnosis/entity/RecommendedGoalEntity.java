@@ -1,7 +1,10 @@
 package com.kurung.diagnosis.entity;
 
+import com.kurung.diagnosis.enumeration.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,4 +34,7 @@ public class RecommendedGoalEntity {
   private String goalTitle;
   @Column(name = "GOAL_TEXT")
   private String goalText;
+  @Column(name = "CATEGORY")
+  @Enumerated(EnumType.STRING)
+  private Category category;
 }
