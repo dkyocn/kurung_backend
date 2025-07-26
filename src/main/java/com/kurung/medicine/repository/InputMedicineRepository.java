@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InputMedicineRepository extends JpaRepository<InputMedicineEntity,Integer>, InputMedicineRepositorySupport {
-
 }

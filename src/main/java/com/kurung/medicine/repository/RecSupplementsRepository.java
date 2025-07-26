@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RecSupplementsRepository extends
-    JpaRepository<RecommendedSupplementsEntity,Integer>, RecSupplementsRepositorySupport {
+public interface RecSupplementsRepository extends JpaRepository<RecommendedSupplementsEntity,Integer>, RecSupplementsRepositorySupport {
 
 }

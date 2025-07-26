@@ -47,8 +47,8 @@ public class DiagnosisController {
       @ApiResponse(responseCode = "459", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   })
   @Parameter(name = "userUuid", description = "사용자 UUID")
-  public ResponseEntity<DiagnosisDTO> getDiagnosisResult(@RequestParam String userUuid){
-    return new ResponseEntity<>(diagnosisService.getDiagnosisResult(userUuid), HttpStatus.OK);
+  public ResponseEntity<DiagnosisDTO> getDiagnosisResult(){
+    return new ResponseEntity<>(diagnosisService.getDiagnosisResult(), HttpStatus.OK);
   }
 
   @PostMapping("/answers")
