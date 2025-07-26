@@ -2,6 +2,8 @@ package com.kurung.user.service;
 
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
+import com.kurung.user.dto.PasswordChangeRequestDTO;
+import com.kurung.user.dto.PasswordChangeResponseDTO;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.repository.UserRepository;
@@ -114,6 +116,64 @@ public class UserServiceImpl implements UserService {
         if ((userEntity.getUserRefreshToken() == null) || (!userEntity.getUserRefreshToken()
             .equals(refreshToken))) {
             userEntity.updateRefresh(refreshToken);
+        }
+    }
+
+    @Override
+    @Transactional
+    public PasswordChangeResponseDTO changePassword(String userUuid, PasswordChangeRequestDTO request) {
+        try {
+            // 1. 사용자 정보 조회
+            UserEntity userEntity = userRepository.getUserByUuid(userUuid);
+            if (userEntity == null) {
+                return PasswordChangeResponseDTO.builder()
+                    .message("사용자를 찾을 수 없습니다.")
+                    .success(false)
+                    .build();
+            }
+            
+            // 2. 현재 비밀번호 검증
+            if (!passwordEncoder.matches(request.getCurrentPassword(), userEntity.getUserPwd())) {
+                return PasswordChangeResponseDTO.builder()
+                    .message("현재 비밀번호가 일치하지 않습니다.")
+                    .success(false)
+                    .build();
+            }
+            
+            // 3. 새 비밀번호와 확인 비밀번호 일치 검증
+            if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+                return PasswordChangeResponseDTO.builder()
+                    .message("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.")
+                    .success(false)
+                    .build();
+            }
+            
+            // 4. 새 비밀번호가 현재 비밀번호와 다른지 검증
+            if (passwordEncoder.matches(request.getNewPassword(), userEntity.getUserPwd())) {
+                return PasswordChangeResponseDTO.builder()
+                    .message("새 비밀번호는 현재 비밀번호와 달라야 합니다.")
+                    .success(false)
+                    .build();
+            }
+            
+            // 5. 새 비밀번호 암호화 및 저장
+            String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
+            userEntity.updatePassword(encodedNewPassword);
+            userRepository.save(userEntity);
+            
+            log.info("비밀번호 변경 성공 - 사용자 UUID: {}", userUuid);
+            
+            return PasswordChangeResponseDTO.builder()
+                .message("비밀번호가 성공적으로 변경되었습니다.")
+                .success(true)
+                .build();
+                
+        } catch (Exception e) {
+            log.error("비밀번호 변경 중 오류 발생 - 사용자 UUID: {}", userUuid, e);
+            return PasswordChangeResponseDTO.builder()
+                .message("비밀번호 변경 처리 중 오류가 발생했습니다: " + e.getMessage())
+                .success(false)
+                .build();
         }
     }
 }

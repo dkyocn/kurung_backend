@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.kurung.common.security.service.SessionService;
+import com.kurung.user.dto.PasswordChangeRequestDTO;
+import com.kurung.user.dto.PasswordChangeResponseDTO;
 
 @Slf4j
 @RestController
@@ -86,5 +88,31 @@ public class UserController {
     public ResponseEntity<Boolean> checkuserId(@RequestParam String userId) {
         boolean available = userService.checkUserIdAvailability(userId);
         return new ResponseEntity<>(available, HttpStatus.OK); // 메시지 없이 true/false만 응답
+    }
+
+    // 비밀번호 변경
+    @Operation(summary = "비밀번호 변경", description = "사용자의 비밀번호를 변경합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "비밀번호 변경 성공"),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+        @ApiResponse(responseCode = "401", description = "인증 실패")
+    })
+    @PostMapping("/change-password")
+    public ResponseEntity<PasswordChangeResponseDTO> changePassword(@RequestBody PasswordChangeRequestDTO request) {
+        // 현재 로그인한 사용자 정보 가져오기
+        UserDTO currentUser = sessionService.getUserFromToken();
+        if (currentUser == null) {
+            return new ResponseEntity<>(
+                PasswordChangeResponseDTO.builder()
+                    .message("로그인이 필요합니다.")
+                    .success(false)
+                    .build(),
+                HttpStatus.UNAUTHORIZED
+            );
+        }
+        
+        PasswordChangeResponseDTO result = userService.changePassword(currentUser.getUserUuid(), request);
+        HttpStatus status = result.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(result, status);
     }
 }
