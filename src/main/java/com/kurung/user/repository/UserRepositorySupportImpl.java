@@ -3,6 +3,7 @@ package com.kurung.user.repository;
 import static com.kurung.user.entity.QUserEntity.userEntity;
 
 import com.kurung.user.entity.UserEntity;
+import com.kurung.user.enumeration.UserPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -53,5 +54,25 @@ public class UserRepositorySupportImpl implements UserRepositorySupport {
         TypedQuery<Long> query = em.createQuery(jpql, Long.class);
         query.setParameter("prefix", datePrefix + "%");
         return query.getSingleResult();
+    }
+    
+    // 소셜 로그인 관련 메서드 구현
+    @Override
+    public UserEntity findByUserPathAndUserKey(UserPath userPath, String userKey) {
+        return jpaQueryFactory
+            .selectFrom(userEntity)
+            .where(userEntity.userPath.eq(userPath)
+                .and(userEntity.userKey.eq(userKey)))
+            .fetchOne();
+    }
+    
+    @Override
+    public boolean existsByUserPathAndUserKey(UserPath userPath, String userKey) {
+        String jpql = "SELECT COUNT(u) > 0 FROM TB_USER u WHERE u.userPath = :userPath AND u.userKey = :userKey";
+        Boolean exists = em.createQuery(jpql, Boolean.class)
+            .setParameter("userPath", userPath)
+            .setParameter("userKey", userKey)
+            .getSingleResult();
+        return exists;
     }
 }

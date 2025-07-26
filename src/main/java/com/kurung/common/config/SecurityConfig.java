@@ -20,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Configuration
@@ -30,11 +31,7 @@ public class SecurityConfig implements WebMvcConfigurer {
   private final JWTUtil jwtUtil;
   private final CustomUserDetailsService userDetailsService;
   private final UserService userService;
-
-  @Bean
-  public CustomLogoutHandler customLogoutHandler() {
-    return new CustomLogoutHandler(jwtUtil, userService);
-  }
+  private final CustomLogoutHandler customLogoutHandler;
 
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -52,6 +49,12 @@ public class SecurityConfig implements WebMvcConfigurer {
         .allowCredentials(true);
   }
 
+  // RestTemplate 빈 등록 (WebConfig에서 옮김)
+  @Bean
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
+  }
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
     http
@@ -67,22 +70,25 @@ public class SecurityConfig implements WebMvcConfigurer {
             .requestMatchers("/", "/index.html", "/favicon.ico", "/static/**", "/manifest.json",
                 "/public/**", "/auth/**", "/css/**", "/js/**", "/*.png").permitAll()
 
-            // 인증 없이 허용되는 API 경로 추가
-            .requestMatchers(
-                "/api/v1/kurung/login",
-                "/api/v1/kurung/reissue",
-                "/api/v1/kurung/user/send-verification-email",
-                "/api/v1/kurung/user/verify-code",
-                "/user/signup",
-                "/user/idchk",
-                "/notice/ntop3",
-                "/notice",
-                "/notice/nfdown",
-                "/notice/search/title",
-                "/notice/detail/*",
-                "/board/btop3",
-                "/board/search/**"
-            ).permitAll()
+                                // 인증 없이 허용되는 API 경로 추가
+                    .requestMatchers(
+                        "/api/v1/kurung/login",
+                        "/api/v1/kurung/reissue",
+                        "/api/v1/kurung/user/send-verification-email",
+                        "/api/v1/kurung/user/verify-code",
+                        "/api/v1/kurung/user/kakao/**",  // 카카오 소셜 로그인 경로 허용
+                        "/api/v1/kurung/user/naver/**",  // 네이버 소셜 로그인 경로 허용
+                        "/api/v1/kurung/test/social/**",  // 소셜 로그인 테스트 경로 허용
+                        "/user/signup",
+                        "/user/idchk",
+                        "/notice/ntop3",
+                        "/notice",
+                        "/notice/nfdown",
+                        "/notice/search/title",
+                        "/notice/detail/*",
+                        "/board/btop3",
+                        "/board/search/**"
+                    ).permitAll()
 
             // 인증 필요
             .requestMatchers("/logout").authenticated()
@@ -123,7 +129,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         // 로그아웃 설정
         .logout(logout -> logout
             .logoutUrl("/logout")
-            .addLogoutHandler(customLogoutHandler())
+            .addLogoutHandler(customLogoutHandler)
             .logoutSuccessHandler((request, response, authentication) -> {
               response.setStatus(HttpServletResponse.SC_OK);
               response.getWriter().write("로그아웃 성공");

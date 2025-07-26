@@ -61,3 +61,16 @@ jwt:
   secret: vrDt6Hhffv9gPPEEHDBVhxY4W+gf//bxDgVljRr/+8z1ZxqEdgTmDDZ/UIquJuWQdZmJ8mz/DuzLF/pmcMFaqw==
   access_expiration: 1800000
   refresh_expiration: 84600000
+
+# 소셜 로그인 API 설정
+social:
+  kakao:
+    api-url: https://kapi.kakao.com
+    client-id: ${KAKAO_CLIENT_ID:your_kakao_client_id}
+    client-secret: ${KAKAO_CLIENT_SECRET:your_kakao_client_secret}
+    redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:3000/auth/kakao/callback}
+  naver:
+    api-url: https://openapi.naver.com
+    client-id: ${NAVER_CLIENT_ID:your_naver_client_id}
+    client-secret: ${NAVER_CLIENT_SECRET:your_naver_client_secret}
+    redirect-uri: ${NAVER_REDIRECT_URI:http://localhost:3000/auth/naver/callback}
