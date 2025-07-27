@@ -11,4 +11,6 @@ public interface FavoritesService {
   List<FavoritesDTO> getFavoritesList(FavoritesType favoritesType);
 
   void deleteFavorite(int id);
+
+  List<FavoritesDTO> getALLFavoritesList(int id, FavoritesType favoritesType);
 }

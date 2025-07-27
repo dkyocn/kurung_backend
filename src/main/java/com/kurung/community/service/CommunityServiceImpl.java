@@ -4,11 +4,19 @@ import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.enumeration.HealthType;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
+import com.kurung.common.security.service.SessionService;
+import com.kurung.community.dto.CommentDTO;
 import com.kurung.community.dto.CommunityDTO;
+import com.kurung.community.entity.CommentEntity;
 import com.kurung.community.entity.CommunityEntity;
+import com.kurung.community.repository.CommentRepository;
 import com.kurung.community.repository.CommunityRepository;
+import com.kurung.favorites.dto.FavoritesDTO;
+import com.kurung.favorites.enumeration.FavoritesType;
+import com.kurung.favorites.service.FavoritesService;
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.service.UserService;
+import com.kurung.user.entity.UserEntity;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommunityServiceImpl implements CommunityService {
 
-  private final UserService userService;
+  private final SessionService sessionService;
+  private final FavoritesService favoritesService;
+  private final CommentRepository commentRepository;
   private final CommunityRepository communityRepository;
 
   @Override
@@ -31,7 +41,10 @@ public class CommunityServiceImpl implements CommunityService {
       throw new CustomIllegalArgumentException(CustomHttpStatus.COMMUNITY_NOT_FOUND) ;
     }
 
-    return CommunityDTO.toCommunityBuilder().communityEntity(communityEntity).build();
+    List<FavoritesDTO> allFavoritesList = favoritesService.getALLFavoritesList(
+        communityEntity.getCommunityId(), FavoritesType.COMMUNITY);
+
+    return CommunityDTO.toCommunityBuilder().communityEntity(communityEntity).favorites(allFavoritesList).build();
   }
 
   @Override
@@ -39,15 +52,19 @@ public class CommunityServiceImpl implements CommunityService {
 
     Page<CommunityEntity> communityByPage = communityRepository.getCommunityByPage(pageable,
         keyword, healthType);
-    return communityByPage.map(communityEntity ->  CommunityDTO.toCommunityBuilder().communityEntity(communityEntity).build());
+    return communityByPage.map(communityEntity ->  CommunityDTO.toCommunityBuilder()
+        .communityEntity(communityEntity)
+        .favorites(favoritesService.getALLFavoritesList(communityEntity.getCommunityId(),
+            FavoritesType.COMMUNITY))
+        .build());
   }
 
   @Override
   public void createCommunity(CommunityDTO communityDTO) {
-    UserDTO userByUuid = userService.getUserByUuid(communityDTO.getUser().getUserUuid());
+    UserDTO userDTO = sessionService.getUserFromToken();
 
     try {
-      communityRepository.save(CommunityEntity.toCommunityBuilder().communityDTO(communityDTO).user(userByUuid).build());
+      communityRepository.save(CommunityEntity.toCommunityBuilder().communityDTO(communityDTO).user(userDTO).build());
     } catch (RuntimeException e) {
       throw new CustomRunTimeException(CustomHttpStatus.COMMUNITY_SAVE_ERROR);
     }
@@ -57,13 +74,13 @@ public class CommunityServiceImpl implements CommunityService {
   @Override
   @Transactional
   public void updateCommunity(CommunityDTO communityDTO) {
-    UserDTO userByUuid = userService.getUserByUuid(communityDTO.getUser().getUserUuid());
+    UserDTO userDTO = sessionService.getUserFromToken();
 
     CommunityEntity communityEntity = communityRepository.getCommunityById(
         communityDTO.getCommunityId());
 
     if (communityEntity == null || !Objects.equals(communityEntity.getUser().getUserUuid(),
-        userByUuid.getUserUuid())) {
+        userDTO.getUserUuid())) {
       throw new CustomIllegalArgumentException(CustomHttpStatus.COMMUNITY_NOT_FOUND);
     }
 
@@ -88,5 +105,33 @@ public class CommunityServiceImpl implements CommunityService {
       throw new CustomRunTimeException(CustomHttpStatus.COMMUNITY_DELETE_ERROR);
     }
 
+  }
+
+  @Override
+  public CommentDTO createComment(int id, CommentDTO commentDTO) {
+
+    UserDTO userDTO = sessionService.getUserFromToken();
+
+    CommunityEntity communityEntity = communityRepository.getCommunityById(id);
+
+    commentRepository.save(CommentEntity.builder()
+            .content(commentDTO.getContent())
+            .user(UserEntity.createUserBuilder()
+                .userDTO(userDTO).build())
+            .community(communityEntity)
+        .build());
+
+    return null;
+  }
+
+  @Override
+  public void deleteComment(int id) {
+    CommentEntity comment = commentRepository.getComment(id);
+
+    if (comment == null || !(comment.getUser().getUserUuid().equals(sessionService.getUserFromToken().getUserUuid()))) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.COMMUNITY_NOT_FOUND);
+    }
+
+    commentRepository.delete(comment);
   }
 }
