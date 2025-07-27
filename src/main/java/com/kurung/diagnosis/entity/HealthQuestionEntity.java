@@ -37,8 +37,7 @@ public class HealthQuestionEntity {
   private String questionText;
   @Column(name = "IS_MULTIPLE")
   private int isMultiple;
-  @Column(name = "TEXT_OPTION")
-  private int textOption;
+
   @Column(name = "HEALTH_OPTION")
   @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private List<HealthOptionEntity> healthOption;

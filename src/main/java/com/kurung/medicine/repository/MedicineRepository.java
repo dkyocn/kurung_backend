@@ -1,8 +1,9 @@
 package com.kurung.medicine.repository;
 
-import com.kurung.medicine.entity.SupplementsEntity;
+import com.kurung.medicine.entity.MedicineEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface MedicineRepository extends JpaRepository<SupplementsEntity, Integer>, MedicineRepositorySupport {
-
+@Repository
+public interface MedicineRepository extends JpaRepository<MedicineEntity, Integer>, MedicineRepositorySupport {
 }
