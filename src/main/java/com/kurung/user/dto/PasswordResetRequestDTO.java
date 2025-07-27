@@ -3,19 +3,18 @@ package com.kurung.user.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
-@Getter
-@SuperBuilder
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "비밀번호 재설정 요청 DTO")
 public class PasswordResetRequestDTO {
     
-    @Schema(description = "사용자 이메일", example = "user@example.com")
-    private String email;
+    @Schema(description = "현재 비밀번호", example = "currentPassword123")
+    private String currentPassword;
     
     @Schema(description = "새 비밀번호", example = "newPassword123")
     private String newPassword;

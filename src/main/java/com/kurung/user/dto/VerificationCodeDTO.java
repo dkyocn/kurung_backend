@@ -25,4 +25,7 @@ public class VerificationCodeDTO {
     
     @Schema(description = "새 비밀번호 확인 (재설정 시에만 사용)", example = "newPassword123")
     private String confirmPassword;
+    
+    @Schema(description = "인증 타입", example = "SIGNUP", allowableValues = {"SIGNUP", "PASSWORD_RESET"})
+    private String verificationType;
 } 
