@@ -1,5 +1,6 @@
 package com.kurung.diet.controller;
 
+import com.kurung.diet.dto.AllergyDTO;
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.dto.FoodDTO;
@@ -135,5 +136,10 @@ public class DietController {
   @Parameter(name = "currentDate", description = "오늘 날짜", example = "2025-04-01T00:00:00")
   public ResponseEntity<NutritionDTO.TodayNutritionDTO> getNutritionSum(@RequestParam LocalDateTime currentDate) {
     return new ResponseEntity<>(dietService.getTodayNutrition(currentDate), HttpStatus.OK);
+  }
+
+  @GetMapping("/allergy")
+  public ResponseEntity<List<AllergyDTO>> getAllergyList(@RequestParam String keyword) {
+    return new ResponseEntity<>(dietService.getAllergyList(keyword), HttpStatus.OK);
   }
 }
