@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
         }
         return UserDTO.builder()
                 .userUuid(userEntity.getUserUuid())
+                .userPwd(userEntity.getUserPwd())
                 .userId(userEntity.getUserId())
                 .userNick(userEntity.getUserNick())
                 .userGender(userEntity.getUserGender())
@@ -57,6 +58,7 @@ public class UserServiceImpl implements UserService {
         return UserDTO.builder()
                 .userUuid(userEntity.getUserUuid())
                 .userId(userEntity.getUserId())
+                .userPwd(userEntity.getUserPwd())
                 .userNick(userEntity.getUserNick())
                 .userGender(userEntity.getUserGender())
                 .userPath(userEntity.getUserPath())
