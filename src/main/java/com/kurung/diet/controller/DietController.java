@@ -139,6 +139,9 @@ public class DietController {
   }
 
   @GetMapping("/allergy")
+  @Operation(summary = "알레르기 리스트 조회", description = "알레르기 리스트를 조회할 때 사용하는 API")
+  @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @Parameter(name = "keyword", description = "검색어", example = "파")
   public ResponseEntity<List<AllergyDTO>> getAllergyList(@RequestParam String keyword) {
     return new ResponseEntity<>(dietService.getAllergyList(keyword), HttpStatus.OK);
   }
