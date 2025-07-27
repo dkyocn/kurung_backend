@@ -1,5 +1,6 @@
 package com.kurung.diet.service;
 
+import com.kurung.diet.dto.AllergyDTO;
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.dto.FoodDTO;
@@ -28,4 +29,6 @@ public interface DietService {
     List<FoodDTO> getFoodList(String keyword);
 
     NutritionDTO.TodayNutritionDTO getTodayNutrition(LocalDateTime currentDate);
+
+    List<AllergyDTO> getAllergyList(String keyword);
 }
