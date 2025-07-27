@@ -25,9 +25,12 @@ public class InputMedicineEntity {
   private int inputMediId;
   @Column(name = "RISK")
   private String risk;
-  @JoinColumn(name = "MEDI_ID")
+  @JoinColumn(name = "MEDI1_ID")
   @ManyToOne(fetch = FetchType.LAZY)
-  private MedicineEntity medicine;
+  private MedicineEntity medicine1;
+  @JoinColumn(name = "MEDI2_ID")
+  @ManyToOne(fetch = FetchType.LAZY)
+  private MedicineEntity medicine2;
   @JoinColumn(name = "MEDI_INTER_ID")
   @ManyToOne(fetch = FetchType.LAZY)
   private MedicineInteractionEntity medicineInteraction;

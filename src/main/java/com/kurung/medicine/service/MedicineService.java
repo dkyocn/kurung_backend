@@ -1,8 +1,13 @@
 package com.kurung.medicine.service;
 
+import com.kurung.medicine.dto.InteractionResultDTO;
 import com.kurung.medicine.dto.SubstanceDTO;
+import com.kurung.medicine.dto.MedicineInteractionDTO;
+import java.util.List;
 
 public interface MedicineService {
 
-  SubstanceDTO getSuppById(int suppId);
+  List<MedicineInteractionDTO> getInteractionResult();
+
+  List<SubstanceDTO> getRecSupplements();
 }

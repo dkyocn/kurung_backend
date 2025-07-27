@@ -13,9 +13,5 @@ public class SupplementsRepositorySupportImpl implements SupplementsRepositorySu
 
   private final JPAQueryFactory jpaQueryFactory;
 
-  public SupplementsEntity getSuppById(int suppId) {
-    return jpaQueryFactory.selectFrom(supplementsEntity)
-        .where(supplementsEntity.suppId.eq(suppId))
-        .fetchOne();
-  }
+
 }
