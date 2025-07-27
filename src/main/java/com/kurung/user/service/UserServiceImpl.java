@@ -192,8 +192,13 @@ public class UserServiceImpl implements UserService {
                 throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
             }
         }
-        emailService.sendVerificationEmail(request.getEmail());
-        log.info("인증번호 발송 성공 - 이메일: {}, 타입: {}", request.getEmail(), request.getVerificationType());
+        try {
+            emailService.sendVerificationEmail(request.getEmail());
+            log.info("인증번호 발송 성공 - 이메일: {}, 타입: {}", request.getEmail(), request.getVerificationType());
+        } catch (Exception e) {
+            log.error("인증번호 발송 중 오류 발생 - 이메일: {}", request.getEmail(), e);
+            throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
+        }
     }
 
     @Override
@@ -208,11 +213,16 @@ public class UserServiceImpl implements UserService {
         if (userEntity == null) {
             throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
         }
-        boolean isVerified = emailService.verifyCode(request.getEmail(), request.getVerificationCode());
-        if (!isVerified) {
+        try {
+            boolean isVerified = emailService.verifyCode(request.getEmail(), request.getVerificationCode());
+            if (!isVerified) {
+                throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
+            }
+            log.info("인증번호 확인 성공 - 이메일: {}", request.getEmail());
+        } catch (Exception e) {
+            log.error("인증번호 확인 중 오류 발생 - 이메일: {}", request.getEmail(), e);
             throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
         }
-        log.info("인증번호 확인 성공 - 이메일: {}", request.getEmail());
     }
 
     @Override
@@ -238,16 +248,21 @@ public class UserServiceImpl implements UserService {
             throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
         }
         
-        String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
-        log.info("새 비밀번호 암호화 완료 - 원본: {}, 암호화: {}", request.getNewPassword(), encodedNewPassword);
-        
-        userEntity.updatePassword(encodedNewPassword);
-        log.info("비밀번호 업데이트 완료 - 새 암호화 비밀번호: {}", userEntity.getUserPwd());
-        
-        UserEntity savedEntity = userRepository.save(userEntity);
-        log.info("DB 저장 완료 - 저장된 비밀번호: {}", savedEntity.getUserPwd());
-        
-        log.info("비밀번호 재설정 성공 - 이메일: {}", request.getEmail());
+        try {
+            String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
+            log.info("새 비밀번호 암호화 완료 - 원본: {}, 암호화: {}", request.getNewPassword(), encodedNewPassword);
+            
+            userEntity.updatePassword(encodedNewPassword);
+            log.info("비밀번호 업데이트 완료 - 새 암호화 비밀번호: {}", userEntity.getUserPwd());
+            
+            UserEntity savedEntity = userRepository.save(userEntity);
+            log.info("DB 저장 완료 - 저장된 비밀번호: {}", savedEntity.getUserPwd());
+            
+            log.info("비밀번호 재설정 성공 - 이메일: {}", request.getEmail());
+        } catch (Exception e) {
+            log.error("비밀번호 재설정 중 오류 발생 - 이메일: {}", request.getEmail(), e);
+            throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
+        }
     }
 
     private boolean validateUser(UserEntity user) {
