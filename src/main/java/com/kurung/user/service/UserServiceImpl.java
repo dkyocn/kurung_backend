@@ -234,19 +234,35 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public ApiResponseDTO<String> resetPasswordByEmail(VerificationCodeDTO request) {
         try {
+            log.info("비밀번호 재설정 시작 - 이메일: {}", request.getEmail());
+            
             if (request.getEmail() == null || !request.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+                log.warn("올바르지 않은 이메일 형식: {}", request.getEmail());
                 return ApiResponseDTO.<String>builder().success(false).message("올바른 이메일 형식이 아닙니다.").timestamp(LocalDateTime.now()).build();
             }
+            
             UserEntity userEntity = userRepository.getByUserId(request.getEmail());
             if (userEntity == null) {
+                log.warn("등록되지 않은 이메일: {}", request.getEmail());
                 return ApiResponseDTO.<String>builder().success(false).message("등록되지 않은 이메일입니다.").timestamp(LocalDateTime.now()).build();
             }
+            
+            log.info("사용자 조회 성공 - UUID: {}, 현재 비밀번호: {}", userEntity.getUserUuid(), userEntity.getUserPwd());
+            
             if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+                log.warn("비밀번호 불일치 - 새 비밀번호: {}, 확인 비밀번호: {}", request.getNewPassword(), request.getConfirmPassword());
                 return ApiResponseDTO.<String>builder().success(false).message("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.").timestamp(LocalDateTime.now()).build();
             }
+            
             String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
+            log.info("새 비밀번호 암호화 완료 - 원본: {}, 암호화: {}", request.getNewPassword(), encodedNewPassword);
+            
             userEntity.updatePassword(encodedNewPassword);
-            userRepository.save(userEntity);
+            log.info("비밀번호 업데이트 완료 - 새 암호화 비밀번호: {}", userEntity.getUserPwd());
+            
+            UserEntity savedEntity = userRepository.save(userEntity);
+            log.info("DB 저장 완료 - 저장된 비밀번호: {}", savedEntity.getUserPwd());
+            
             log.info("비밀번호 재설정 성공 - 이메일: {}", request.getEmail());
             return ApiResponseDTO.<String>builder().success(true).message("비밀번호가 성공적으로 재설정되었습니다.").timestamp(LocalDateTime.now()).build();
         } catch (Exception e) {
