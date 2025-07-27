@@ -1,7 +1,7 @@
 package com.kurung.user.service;
 
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.dto.PasswordResetDTO;
+import com.kurung.user.dto.PasswordResetRequestDTO;
 import com.kurung.user.dto.VerificationCodeDTO;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.repository.UserRepository;
@@ -108,29 +108,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public PasswordResetDTO resetPassword(String userUuid, PasswordResetDTO request) {
+    public void resetPassword(String userUuid, PasswordResetRequestDTO request) {
         UserEntity userEntity = userRepository.getUserByUuid(userUuid);
         if (userEntity == null) {
-            return PasswordResetDTO.builder()
-                    .message("사용자를 찾을 수 없습니다.")
-                    .success(false)
-                    .build();
+            throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
         }
 
         // 현재 비밀번호 확인
         if (!passwordEncoder.matches(request.getCurrentPassword(), userEntity.getUserPwd())) {
-            return PasswordResetDTO.builder()
-                    .message("현재 비밀번호가 일치하지 않습니다.")
-                    .success(false)
-                    .build();
+            throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
         }
 
         // 새 비밀번호 확인
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-            return PasswordResetDTO.builder()
-                    .message("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.")
-                    .success(false)
-                    .build();
+            throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
         }
 
         // 새 비밀번호 암호화 및 저장
@@ -139,29 +130,19 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userEntity);
 
         log.info("비밀번호 재설정 성공 - 사용자 UUID: {}", userUuid);
-        return PasswordResetDTO.builder()
-                .message("비밀번호가 성공적으로 재설정되었습니다.")
-                .success(true)
-                .build();
     }
 
     @Override
     @Transactional
-    public PasswordResetDTO resetPassword(String userUuid, VerificationCodeDTO request) {
+    public void resetPassword(String userUuid, VerificationCodeDTO request) {
         UserEntity userEntity = userRepository.getUserByUuid(userUuid);
         if (userEntity == null) {
-            return PasswordResetDTO.builder()
-                    .message("사용자를 찾을 수 없습니다.")
-                    .success(false)
-                    .build();
+            throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
         }
 
         // 새 비밀번호 확인
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-            return PasswordResetDTO.builder()
-                    .message("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.")
-                    .success(false)
-                    .build();
+            throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
         }
 
         // 새 비밀번호 암호화 및 저장
@@ -170,10 +151,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userEntity);
 
         log.info("비밀번호 재설정 성공 - 사용자 UUID: {}", userUuid);
-        return PasswordResetDTO.builder()
-                .message("비밀번호가 성공적으로 재설정되었습니다.")
-                .success(true)
-                .build();
     }
 
     @Override
