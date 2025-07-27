@@ -1,7 +1,7 @@
 package com.kurung.user.controller;
 
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.dto.PasswordResetRequestDTO;
+import com.kurung.user.dto.PasswordResetDTO;
 import com.kurung.user.dto.VerificationCodeDTO;
 import com.kurung.user.service.UserService;
 import com.kurung.common.security.service.SessionService;
@@ -61,14 +61,21 @@ public class UserController {
         @ApiResponse(responseCode = "401", description = "인증 실패")
     })
     @PostMapping("/reset-password")
-    public ResponseEntity<HttpStatus> resetPassword(@RequestBody PasswordResetRequestDTO request) {
+    public ResponseEntity<PasswordResetDTO> resetPassword(@RequestBody PasswordResetDTO request) {
         UserDTO currentUser = sessionService.getUserFromToken();
         if (currentUser == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(
+                PasswordResetDTO.builder()
+                    .message("로그인이 필요합니다.")
+                    .success(false)
+                    .build(),
+                HttpStatus.UNAUTHORIZED
+            );
         }
         
-        userService.resetPassword(currentUser.getUserUuid(), request);
-        return new ResponseEntity<>(HttpStatus.OK);
+        PasswordResetDTO result = userService.resetPassword(currentUser.getUserUuid(), request);
+        HttpStatus status = result.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(result, status);
     }
 
     // 인증번호 발송 (통합)
@@ -115,13 +122,18 @@ public class UserController {
         @ApiResponse(responseCode = "401", description = "인증 실패")
     })
     @PostMapping("/reset-password-loggedin")
-    public ResponseEntity<HttpStatus> resetPasswordLoggedIn(@RequestBody VerificationCodeDTO request) {
+    public ResponseEntity<PasswordResetDTO> resetPasswordLoggedIn(@RequestBody VerificationCodeDTO request) {
         UserDTO currentUser = sessionService.getUserFromToken();
         if (currentUser == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(
+                PasswordResetDTO.builder()
+                    .message("로그인이 필요합니다.")
+                    .success(false)
+                    .build(),
+                HttpStatus.UNAUTHORIZED
+            );
         }
         
-        userService.resetPassword(currentUser.getUserUuid(), request);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(userService.resetPassword(currentUser.getUserUuid(), request), HttpStatus.OK);
     }
 }

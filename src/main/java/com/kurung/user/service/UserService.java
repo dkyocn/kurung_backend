@@ -1,7 +1,7 @@
 package com.kurung.user.service;
 
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.dto.PasswordResetRequestDTO;
+import com.kurung.user.dto.PasswordResetDTO;
 import com.kurung.user.dto.VerificationCodeDTO;
 import com.kurung.user.entity.UserEntity;
 
@@ -14,9 +14,9 @@ public interface UserService {
     void registerUser(UserDTO userDTO);
     
     // 비밀번호 재설정 메서드
-    void resetPassword(String userUuid, PasswordResetRequestDTO request);
+    PasswordResetDTO resetPassword(String userUuid, PasswordResetDTO request);
     // 비밀번호 재설정 메서드 (VerificationCodeDTO 사용)
-    void resetPassword(String userUuid, VerificationCodeDTO request);
+    PasswordResetDTO resetPassword(String userUuid, VerificationCodeDTO request);
     // 인증번호 발송 메서드
     void sendVerificationCode(VerificationCodeDTO request);
     // 인증번호 확인 메서드
