@@ -1,6 +1,7 @@
 package com.kurung.community.controller;
 
 import com.kurung.common.enumeration.HealthType;
+import com.kurung.community.dto.CommentDTO;
 import com.kurung.community.dto.CommunityDTO;
 import com.kurung.community.service.CommunityService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,6 +90,17 @@ public class CommunityController {
   })
   public ResponseEntity<HttpStatus> deleteCommunityById(@PathVariable int id) {
     communityService.deleteCommunity(id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/{id}/comment/create")
+  public ResponseEntity<CommentDTO> createComment(@PathVariable int id, @RequestBody CommentDTO commentDTO) {
+    return new ResponseEntity<>(communityService.createComment(id, commentDTO), HttpStatus.OK);
+  }
+
+  @DeleteMapping("/comment/{id}")
+  public ResponseEntity<HttpStatus> deleteCommentById(@PathVariable int id) {
+    communityService.deleteComment(id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }
