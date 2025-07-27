@@ -14,6 +14,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MedicineInteractionDTO {
+  @Schema(description = "상호작용 아이디", example = "1")
+  protected int mediInterId;
   @Schema(description = "첫 번째 약물 정보")
   protected SubstanceDTO medicine1;
   @Schema(description = "두 번째 약물 정보")

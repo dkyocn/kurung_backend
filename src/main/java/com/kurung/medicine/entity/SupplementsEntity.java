@@ -28,8 +28,6 @@ public class SupplementsEntity {
   private String suppName;
   @Column(name = "SUPP_NAME_KO")
   private String suppNameKo;
-  @Column(name = "IMAGE_PATH")
-  private String imagePath;
   @Column(name = "CATEGORY")
   private String category;
   @Column(name = "COMPANY")

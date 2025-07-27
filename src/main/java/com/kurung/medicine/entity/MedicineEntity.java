@@ -34,6 +34,9 @@ public class MedicineEntity {
   @Column(name = "COMPANY")
   private String company;
   @Column(name="INPUT_MEDICINE")
-  @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<InputMedicineEntity> inputMedicine;
+  @OneToMany(mappedBy = "medicine1", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  private List<InputMedicineEntity> inputMedicine1;
+  @Column(name="INPUT_MEDICINE")
+  @OneToMany(mappedBy = "medicine2", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  private List<InputMedicineEntity> inputMedicine2;
 }
