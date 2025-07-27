@@ -1,10 +1,8 @@
 package com.kurung.user.controller;
 
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.dto.PasswordResetRequestDTO;
-import com.kurung.user.dto.PasswordResetResponseDTO;
+import com.kurung.user.dto.PasswordResetDTO;
 import com.kurung.user.dto.VerificationCodeDTO;
-import com.kurung.common.dto.ApiResponseDTO;
 import com.kurung.user.service.UserService;
 import com.kurung.common.security.service.SessionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,11 +61,11 @@ public class UserController {
         @ApiResponse(responseCode = "401", description = "인증 실패")
     })
     @PostMapping("/reset-password")
-    public ResponseEntity<PasswordResetResponseDTO> resetPassword(@RequestBody PasswordResetRequestDTO request) {
+    public ResponseEntity<PasswordResetDTO> resetPassword(@RequestBody PasswordResetDTO request) {
         UserDTO currentUser = sessionService.getUserFromToken();
         if (currentUser == null) {
             return new ResponseEntity<>(
-                PasswordResetResponseDTO.builder()
+                PasswordResetDTO.builder()
                     .message("로그인이 필요합니다.")
                     .success(false)
                     .build(),
@@ -75,7 +73,7 @@ public class UserController {
             );
         }
         
-        PasswordResetResponseDTO result = userService.resetPassword(currentUser.getUserUuid(), request);
+        PasswordResetDTO result = userService.resetPassword(currentUser.getUserUuid(), request);
         HttpStatus status = result.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
         return new ResponseEntity<>(result, status);
     }
@@ -87,8 +85,9 @@ public class UserController {
         @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
     @PostMapping("/send-verification-code")
-    public ResponseEntity<ApiResponseDTO<String>> sendVerificationCode(@RequestBody VerificationCodeDTO request) {
-        return new ResponseEntity<>(userService.sendVerificationCode(request), HttpStatus.OK);
+    public ResponseEntity<HttpStatus> sendVerificationCode(@RequestBody VerificationCodeDTO request) {
+        userService.sendVerificationCode(request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 인증번호 확인
@@ -98,8 +97,9 @@ public class UserController {
         @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
     @PostMapping("/confirm-verification-code")
-    public ResponseEntity<ApiResponseDTO<String>> confirmVerificationCode(@RequestBody VerificationCodeDTO request) {
-        return new ResponseEntity<>(userService.confirmVerificationCode(request), HttpStatus.OK);
+    public ResponseEntity<HttpStatus> confirmVerificationCode(@RequestBody VerificationCodeDTO request) {
+        userService.confirmVerificationCode(request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 비밀번호 재설정 (이메일 기반)
@@ -109,8 +109,9 @@ public class UserController {
         @ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
     @PostMapping("/reset-password-by-email")
-    public ResponseEntity<ApiResponseDTO<String>> resetPasswordByEmail(@RequestBody VerificationCodeDTO request) {
-        return new ResponseEntity<>(userService.resetPasswordByEmail(request), HttpStatus.OK);
+    public ResponseEntity<HttpStatus> resetPasswordByEmail(@RequestBody VerificationCodeDTO request) {
+        userService.resetPasswordByEmail(request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // 비밀번호 재설정 (로그인된 사용자)
@@ -121,11 +122,11 @@ public class UserController {
         @ApiResponse(responseCode = "401", description = "인증 실패")
     })
     @PostMapping("/reset-password-loggedin")
-    public ResponseEntity<PasswordResetResponseDTO> resetPasswordLoggedIn(@RequestBody VerificationCodeDTO request) {
+    public ResponseEntity<PasswordResetDTO> resetPasswordLoggedIn(@RequestBody VerificationCodeDTO request) {
         UserDTO currentUser = sessionService.getUserFromToken();
         if (currentUser == null) {
             return new ResponseEntity<>(
-                PasswordResetResponseDTO.builder()
+                PasswordResetDTO.builder()
                     .message("로그인이 필요합니다.")
                     .success(false)
                     .build(),
