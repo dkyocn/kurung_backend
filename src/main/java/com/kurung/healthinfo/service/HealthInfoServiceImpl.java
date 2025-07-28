@@ -5,6 +5,7 @@ import static com.kurung.user.entity.QUserEntity.userEntity;
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
+import com.kurung.common.security.service.SessionService;
 import com.kurung.healthinfo.dto.HealthInfoDTO;
 import com.kurung.healthinfo.entity.HealthInfoEntity;
 import com.kurung.healthinfo.repository.HealthInfoRepository;
@@ -26,6 +27,7 @@ public class HealthInfoServiceImpl implements HealthInfoService {
 
   private final HealthInfoRepository healthInfoRepository;
   private final UserService userService;
+  private final SessionService sessionService;
 
   @Override
   public List<HealthInfoDTO> getHealthInfo() {
@@ -52,16 +54,16 @@ public class HealthInfoServiceImpl implements HealthInfoService {
   }
 
   @Override
-  public List<HealthInfoDTO> getHealthInfoMonthList(LocalDate currentDate, String userUuid) {
+  public List<HealthInfoDTO> getHealthInfoMonthList(LocalDate currentDate) {
 
     // 사용자 존재 여부 확인
-    userService.getUserByUuid(userUuid);
+    UserDTO userDTO = sessionService.getUserFromToken();
 
     // 월별 건강 정보 목록 조회
     List<HealthInfoEntity> healthInfoMonthList = healthInfoRepository.getHealthInfoMonthList(
         currentDate.withDayOfMonth(1).atStartOfDay(),
         currentDate.withDayOfMonth(currentDate.lengthOfMonth()).atTime(23, 59, 59),
-        userUuid);
+        userDTO.getUserUuid());
 
     //  DTO로 변환하여 반환
     return healthInfoMonthList.stream()

@@ -64,14 +64,12 @@ public class HealthInfoController {
   @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   @Parameters({
       @Parameter(name = "currentDate", description = "기준 날짜", example = "2025-06-01"),
-      @Parameter(name = "userUuid", description = "사용자 UUID", example = "2025061401")
   })
   public ResponseEntity<List<HealthInfoDTO>> getHealthInfoMonthList(
-      @RequestParam LocalDate currentDate,
-      @RequestParam String userUuid
+      @RequestParam LocalDate currentDate
   ) {
 
-    return new ResponseEntity<>(healthInfoService.getHealthInfoMonthList(currentDate, userUuid), HttpStatus.OK);
+    return new ResponseEntity<>(healthInfoService.getHealthInfoMonthList(currentDate), HttpStatus.OK);
   }
 
   @PostMapping("/update")

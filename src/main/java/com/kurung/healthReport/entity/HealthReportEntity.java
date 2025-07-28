@@ -10,7 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +29,7 @@ public class HealthReportEntity {
   @Column(name = "HEALTH_STATUS")
   private String healthStatus;
   @Column(name = "REPORT_MONTH")
-  private Date reportMonth;
+  private LocalDateTime reportMonth;
   @Column(name = "PROGRESS_RATE")
   private float progressRate;
   @Column(name = "MONTHLY_SCORE")

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,10 +26,10 @@ public class HealthReportController {
 
   private final HealthReportService healthReportService;
 
-  @GetMapping("/")
+  @GetMapping("/report")
   @Operation(summary = "건강리포트 조회", description = "하나의 식단을 조회할 때 사용하는 API")
   @Parameter(name = "reportMonth", description = "건강 리포트 해당 달", example = "20250601")
-  public ResponseEntity<HealthReportDTO> getHealthReportByMonth(@RequestParam int reportMonth){
+  public ResponseEntity<HealthReportDTO> getHealthReportByMonth(@RequestParam LocalDateTime reportMonth){
     return new ResponseEntity<>(healthReportService.getHealthReportByMonth(reportMonth), HttpStatus.OK);
   }
 }
