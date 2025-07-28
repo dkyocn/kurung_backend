@@ -57,7 +57,7 @@ public class HealthInfoController {
       @Parameter(name = "currentDate", description = "조회 기준 날짜", example = "2025-08-03")
   })
   public ResponseEntity<HealthInfoDTO> getHealthInfoById(
-      @RequestParam   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime currentDate
+      @RequestParam  LocalDateTime currentDate
   ) {
     UserDTO user = sessionService.getUserFromToken();
     return new ResponseEntity<>(healthInfoService.getHealthInfoById(currentDate), HttpStatus.OK);
