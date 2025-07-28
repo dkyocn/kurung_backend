@@ -41,7 +41,8 @@ public class HealthInfoDTO extends BaseDTO {
     this.bodyfatpercent = entity.getBodyfatpercent();
     this.bmi = entity.getBmi();
     this.memo = entity.getMemo();
-
+    this.createdAt = entity.getCreatedAt();
+    this.updatedAt = entity.getUpdatedAt();
   }
 
 }

@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class HealthInfoServiceImpl implements HealthInfoService {
 
   private final HealthInfoRepository healthInfoRepository;
+  private final UserService userService;
   private final SessionService sessionService;
 
   @Override

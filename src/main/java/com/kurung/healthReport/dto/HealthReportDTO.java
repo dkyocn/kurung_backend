@@ -1,15 +1,24 @@
 package com.kurung.healthReport.dto;
 
 import com.kurung.common.dto.BaseDTO;
+import com.kurung.diet.dto.DietScoreDTO;
+import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.healthReport.entity.HealthReportEntity;
+import com.kurung.healthinfo.dto.HealthInfoDTO;
+import com.kurung.missions.dto.MissionsDTO;
 import com.kurung.user.dto.UserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.util.CollectionUtils;
 
 @Getter
 @SuperBuilder
@@ -21,7 +30,7 @@ public class HealthReportDTO {
   @Schema(description = "건강상태 요약", example = "블라블라블라블라")
   protected String healthStatus;
   @Schema(description = "건강 리포트 해당 월", example = "2025-06-01")
-  protected Date reportMonth;
+  protected LocalDateTime reportMonth;
   @Schema(description = "목표 대비 진행률", example = "76")
   protected float progressRate;
   @Schema(description = "월간 점수", example = "84")
@@ -31,14 +40,21 @@ public class HealthReportDTO {
   @Schema(description = "사용자 정보")
   protected UserDTO user;
 
+  protected List<DietScoreDTO> dietScore;
+  protected List<SummaryDTO> monthlyExercisesTimes;
+  protected List<HealthInfoDTO> healthInfo;
+
   @Builder(builderMethodName = "toHealthReportBuilder",builderClassName = "toHealthReportBuilder")
-  public HealthReportDTO(HealthReportEntity healthReportEntity) {
+  public HealthReportDTO(HealthReportEntity healthReportEntity,List<DietScoreDTO> dietScore, List<SummaryDTO> monthlyExercisesTimes,List<HealthInfoDTO> healthInfo) {
     this.reportId = healthReportEntity.getReportId();
     this.healthStatus = healthReportEntity.getHealthStatus();
     this.reportMonth = healthReportEntity.getReportMonth();
     this.progressRate = healthReportEntity.getProgressRate();
     this.monthlyScore = healthReportEntity.getMonthlyScore();
     this.reportPdfPath = healthReportEntity.getReportPdfPath();
+    this.dietScore = !CollectionUtils.isEmpty(dietScore) ? dietScore : new ArrayList<>();
+    this.monthlyExercisesTimes = monthlyExercisesTimes;
+    this.healthInfo = healthInfo;
     this.user = UserDTO.toUserBuilder()
         .userEntity(healthReportEntity.getUser())
         .build();
