@@ -1,16 +1,14 @@
 package com.kurung.favorites.repository;
 
-import com.kurung.common.enumeration.HealthType;
+import static com.kurung.favorites.entity.QFavoritesEntity.favoritesEntity;
+
 import com.kurung.favorites.entity.FavoritesEntity;
 import com.kurung.favorites.enumeration.FavoritesType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
-import static com.kurung.favorites.entity.QFavoritesEntity.favoritesEntity;
 
 @Repository
 @RequiredArgsConstructor
@@ -69,5 +67,22 @@ public class FavoritesRepositorySupportImpl implements FavoritesRepositorySuppor
         .where(favoritesEntity.favoritesId.eq(id))
         .fetchOne();
   }
+
+  @Override
+  public List<FavoritesEntity> getAllFavorites(int id, FavoritesType favoritesType) {
+    return jpaQueryFactory.selectFrom(favoritesEntity)
+        .where(eqFavoritesTypeId(id, favoritesType))
+        .fetch();
+  }
+
+  BooleanExpression eqFavoritesTypeId(int id, FavoritesType favoritesType) {
+    return switch (favoritesType) {
+      case STRESS -> favoritesEntity.stressRelief.stressReliefId.eq(id);
+      case RECIPE -> favoritesEntity.recipe.recipeId.eq(id);
+      case ROUTINES -> favoritesEntity.routines.routinesId.eq(id);
+      case COMMUNITY -> favoritesEntity.community.communityId.eq(id);
+    };
+  }
+
 
 }

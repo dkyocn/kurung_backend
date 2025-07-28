@@ -1,5 +1,6 @@
 package com.kurung.medicine.controller;
 
+import com.kurung.medicine.dto.InteractionResultDTO;
 import com.kurung.medicine.dto.MedicineInteractionDTO;
 import com.kurung.medicine.dto.SubstanceDTO;
 import com.kurung.medicine.service.MedicineService;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,14 +28,23 @@ public class MedicineController {
 
   private final MedicineService medicineService;
 
-  @GetMapping("/{suppId}")
-  @Operation(summary = "영양제 단일 조회", description = "하나의 식단을 조회할 때 사용하는 API")
+  @GetMapping("/result")
+  @Operation(summary = "상호작용 결과 조회", description = "약물 상호작용 결과를 조회할 때 사용하는 API")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "418", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "488", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
   })
-  @Parameter(name = "id", description = "영양제 아이디", example = "1")
-  public ResponseEntity<SubstanceDTO> getSuppById(@PathVariable int suppId) {
-    return new ResponseEntity<>(medicineService.getSuppById(suppId), HttpStatus.OK);
+  public ResponseEntity<List<MedicineInteractionDTO>> getInteractionResult() {
+    return new ResponseEntity<>(medicineService.getInteractionResult(), HttpStatus.OK);
+  }
+
+  @GetMapping("/recSupp")
+  @Operation(summary = "추천 영양제 조회", description = "추천받은 영양제를 조회할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "489", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  public ResponseEntity<List<SubstanceDTO>> getRecSupplements() {
+    return new ResponseEntity<>(medicineService.getRecSupplements(), HttpStatus.OK);
   }
 }

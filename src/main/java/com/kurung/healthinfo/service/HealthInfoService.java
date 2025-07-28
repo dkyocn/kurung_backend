@@ -9,11 +9,11 @@ public interface HealthInfoService {
 
   List<HealthInfoDTO> getHealthInfo();
 
-  HealthInfoDTO getHealthInfoById(String userUuid, LocalDateTime targetDate);
+  HealthInfoDTO getHealthInfoById(LocalDateTime targetDate);
 
   List<HealthInfoDTO> getHealthInfoMonthList(LocalDate currentDate);
 
-  HealthInfoDTO updateHealthInfo(HealthInfoDTO healthInfoDTO);
+  void updateHealthInfo(HealthInfoDTO healthInfoDTO);
 
   void createHealthInfo(HealthInfoDTO healthInfoDTO);
 }

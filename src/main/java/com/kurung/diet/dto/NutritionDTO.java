@@ -37,4 +37,17 @@ public class NutritionDTO {
     this.protein = nutritionalEntity.getProtein();
     this.kcal = nutritionalEntity.getKcal();
   }
+
+
+  @Getter
+  @SuperBuilder
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class TodayNutritionDTO extends NutritionDTO {
+
+    protected int objectiveSodium;
+    protected int objectiveCarb;
+    protected int objectiveFat;
+    protected int objectiveProtein;
+  }
 }

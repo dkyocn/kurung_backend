@@ -3,24 +3,27 @@ package com.kurung.community.entity;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "TB_COMMENT")
+@EntityListeners(value = {AuditingEntityListener.class})
 public class CommentEntity {
 
   @Id
@@ -31,7 +34,7 @@ public class CommentEntity {
   private String content;
   @CreatedDate
   @Column(name = "CREATED_AT")
-  private Date createdAt;
+  private LocalDateTime createdAt;
   @JoinColumn(name = "USER_UUID")
   @ManyToOne(fetch = FetchType.LAZY)
   private UserEntity user;

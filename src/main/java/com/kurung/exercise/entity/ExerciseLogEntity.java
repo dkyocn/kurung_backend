@@ -113,4 +113,9 @@ public class ExerciseLogEntity {
     this.memo = dto.getMemo();
     this.exerciseDate = dto.getExerciseDate();
   }
+
+  public void setExercise(ExerciseEntity exercise) {
+    this.exercise = exercise;
+  }
+
 }

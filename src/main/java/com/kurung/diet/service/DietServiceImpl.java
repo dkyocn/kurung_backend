@@ -4,15 +4,19 @@ import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.common.security.service.SessionService;
+import com.kurung.diet.dto.AllergyDTO;
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.dto.FoodDTO;
 import com.kurung.diet.dto.NutritionDTO;
+import com.kurung.diet.dto.NutritionDTO.TodayNutritionDTO;
+import com.kurung.diet.entity.AllergyEntity;
 import com.kurung.diet.entity.DietEntity;
 import com.kurung.diet.entity.DietScoreEntity;
 import com.kurung.diet.entity.FoodEntity;
 import com.kurung.diet.enumeration.DIETTYPE;
 import com.kurung.diet.enumeration.MEAL;
+import com.kurung.diet.repository.AllergyRepository;
 import com.kurung.diet.repository.DietRepository;
 import com.kurung.diet.repository.DietScoreRepository;
 import com.kurung.diet.repository.FoodRepository;
@@ -36,6 +40,7 @@ public class DietServiceImpl implements DietService {
   private final SessionService sessionService;
   private final DietRepository dietRepository;
   private final FoodRepository foodRepository;
+  private final AllergyRepository allergyRepository;
   private final DietScoreRepository dietScoreRepository;
   private final NutritionalRepository nutritionalRepository;
 
@@ -46,7 +51,8 @@ public class DietServiceImpl implements DietService {
 
     UserDTO userDTO = sessionService.getUserFromToken();
 
-    DietEntity dietById = dietRepository.getCurrentDiet(currentDate,userDTO.getUserUuid(), meal);
+    DietEntity dietById = dietRepository.getCurrentDiet(currentDate.withHour(0).withMinute(0).withSecond(0),
+        currentDate.withHour(23).withMinute(59).withSecond(59),userDTO.getUserUuid(), meal);
 
     if (dietById != null) {
       return DietDTO.toDietBuilder().dietEntity(dietById).build();
@@ -234,6 +240,8 @@ public class DietServiceImpl implements DietService {
             .build()).collect(Collectors.toList());
   }
 
+  // FOOD
+
   @Override
   public FoodDTO getFoodById(int id) {
 
@@ -253,6 +261,63 @@ public class DietServiceImpl implements DietService {
     return foodList.stream()
         .map(foodEntity -> FoodDTO.toFoodBuilder().foodEntity(foodEntity).build()).collect(
             Collectors.toList());
+  }
+
+  @Override
+  public TodayNutritionDTO getTodayNutrition(LocalDateTime currentDate) {
+
+    int sodium = 0;
+    int carb = 0;
+    int sugar = 0;
+    int totalFat = 0;
+    int transFat = 0;
+    int saturatedFat = 0;
+    int cholesterol = 0;
+    int protein = 0;
+
+    UserDTO userDTO = sessionService.getUserFromToken();
+
+    List<DietEntity> todayDietList = dietRepository.getTodayDiet(currentDate.withHour(0).withMinute(0).withSecond(0),
+        currentDate.withHour(23).withMinute(59).withSecond(59), userDTO.getUserUuid());
+
+    // 지방 2200kcal -> 48.9 g
+    // 나트륨 2200kcal -> 2000 mg
+    // 탄수화물 2200kcal -> 330 g
+    // 단백질 2200kcal -> 68.75 g
+
+    for (DietEntity diet : todayDietList) {
+      sodium += diet.getNutritional().getSodium();
+      carb += diet.getNutritional().getCarb();
+      sugar += diet.getNutritional().getSugar();
+      totalFat += (diet.getNutritional().getTransFat() + diet.getNutritional().getSaturatedFat());
+      transFat += diet.getNutritional().getTransFat();
+      saturatedFat += diet.getNutritional().getSaturatedFat();
+      cholesterol += diet.getNutritional().getCholesterol();
+      protein += diet.getNutritional().getProtein();
+    }
+
+    return TodayNutritionDTO.builder()
+        .objectiveSodium(Math.round(((float) sodium /2000) * 100))
+        .objectiveCarb(Math.round(((float) carb /330) * 100))
+        .objectiveFat((int) Math.round((totalFat/48.9)* 100))
+        .objectiveProtein((int) Math.round((protein /68.75) * 100))
+        .sodium(sodium)
+        .carb(carb)
+        .sugar(sugar)
+        .totalFat(totalFat)
+        .transFat(transFat)
+        .saturatedFat(saturatedFat)
+        .cholesterol(cholesterol)
+        .protein(protein)
+        .build();
+  }
+
+  @Override
+  public List<AllergyDTO> getAllergyList(String keyword) {
+
+    List<AllergyEntity> allergyList = allergyRepository.getAllergyList(keyword);
+    return allergyList.stream().map(allergyEntity -> AllergyDTO.builder()
+        .allergyId(allergyEntity.getAllergyId()).allergyName(allergyEntity.getAllergyName()).build()).collect(Collectors.toList());
   }
 
 
