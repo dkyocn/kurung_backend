@@ -103,10 +103,18 @@ public class UserServiceImpl implements UserService {
     //User id로 사용자를 조회해서 DTO로 반환하는 메소드!
     @Override
     public UserDTO getUserByUserId(String userId) {
+        log.info("=== getUserByUserId 시작 ===");
+        log.info("조회 요청 userId: {}", userId);
+        
         UserEntity userEntity = userRepository.getByUserId(userId);
         if (userEntity == null) {
+            log.warn("사용자를 찾을 수 없습니다: {}", userId);
             throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
         }
+        
+        log.info("조회된 사용자: {}", userEntity);
+        log.info("=== getUserByUserId 완료 ===");
+        
         return UserDTO.toUserBuilder()
             .userEntity(userEntity)
             .build();
@@ -289,18 +297,9 @@ public class UserServiceImpl implements UserService {
                 return UserDTO.builder()
                     .userUuid(userDTO.getUserUuid())
                     .userId(userDTO.getUserId())
-                    .userFaceLoginYN(userDTO.isUserFaceLoginYN())
-                    .userFaceLoginRef(userDTO.getUserFaceLoginRef())
-                    .userPwd(userDTO.getUserPwd())
                     .userNick(userDTO.getUserNick())
-                    .userGender(userDTO.getUserGender())
-                    .userAge(userDTO.getUserAge())
-                    .userKey(userDTO.getUserKey())
                     .userPath(userDTO.getUserPath())
                     .profileImg(userDTO.getProfileImg())
-                    .isActive(userDTO.isActive())
-                    .adminYN(userDTO.isAdminYN())
-                    .userRefreshToken(userDTO.getUserRefreshToken())
                     .message("카카오 로그인 성공")
                     .isNewUser(false)
                     .accessToken(accessToken)
@@ -329,18 +328,9 @@ public class UserServiceImpl implements UserService {
                     return UserDTO.builder()
                         .userUuid(userDTO.getUserUuid())
                         .userId(userDTO.getUserId())
-                        .userFaceLoginYN(userDTO.isUserFaceLoginYN())
-                        .userFaceLoginRef(userDTO.getUserFaceLoginRef())
-                        .userPwd(userDTO.getUserPwd())
                         .userNick(userDTO.getUserNick())
-                        .userGender(userDTO.getUserGender())
-                        .userAge(userDTO.getUserAge())
-                        .userKey(userDTO.getUserKey())
                         .userPath(userDTO.getUserPath())
                         .profileImg(userDTO.getProfileImg())
-                        .isActive(userDTO.isActive())
-                        .adminYN(userDTO.isAdminYN())
-                        .userRefreshToken(userDTO.getUserRefreshToken())
                         .message("카카오 회원가입 및 로그인 성공")
                         .isNewUser(true)
                         .accessToken(accessToken)
@@ -418,7 +408,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // 비밀번호 재설정 관련 메서드들 (UserDTO로 통합)
-        @Override
+    @Override
     public void sendVerificationCode(UserDTO request) {
         try {
             log.info("인증번호 발송 시작 - 이메일: {}", request.getEmail());
@@ -429,13 +419,12 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("인증번호 발송에 실패했습니다.", e);
         }
     }
-    
+
     @Override
     public boolean confirmVerificationCode(UserDTO request) {
         try {
-            log.info("인증번호 확인 시작 - 이메일: {}", request.getEmail());
-            // verificationCode는 별도 파라미터로 받아야 함
-            boolean isValid = emailService.verifyCode(request.getEmail(), "verification_code");
+            log.info("인증번호 확인 시작 - 이메일: {}, 인증번호: {}", request.getEmail(), request.getVerificationCode());
+            boolean isValid = emailService.verifyCode(request.getEmail(), request.getVerificationCode());
             log.info("인증번호 확인 완료 - 이메일: {}, 결과: {}", request.getEmail(), isValid);
             return isValid;
         } catch (Exception e) {
@@ -446,27 +435,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO resetPasswordByEmail(UserDTO request) {
-        String userId = null;
+        String email = null;
         try {
-            userId = request.getUserId();
+            email = request.getEmail();
 
-            log.info("비밀번호 재설정 시작 - 사용자 ID: {}", userId);
+            log.info("비밀번호 재설정 시작 - 이메일: {}", email);
 
-            // 사용자 조회
-            UserEntity userEntity = userRepository.getByUserId(userId);
-                        if (userEntity == null) {
+            // 사용자 조회 (이메일로)
+            UserEntity userEntity = userRepository.getByUserId(email);
+            if (userEntity == null) {
                 return UserDTO.builder()
                     .message("사용자를 찾을 수 없습니다.")
                     .build();
             }
-            
+
             // 새 비밀번호 유효성 검사
             if (request.getNewPassword() == null || request.getNewPassword().trim().isEmpty()) {
                 return UserDTO.builder()
                     .message("새 비밀번호를 입력해주세요.")
                     .build();
             }
-            
+
             if (!request.getNewPassword().equals(request.getConfirmPassword())) {
                 return UserDTO.builder()
                     .message("비밀번호가 일치하지 않습니다.")
@@ -475,7 +464,10 @@ public class UserServiceImpl implements UserService {
 
             // 비밀번호 업데이트
             String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
-            UserEntity updatedUser = UserEntity.builder()
+            log.info("새 비밀번호 암호화 완료 - 이메일: {}", email);
+            
+            // 기존 엔티티의 비밀번호만 업데이트 (컬렉션 참조 유지)
+            userEntity = UserEntity.builder()
                 .userUuid(userEntity.getUserUuid())
                 .userId(userEntity.getUserId())
                 .userFaceLoginYN(userEntity.isUserFaceLoginYN())
@@ -490,16 +482,33 @@ public class UserServiceImpl implements UserService {
                 .isActive(userEntity.isActive())
                 .adminYN(userEntity.isAdminYN())
                 .userRefreshToken(userEntity.getUserRefreshToken())
+                .diet(userEntity.getDiet())
+                .exerciseLogs(userEntity.getExerciseLogs())
+                .objectiveList(userEntity.getObjectiveList())
+                .routine(userEntity.getRoutine())
+                .missions(userEntity.getMissions())
+                .favorites(userEntity.getFavorites())
+                .chatbotList(userEntity.getChatbotList())
+                .dietScore(userEntity.getDietScore())
+                .community(userEntity.getCommunity())
+                .comment(userEntity.getComment())
+                .medicineInteraction(userEntity.getMedicineInteraction())
+                .lifelog(userEntity.getLifelog())
+                .monthlyLifelog(userEntity.getMonthlyLifelog())
+                .healthDiagnosis(userEntity.getHealthDiagnosis())
+                .healthAnswer(userEntity.getHealthAnswer())
+                .healthReport(userEntity.getHealthReport())
                 .build();
-            userRepository.save(updatedUser);
+            userRepository.save(userEntity);
+            log.info("사용자 정보 업데이트 완료 - 이메일: {}", email);
 
-            log.info("비밀번호 재설정 완료 - 사용자 ID: {}", userId);
+            log.info("비밀번호 재설정 완료 - 이메일: {}", email);
 
             return UserDTO.builder()
                 .message("비밀번호가 성공적으로 재설정되었습니다.")
                 .build();
         } catch (Exception e) {
-            log.error("비밀번호 재설정 실패 - 사용자 ID: {}, 오류: {}", userId, e.getMessage(), e);
+            log.error("비밀번호 재설정 실패 - 이메일: {}, 오류: {}", email, e.getMessage(), e);
             return UserDTO.builder()
                 .message("비밀번호 재설정에 실패했습니다.")
                 .build();

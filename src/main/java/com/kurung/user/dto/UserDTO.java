@@ -74,6 +74,8 @@ public class UserDTO {
     protected String refreshToken;
 
     // === 비밀번호 재설정 필드들 ===
+    @Schema(description = "인증번호", example = "123456")
+    protected String verificationCode;
     @Schema(description = "새 비밀번호", example = "newPassword123")
     protected String newPassword;
     @Schema(description = "새 비밀번호 확인", example = "newPassword123")

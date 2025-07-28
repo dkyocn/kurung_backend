@@ -19,6 +19,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("=== CustomUserDetailsService.loadUserByUsername 시작 ===");
+        log.info("요청된 username: {}", username);
+        
         // 1. DB에서 사용자 조회
         UserDTO userDTO = userService.getUserByUserId(username);
 
@@ -35,11 +38,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // 3. ROLE 부여 (int → String 변환)
         String role = (userDTO.isAdminYN()) ? "ADMIN" : "USER";
+        log.info("부여된 ROLE: {}", role);
 
+        log.info("=== CustomUserDetailsService.loadUserByUsername 완료 ===");
+        
         return User.builder()
-                .username(userDTO.getUserId())
-                .password(userDTO.getUserPwd())
-                .roles(role)
-                .build();
+            .username(userDTO.getUserId())
+            .password(userDTO.getUserPwd())
+            .roles(role)
+            .build();
     }
 }

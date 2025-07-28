@@ -74,6 +74,6 @@ social:
     redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:3000/auth/kakao/callback}
   naver:
     api-url: https://openapi.naver.com
-    client-id: ${NAVER_CLIENT_ID:your_naver_client_id}
-    client-secret: ${NAVER_CLIENT_SECRET:your_naver_client_secret}
+    client-id: ${NAVER_CLIENT_ID:3Os7CSY9u41ugvx8VLkz}
+    client-secret: ${NAVER_CLIENT_SECRET:7M07I61M9m}
     redirect-uri: ${NAVER_REDIRECT_URI:http://localhost:3000/auth/naver/callback}
