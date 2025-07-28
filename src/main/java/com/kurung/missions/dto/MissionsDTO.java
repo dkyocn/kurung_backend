@@ -40,6 +40,8 @@ public class MissionsDTO {
   @Schema(description = "토글 옵션 사용 여부", example = "true")
   protected boolean toggleOption;
 
+
+
   @Builder(builderMethodName = "toMissionBuilder", builderClassName = "toMissionBuilder")
   public MissionsDTO(MissionsEntity missionEntity) {
     this.missionId = missionEntity.getMissionId();
