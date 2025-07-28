@@ -19,32 +19,33 @@ public class JWTFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;
     }
 
-                // 토큰 검사를 생략할 URL 목록 정의
-            private boolean isExcludedUrl(String url) {
-                return url.equals("/") ||
-                    url.equals("/favicon.ico") ||
-                    url.equals("/api/v1/kurung/user/login") ||
-                    url.equals("/api/v1/kurung/user/signup") ||
-                    url.equals("/api/v1/kurung/user/check-userid") ||
-                    url.equals("/api/v1/kurung/user/send-verification-email") ||
-                    url.equals("/api/v1/kurung/user/verify-code") ||
-                    url.startsWith("/api/v1/kurung/user/kakao/") ||  // 카카오 소셜 로그인 경로
-                    url.startsWith("/api/v1/kurung/user/naver/") ||  // 네이버 소셜 로그인 경로
-                    url.startsWith("/api/v1/kurung/test/social/") ||  // 소셜 로그인 테스트 경로
-                    url.startsWith("/api-test") ||
-                    url.startsWith("/swagger-ui/") ||
-                    url.startsWith("/v3/api-docs") ||
-                    url.equals("/reissue") ||
-                    url.endsWith(".png") ||
-                    url.startsWith("/js/") ||
-                    url.startsWith("/css/") ||
-                    url.startsWith("/api/personality-test/") ||
-                    url.startsWith("/api/psychological-test/");
-            }
+    // 토큰 검사를 생략할 URL 목록 정의
+    private boolean isExcludedUrl(String url) {
+        return url.equals("/") ||
+            url.equals("/favicon.ico") ||
+            url.equals("/api/v1/kurung/user/login") ||
+            url.equals("/api/v1/kurung/user/signup") ||
+            url.equals("/api/v1/kurung/user/check-userid") ||
+            url.equals("/api/v1/kurung/user/send-verification-code") ||
+            url.equals("/api/v1/kurung/user/confirm-verification-code") ||
+            url.equals("/api/v1/kurung/user/reset-password-by-email") ||
+            url.startsWith("/api/v1/kurung/user/kakao/") ||  // 카카오 소셜 로그인 경로
+            url.startsWith("/api/v1/kurung/user/naver/") ||  // 네이버 소셜 로그인 경로
+            url.startsWith("/api/v1/kurung/test/social/") ||  // 소셜 로그인 테스트 경로
+            url.startsWith("/api-test") ||
+            url.startsWith("/swagger-ui/") ||
+            url.startsWith("/v3/api-docs") ||
+            url.equals("/reissue") ||
+            url.endsWith(".png") ||
+            url.startsWith("/js/") ||
+            url.startsWith("/css/") ||
+            url.startsWith("/api/personality-test/") ||
+            url.startsWith("/api/psychological-test/");
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
 

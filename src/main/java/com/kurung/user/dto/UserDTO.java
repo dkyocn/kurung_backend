@@ -47,6 +47,38 @@ public class UserDTO {
     @Schema(description = "리프레시 토큰 발급", example = "리프레시 토큰")
     protected String userRefreshToken;
 
+    // === 소셜 로그인 통합 필드들 ===
+    @Schema(description = "소셜 인증 토큰", example = "kakao_access_token_here")
+    protected String socialToken;
+    @Schema(description = "소셜 사용자 고유 ID", example = "123456789")
+    protected String socialUserId;
+    @Schema(description = "사용자 이메일 (소셜)", example = "user@example.com")
+    protected String email;
+    @Schema(description = "사용자 닉네임 (소셜)", example = "홍길동")
+    protected String nickname;
+    @Schema(description = "사용자 성별 (소셜)", example = "MALE")
+    protected Gender gender;
+    @Schema(description = "프로필 이미지 URL (소셜)", example = "https://example.com/profile.jpg")
+    protected String profileImage;
+    @Schema(description = "생년월일 (소셜)", example = "1990-01-01")
+    protected String birthDate;
+
+    // === 소셜 로그인 응답 필드들 ===
+    @Schema(description = "응답 메시지", example = "카카오 로그인 성공")
+    protected String message;
+    @Schema(description = "신규 회원 여부", example = "true")
+    protected boolean isNewUser;
+    @Schema(description = "JWT 액세스 토큰")
+    protected String accessToken;
+    @Schema(description = "JWT 리프레시 토큰")
+    protected String refreshToken;
+
+    // === 비밀번호 재설정 필드들 ===
+    @Schema(description = "새 비밀번호", example = "newPassword123")
+    protected String newPassword;
+    @Schema(description = "새 비밀번호 확인", example = "newPassword123")
+    protected String confirmPassword;
+
     @Builder(builderMethodName = "toUserBuilder", builderClassName = "toUserBuilder")
     public UserDTO(UserEntity userEntity) {
         this.userUuid = userEntity.getUserUuid();
@@ -62,5 +94,6 @@ public class UserDTO {
         this.profileImg = userEntity.getProfileImg();
         this.isActive = userEntity.isActive();
         this.adminYN = userEntity.isAdminYN();
+        this.userRefreshToken = userEntity.getUserRefreshToken();
     }
 }

@@ -87,9 +87,9 @@ public class UserEntity {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private List<ExerciseLogEntity> exerciseLogs;
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<ObjectiveEntity> ObjectiveList;
+  private List<ObjectiveEntity> objectiveList;
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-  private List<RoutinesEntity> Routine;
+  private List<RoutinesEntity> routine;
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private List<MissionsEntity> missions;
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -141,9 +141,9 @@ public class UserEntity {
     this.profileImg = userDTO.getProfileImg();
   }
 
- public void updateRefresh(String refreshToken){
+  public void updateRefresh(String refreshToken){
     this.userRefreshToken = refreshToken;
- }
+  }
   public void assignUserUuid(String uuid) {
     this.userUuid = uuid;
   }

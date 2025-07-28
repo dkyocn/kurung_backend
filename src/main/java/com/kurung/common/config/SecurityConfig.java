@@ -49,11 +49,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         .allowCredentials(true);
   }
 
-  // RestTemplate 빈 등록 (WebConfig에서 옮김)
-  @Bean
-  public RestTemplate restTemplate() {
-    return new RestTemplate();
-  }
+  // RestTemplate 빈은 RestTemplateConfig에서 관리
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
@@ -70,25 +66,28 @@ public class SecurityConfig implements WebMvcConfigurer {
             .requestMatchers("/", "/index.html", "/favicon.ico", "/static/**", "/manifest.json",
                 "/public/**", "/auth/**", "/css/**", "/js/**", "/*.png").permitAll()
 
-                                // 인증 없이 허용되는 API 경로 추가
-                    .requestMatchers(
-                        "/api/v1/kurung/login",
-                        "/api/v1/kurung/reissue",
-                        "/api/v1/kurung/user/send-verification-email",
-                        "/api/v1/kurung/user/verify-code",
-                        "/api/v1/kurung/user/kakao/**",  // 카카오 소셜 로그인 경로 허용
-                        "/api/v1/kurung/user/naver/**",  // 네이버 소셜 로그인 경로 허용
-                        "/api/v1/kurung/test/social/**",  // 소셜 로그인 테스트 경로 허용
-                        "/user/signup",
-                        "/user/idchk",
-                        "/notice/ntop3",
-                        "/notice",
-                        "/notice/nfdown",
-                        "/notice/search/title",
-                        "/notice/detail/*",
-                        "/board/btop3",
-                        "/board/search/**"
-                    ).permitAll()
+            // 인증 없이 허용되는 API 경로 추가
+            .requestMatchers(
+                "/api/v1/kurung/login",
+                "/api/v1/kurung/reissue",
+                "/api/v1/kurung/user/send-verification-email",
+                "/api/v1/kurung/user/verify-code",
+                "/api/v1/kurung/user/send-verification-code",
+                "/api/v1/kurung/user/confirm-verification-code",
+                "/api/v1/kurung/user/reset-password-by-email",
+                "/api/v1/kurung/user/kakao/**",  // 카카오 소셜 로그인 경로 허용
+                "/api/v1/kurung/user/naver/**",  // 네이버 소셜 로그인 경로 허용
+                "/api/v1/kurung/test/social/**",  // 소셜 로그인 테스트 경로 허용
+                "/user/signup",
+                "/user/idchk",
+                "/notice/ntop3",
+                "/notice",
+                "/notice/nfdown",
+                "/notice/search/title",
+                "/notice/detail/*",
+                "/board/btop3",
+                "/board/search/**"
+            ).permitAll()
 
             // 인증 필요
             .requestMatchers("/logout").authenticated()

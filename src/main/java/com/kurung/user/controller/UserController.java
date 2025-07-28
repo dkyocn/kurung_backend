@@ -2,11 +2,8 @@ package com.kurung.user.controller;
 
 import com.kurung.common.security.service.SessionService;
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.dto.UserSignupResponseDTO;
 import com.kurung.user.enumeration.UserPath;
 import com.kurung.user.service.UserService;
-import com.kurung.user.social.dto.SocialLoginRequest;
-import com.kurung.user.social.dto.SocialLoginResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -29,49 +26,35 @@ public class UserController {
     public ResponseEntity<UserDTO> getMyInfo() {
         return new ResponseEntity<>(sessionService.getUserFromToken(), HttpStatus.OK);
     }
-
-    //회원가입
     @PostMapping("/signup")
-    public ResponseEntity<UserSignupResponseDTO> registerUser(@RequestBody UserDTO userDTO) {
-        UserSignupResponseDTO result = userService.registerUserWithResponse(userDTO);
-        HttpStatus status = result.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
-        return new ResponseEntity<>(result, status);
+    public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDTO) {
+        return new ResponseEntity<>(userService.registerUserWithResponse(userDTO), HttpStatus.OK);
     }
-
-    // 아이디(이메일) 중복 확인
-    @Operation(summary = "아이디 중복 확인", description = "사용 가능한 아이디인지 확인합니다.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "확인 성공")
-    })
     @GetMapping("/check-userid")
     public ResponseEntity<Boolean> checkuserId(@RequestParam String userId) {
-        boolean available = userService.checkUserIdAvailability(userId);
-        return new ResponseEntity<>(available, HttpStatus.OK);
+        return new ResponseEntity<>(userService.checkUserIdAvailability(userId), HttpStatus.OK);
     }
-    
-    // 카카오 로그인 (실제 소셜 API 연동용)
-    @Operation(summary = "카카오 로그인", description = "카카오 액세스 토큰으로 로그인합니다.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "로그인 성공"),
-        @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-        @ApiResponse(responseCode = "401", description = "인증 실패")
-    })
     @PostMapping("/kakao/login")
-    public ResponseEntity<SocialLoginResponseDTO> kakaoLogin(@RequestBody SocialLoginRequest request) {
-        SocialLoginResponseDTO result = userService.socialLoginWithResponse(request.getSocialToken(), UserPath.KAKAO);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponseEntity<UserDTO> kakaoLogin(@RequestBody UserDTO request) {
+        return new ResponseEntity<>(userService.socialLoginWithResponse(request.getSocialToken(), UserPath.KAKAO), HttpStatus.OK);
     }
-
-    // 네이버 로그인 (실제 소셜 API 연동용)
-    @Operation(summary = "네이버 로그인", description = "네이버 액세스 토큰으로 로그인합니다.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "로그인 성공"),
-        @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-        @ApiResponse(responseCode = "401", description = "인증 실패")
-    })
     @PostMapping("/naver/login")
-    public ResponseEntity<SocialLoginResponseDTO> naverLogin(@RequestBody SocialLoginRequest request) {
-        SocialLoginResponseDTO result = userService.socialLoginWithResponse(request.getSocialToken(), UserPath.NAVER);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponseEntity<UserDTO> naverLogin(@RequestBody UserDTO request) {
+        return new ResponseEntity<>(userService.socialLoginWithResponse(request.getSocialToken(), UserPath.NAVER), HttpStatus.OK);
+    }
+    @PostMapping("/send-verification-code")
+    public ResponseEntity<String> sendVerificationCode(@RequestBody UserDTO request) {
+        userService.sendVerificationCode(request);
+        return new ResponseEntity<>("인증번호가 발송되었습니다.", HttpStatus.OK);
+    }
+    @PostMapping("/confirm-verification-code")
+    public ResponseEntity<String> confirmVerificationCode(@RequestBody UserDTO request) {
+        boolean isValid = userService.confirmVerificationCode(request);
+        return new ResponseEntity<>(isValid ? "인증번호가 확인되었습니다." : "인증번호가 일치하지 않습니다.",
+            isValid ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
+    }
+    @PostMapping("/reset-password-by-email")
+    public ResponseEntity<UserDTO> resetPasswordByEmail(@RequestBody UserDTO request) {
+        return new ResponseEntity<>(userService.resetPasswordByEmail(request), HttpStatus.OK);
     }
 }
