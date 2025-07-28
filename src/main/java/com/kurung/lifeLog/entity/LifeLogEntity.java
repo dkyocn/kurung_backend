@@ -52,6 +52,7 @@ public class LifeLogEntity extends BaseEntity {
   private UserEntity user;
 
   public void updateLifeLog(LifeLogDTO lifeLogDTO) {
+    this.lifelogDate= lifeLogDTO.getLifelogDate();
      this.emotion = lifeLogDTO.getEmotion();
      this.emotionWrite = lifeLogDTO.getEmotionWrite();
      this.bedTime = lifeLogDTO.getBedTime();
