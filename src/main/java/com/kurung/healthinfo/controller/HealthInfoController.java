@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,13 +54,13 @@ public class HealthInfoController {
       @ApiResponse(responseCode = "463", description = "조회 실패", content = @Content(mediaType = "application/json"))
   })
   @Parameters({
-      @Parameter(name = "targetDate", description = "조회 기준 날짜", example = "2025-08-03")
+      @Parameter(name = "currentDate", description = "조회 기준 날짜", example = "2025-08-03")
   })
   public ResponseEntity<HealthInfoDTO> getHealthInfoById(
-      @RequestParam LocalDateTime targetDate
+      @RequestParam   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime currentDate
   ) {
     UserDTO user = sessionService.getUserFromToken();
-    return new ResponseEntity<>(healthInfoService.getHealthInfoById(targetDate), HttpStatus.OK);
+    return new ResponseEntity<>(healthInfoService.getHealthInfoById(currentDate), HttpStatus.OK);
   }
 
   @GetMapping("/month")
@@ -71,7 +72,7 @@ public class HealthInfoController {
   public ResponseEntity<List<HealthInfoDTO>> getHealthInfoMonthList(
       @RequestParam LocalDate currentDate
   ) {
-
+    UserDTO user = sessionService.getUserFromToken();
     return new ResponseEntity<>(healthInfoService.getHealthInfoMonthList(currentDate), HttpStatus.OK);
   }
 

@@ -9,7 +9,7 @@ public interface HealthInfoService {
 
   List<HealthInfoDTO> getHealthInfo();
 
-  HealthInfoDTO getHealthInfoById(LocalDateTime targetDate);
+  HealthInfoDTO getHealthInfoById(LocalDateTime currentDate);
 
   List<HealthInfoDTO> getHealthInfoMonthList(LocalDate currentDate);
 
