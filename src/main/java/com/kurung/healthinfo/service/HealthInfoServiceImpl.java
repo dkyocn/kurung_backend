@@ -37,12 +37,12 @@ public class HealthInfoServiceImpl implements HealthInfoService {
   }
 
   @Override
-  public HealthInfoDTO getHealthInfoById(LocalDateTime targetDate) {
+  public HealthInfoDTO getHealthInfoById(LocalDateTime currentDate) {
 
     UserDTO userDTO = sessionService.getUserFromToken();
 
-    LocalDateTime startOfDay = targetDate.toLocalDate().atStartOfDay(); // 00:00:00
-    LocalDateTime endOfDay = targetDate.toLocalDate().atTime(23, 59, 59); // 23:59:59
+    LocalDateTime startOfDay = currentDate.toLocalDate().atStartOfDay(); // 00:00:00
+    LocalDateTime endOfDay = currentDate.toLocalDate().atTime(23, 59, 59); // 23:59:59
 
     HealthInfoEntity entity = healthInfoRepository.findByUserAndDateBetween(userDTO.getUserUuid(), startOfDay, endOfDay);
 
