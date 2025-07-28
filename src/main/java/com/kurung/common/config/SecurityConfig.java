@@ -84,8 +84,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                 "/board/search/**"
             ).permitAll()
 
-            // 인증 필요
-            .requestMatchers("/logout").authenticated()
+                                // 인증 필요
+                    .requestMatchers("/logout", "/api/v1/kurung/user/change-password").authenticated()
 
             // 관리자 권한 필요
             .requestMatchers("/admin/**").hasRole("ADMIN")

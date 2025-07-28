@@ -144,9 +144,14 @@ public class UserEntity {
     this.profileImg = userDTO.getProfileImg();
   }
 
- public void updateRefresh(String refreshToken){
+  public void updateRefresh(String refreshToken){
     this.userRefreshToken = refreshToken;
- }
+  }
+
+  public void updatePassword(String newPassword) {
+    this.userPwd = newPassword;
+  }
+ 
   public void assignUserUuid(String uuid) {
     this.userUuid = uuid;
   }
