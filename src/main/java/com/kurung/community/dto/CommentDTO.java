@@ -2,8 +2,7 @@ package com.kurung.community.dto;
 
 import com.kurung.community.entity.CommentEntity;
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.dto.UserDTO.toUserBuilder;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +17,7 @@ public class CommentDTO {
 
   protected int commentId;
   protected String content;
-  protected Date createdAt;
+  protected LocalDateTime createdAt;
   protected UserDTO user;
 
   @Builder(builderMethodName = "toCommentBuilder", builderClassName = "toCommentBuilder")

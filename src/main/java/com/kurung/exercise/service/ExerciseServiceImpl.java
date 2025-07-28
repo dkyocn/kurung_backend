@@ -68,19 +68,32 @@ public class ExerciseServiceImpl implements ExerciseService {
   // ExerciseLog Updated ---------------------------------
   @Override
   @Transactional
-  public SummaryDTO.ExerciseLogDTO updateExerciseLog(SummaryDTO.ExerciseLogDTO exerciseLogDTO) {
+  public SummaryDTO.ExerciseLogDTO updateExerciseLog(SummaryDTO.ExerciseLogDTO dto) {
     // 1. 기존 기록 조회
-    ExerciseLogEntity entity = exerciseLogRepository.getReferenceById(
-        exerciseLogDTO.getExerciseLogsId());
+    ExerciseLogEntity entity = exerciseLogRepository.getReferenceById(dto.getExerciseLogsId());
     if (entity == null) {
       throw new CustomIllegalArgumentException(CustomHttpStatus.EXERCISELOG_NOT_FOUND);
     }
+
     try {
-      // 2. 엔티티에 값 반영
-      entity.updateFromDTO(exerciseLogDTO);
+      // 2. 기본 필드 업데이트
+      entity.updateFromDTO(dto);
+
+      // 3. 운동 ID로 ExerciseEntity 조회 후 직접 세팅
+      int exerciseId = dto.getExercise().getExerciseId();
+      Optional<ExerciseEntity> optional = exerciseRepository.findById(exerciseId);
+
+      if (!optional.isPresent()) {
+        throw new CustomIllegalArgumentException(CustomHttpStatus.EXERCISE_NOT_FOUND);
+      }
+
+      ExerciseEntity exercise = optional.get();
+      entity.setExercise(exercise); // ✅ 외래키 반영
     } catch (Exception e) {
       throw new CustomRunTimeException(CustomHttpStatus.EXERCISE_UPDATE_ERROR);
     }
+
+    // 4. 수정된 내용 DTO로 변환 후 반환
     return SummaryDTO.ExerciseLogDTO.toExerciseLogBuilder()
         .entity(entity)
         .build();

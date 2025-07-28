@@ -1,4 +1,4 @@
-package com.kurung.medicine.entity;
+package com.kurung.diet.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,21 +17,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "TB_INPUT_MEDICINE")
-public class InputMedicineEntity {
+@Entity(name = "TB_FOOD_ALLERGY")
+public class FoodAllergyEntity {
+
   @Id
-  @Column(name = "INPUT_MEDI_ID")
+  @Column(name = "FOOD_ALLERGY_ID")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int inputMediId;
-  @Column(name = "RISK")
-  private String risk;
-  @JoinColumn(name = "MEDI1_ID")
+  private int foodAllergyId;
+  @JoinColumn(name = "FOOD_ID")
   @ManyToOne(fetch = FetchType.LAZY)
-  private MedicineEntity medicine1;
-  @JoinColumn(name = "MEDI2_ID")
+  private FoodEntity food;
+  @JoinColumn(name = "ALLERGY_ID")
   @ManyToOne(fetch = FetchType.LAZY)
-  private MedicineEntity medicine2;
-  @JoinColumn(name = "MEDI_INTER_ID")
-  @ManyToOne(fetch = FetchType.LAZY)
-  private MedicineInteractionEntity medicineInteraction;
+  private AllergyEntity allergy;
 }

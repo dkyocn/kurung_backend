@@ -1,6 +1,7 @@
 package com.kurung.community.controller;
 
 import com.kurung.common.enumeration.HealthType;
+import com.kurung.community.dto.CommentDTO;
 import com.kurung.community.dto.CommunityDTO;
 import com.kurung.community.service.CommunityService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,6 +90,23 @@ public class CommunityController {
   })
   public ResponseEntity<HttpStatus> deleteCommunityById(@PathVariable int id) {
     communityService.deleteCommunity(id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/{id}/comment/create")
+  @Operation(summary = "댓글 생성", description = "댓글 생성할 때 사용하는 API")
+  @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @Parameter(name = "id", description = "아이디", example = "커뮤니티 보드 아이디")
+  public ResponseEntity<CommentDTO> createComment(@PathVariable int id, @RequestBody CommentDTO commentDTO) {
+    return new ResponseEntity<>(communityService.createComment(id, commentDTO), HttpStatus.OK);
+  }
+
+  @DeleteMapping("/comment/{id}")
+  @Operation(summary = "댓글 생성", description = "댓글 생성할 때 사용하는 API")
+  @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @Parameter(name = "id", description = "아이디", example = "삭제할 댓글 아이디")
+  public ResponseEntity<HttpStatus> deleteCommentById(@PathVariable int id) {
+    communityService.deleteComment(id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }

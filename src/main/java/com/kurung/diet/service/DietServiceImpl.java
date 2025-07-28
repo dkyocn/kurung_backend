@@ -4,16 +4,19 @@ import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.common.security.service.SessionService;
+import com.kurung.diet.dto.AllergyDTO;
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.dto.FoodDTO;
 import com.kurung.diet.dto.NutritionDTO;
 import com.kurung.diet.dto.NutritionDTO.TodayNutritionDTO;
+import com.kurung.diet.entity.AllergyEntity;
 import com.kurung.diet.entity.DietEntity;
 import com.kurung.diet.entity.DietScoreEntity;
 import com.kurung.diet.entity.FoodEntity;
 import com.kurung.diet.enumeration.DIETTYPE;
 import com.kurung.diet.enumeration.MEAL;
+import com.kurung.diet.repository.AllergyRepository;
 import com.kurung.diet.repository.DietRepository;
 import com.kurung.diet.repository.DietScoreRepository;
 import com.kurung.diet.repository.FoodRepository;
@@ -37,6 +40,7 @@ public class DietServiceImpl implements DietService {
   private final SessionService sessionService;
   private final DietRepository dietRepository;
   private final FoodRepository foodRepository;
+  private final AllergyRepository allergyRepository;
   private final DietScoreRepository dietScoreRepository;
   private final NutritionalRepository nutritionalRepository;
 
@@ -306,6 +310,14 @@ public class DietServiceImpl implements DietService {
         .cholesterol(cholesterol)
         .protein(protein)
         .build();
+  }
+
+  @Override
+  public List<AllergyDTO> getAllergyList(String keyword) {
+
+    List<AllergyEntity> allergyList = allergyRepository.getAllergyList(keyword);
+    return allergyList.stream().map(allergyEntity -> AllergyDTO.builder()
+        .allergyId(allergyEntity.getAllergyId()).allergyName(allergyEntity.getAllergyName()).build()).collect(Collectors.toList());
   }
 
 

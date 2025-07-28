@@ -76,5 +76,13 @@ public class FavoritesServiceImpl implements FavoritesService {
     }
   }
 
+  @Override
+  public List<FavoritesDTO> getALLFavoritesList(int id, FavoritesType favoritesType) {
+
+    List<FavoritesEntity> favoritesEntityList = favoritesRepository.getAllFavorites(id, favoritesType);
+
+    return favoritesEntityList.stream().map(FavoritesDTO::new).collect(Collectors.toList());
+  }
+
 
 }

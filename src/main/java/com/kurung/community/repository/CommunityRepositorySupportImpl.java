@@ -39,7 +39,7 @@ public class CommunityRepositorySupportImpl implements CommunityRepositorySuppor
 
     Long count = queryFactory.select(communityEntity.count())
         .from(communityEntity)
-        .where(containKeyword(keyword))
+        .where(containKeyword(keyword), equalType(healthType))
         .fetchOne();
 
     return new PageImpl<>(fetch, pageable, count);

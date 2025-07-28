@@ -45,6 +45,7 @@ public enum CustomHttpStatus {
   MISSIONS_NOT_FOUND(483, "해당 id의 미션이 없습니다."),
 
   // Medicine
+  INTERACTIONS_NOT_FOUND(488, "해당 id의 상호작용 결과가 없습니다."),
 
   // Favorite
   FAVORITE_NOT_FOUND(491, "해당 id의 즐겨찾기가 없습니다."),

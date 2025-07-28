@@ -1,6 +1,7 @@
 package com.kurung.community.service;
 
 import com.kurung.common.enumeration.HealthType;
+import com.kurung.community.dto.CommentDTO;
 import com.kurung.community.dto.CommunityDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,5 +17,9 @@ public interface CommunityService {
   void updateCommunity(CommunityDTO communityDTO);
 
   void deleteCommunity(int id);
+
+  CommentDTO createComment(int id, CommentDTO commentDTO);
+
+  void deleteComment(int id);
 
 }

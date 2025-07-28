@@ -1,5 +1,6 @@
 package com.kurung.diet.controller;
 
+import com.kurung.diet.dto.AllergyDTO;
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.diet.dto.FoodDTO;
@@ -135,5 +136,13 @@ public class DietController {
   @Parameter(name = "currentDate", description = "오늘 날짜", example = "2025-04-01T00:00:00")
   public ResponseEntity<NutritionDTO.TodayNutritionDTO> getNutritionSum(@RequestParam LocalDateTime currentDate) {
     return new ResponseEntity<>(dietService.getTodayNutrition(currentDate), HttpStatus.OK);
+  }
+
+  @GetMapping("/allergy")
+  @Operation(summary = "알레르기 리스트 조회", description = "알레르기 리스트를 조회할 때 사용하는 API")
+  @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @Parameter(name = "keyword", description = "검색어", example = "파")
+  public ResponseEntity<List<AllergyDTO>> getAllergyList(@RequestParam String keyword) {
+    return new ResponseEntity<>(dietService.getAllergyList(keyword), HttpStatus.OK);
   }
 }
