@@ -16,4 +16,5 @@ public interface MissionsRepositorySupport {
 
   List<MissionsEntity> getMissionMonthList(LocalDate startDate, LocalDate endDate, String userUuid, HealthType displayType);
 
+  List<MissionsEntity> getTodayMissions(String userUuid, LocalDate today);
 }

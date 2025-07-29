@@ -1,6 +1,7 @@
 package com.kurung.missions.entity;
 
 import com.kurung.common.enumeration.HealthType;
+import com.kurung.missions.dto.MissionsDTO;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -54,6 +55,14 @@ public class MissionsEntity {
   @JoinColumn(name = "STRESS_REC_ID")
   private StressRecEntity stressRec;
 
+  public void updateMissions(MissionsDTO missionsDTO) {
+    this.missionId = missionsDTO.getMissionId();
+    this.startedDate = missionsDTO.getStartedDate();
+    this.isComplete = missionsDTO.isComplete();
+    this.displayType = missionsDTO.getDisplayType();
+    this.toggleOption = missionsDTO.isToggleOption();
+
+  }
 
 
 }
