@@ -63,7 +63,6 @@ public class MissionsController {
       @RequestParam LocalDate currentDate,
       @RequestParam HealthType displayType
   ) {
-
     return new ResponseEntity<>(missionsService.getMissionMonthList(currentDate, displayType), HttpStatus.OK);
   }
 

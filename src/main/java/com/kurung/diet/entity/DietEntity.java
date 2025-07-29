@@ -69,4 +69,5 @@ public class DietEntity {
   public void addNutritional(NutritionDTO nutritionDTO) {
     this.nutritional = NutritionalEntity.createNutritionalBuilder().nutritionDTO(nutritionDTO).diet(this).build();
   }
+
 }
