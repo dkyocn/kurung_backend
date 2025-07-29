@@ -37,4 +37,27 @@ public class MissionsEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_UUID", nullable = false)
   private UserEntity user;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "HABIT_REC_ID")
+  private HabitRecEntity habitRec;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "EXERCISE_REC_ID")
+  private ExerciseRecEntity exerciseRec;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "DIET_REC_ID")
+  private DietRecEntity dietRec;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "STRESS_REC_ID")
+  private StressRecEntity stressRec;
+
+
+
 }
+
+
+
+
