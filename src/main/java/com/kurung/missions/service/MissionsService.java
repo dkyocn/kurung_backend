@@ -12,6 +12,6 @@ public interface MissionsService {
   List<MissionsDTO> getTodayMissions(String userUuid);
 
   List<MissionsDTO> getMissionMonthList(LocalDate currentDate, HealthType displayType);
-
-
+  // 매일 00시 00분 습관 미션 저장
+  void createMission();
 }

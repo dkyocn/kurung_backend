@@ -54,8 +54,6 @@ public class MissionsEntity {
   @JoinColumn(name = "STRESS_REC_ID")
   private StressRecEntity stressRec;
 
-
-
 }
 
 
