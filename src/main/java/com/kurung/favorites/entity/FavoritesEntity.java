@@ -70,9 +70,5 @@ public class FavoritesEntity {
     this.community = favoritesDTO.getCommunityId() != null
         ? CommunityEntity.builder().communityId(favoritesDTO.getCommunityId()).build()
         : null;
-
-
   }
-
-
 }
