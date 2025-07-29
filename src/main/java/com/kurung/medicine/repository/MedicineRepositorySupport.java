@@ -1,6 +1,9 @@
 package com.kurung.medicine.repository;
 
 
-public interface MedicineRepositorySupport {
+import com.kurung.medicine.entity.MedicineEntity;
+import java.util.List;
 
+public interface MedicineRepositorySupport {
+  List<MedicineEntity> getMedicineList(String keyword);
 }

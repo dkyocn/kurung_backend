@@ -10,4 +10,8 @@ public interface MedicineService {
   List<MedicineInteractionDTO> getInteractionResult();
 
   List<SubstanceDTO> getRecSupplements();
+
+  List<SubstanceDTO> getMedicineList(String keyword);
+
+//  void createMedicineList(List<SubstanceDTO> mediList);
 }
