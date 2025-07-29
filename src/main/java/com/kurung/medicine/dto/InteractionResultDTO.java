@@ -18,8 +18,6 @@ public class InteractionResultDTO {
 
   @Schema(description = "상호작용 아이디", example = "1")
   protected int mediInterId;
-  @Schema(description = "pdf 경로", example = "/reports/report_1.pdf")
-  protected String reportPdfPath;
   @Schema(description = "영양제 리스트")
   protected List<SubstanceDTO> substances;
   @Schema(description = "상호작용 결과 리스트")
