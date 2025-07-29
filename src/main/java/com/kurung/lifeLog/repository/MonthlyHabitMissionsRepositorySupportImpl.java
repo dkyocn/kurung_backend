@@ -1,6 +1,7 @@
 package com.kurung.lifeLog.repository;
 
 import static com.kurung.lifeLog.entity.QMonthlyHabitMissionsEntity.monthlyHabitMissionsEntity;
+import static com.kurung.missions.entity.QHabitRecEntity.habitRecEntity;
 
 import com.kurung.lifeLog.entity.MonthlyHabitMissionsEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
