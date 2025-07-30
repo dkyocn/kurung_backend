@@ -54,7 +54,7 @@ public class MissionsEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "STRESS_REC_ID")
   private StressRecEntity stressRec;
-
+  
   public void updateMissions(MissionsDTO missionsDTO) {
     this.missionId = missionsDTO.getMissionId();
     this.startedDate = missionsDTO.getStartedDate();
@@ -63,7 +63,6 @@ public class MissionsEntity {
     this.toggleOption = missionsDTO.isToggleOption();
 
   }
-
 
 }
 

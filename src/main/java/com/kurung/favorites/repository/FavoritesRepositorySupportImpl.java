@@ -53,8 +53,7 @@ public class FavoritesRepositorySupportImpl implements FavoritesRepositorySuppor
 
   BooleanExpression notNullFavoritesType(FavoritesType favoritesType) {
     return switch (favoritesType) {
-      case STRESS -> favoritesEntity.stressRelief.isNotNull();
-      case RECIPE -> favoritesEntity.recipe.isNotNull();
+      case FOOD -> favoritesEntity.foods.isNotNull();
       case ROUTINES -> favoritesEntity.routines.isNotNull();
       case COMMUNITY -> favoritesEntity.community.isNotNull();
     };
@@ -77,8 +76,7 @@ public class FavoritesRepositorySupportImpl implements FavoritesRepositorySuppor
 
   BooleanExpression eqFavoritesTypeId(int id, FavoritesType favoritesType) {
     return switch (favoritesType) {
-      case STRESS -> favoritesEntity.stressRelief.stressReliefId.eq(id);
-      case RECIPE -> favoritesEntity.recipe.recipeId.eq(id);
+      case FOOD -> favoritesEntity.foods.foodId.eq(id);
       case ROUTINES -> favoritesEntity.routines.routinesId.eq(id);
       case COMMUNITY -> favoritesEntity.community.communityId.eq(id);
     };

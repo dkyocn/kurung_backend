@@ -7,6 +7,7 @@ import com.kurung.user.dto.UserDTO;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -25,6 +26,7 @@ public class RoutinesDTO {
   protected LocalDateTime savedDate;
   protected UserDTO user;
 
+  @Builder(builderMethodName = "toRoutinesBuilder", builderClassName = "toRoutinesBuilder")
   public RoutinesDTO(RoutinesEntity entity) {
     this.routinesId = entity.getRoutinesId();
     this.title = entity.getTitle();

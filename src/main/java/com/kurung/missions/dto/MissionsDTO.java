@@ -53,8 +53,6 @@ public class MissionsDTO {
   protected StressRecDTO stressRecDTO;
 
 
-
-
   @Builder(builderMethodName = "toMissionBuilder", builderClassName = "toMissionBuilder")
   public MissionsDTO(MissionsEntity missionEntity) {
     this.missionId = missionEntity.getMissionId();

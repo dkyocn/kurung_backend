@@ -111,6 +111,7 @@ public class LifeLogServiceImpl implements LifeLogService{
     }
   }
 
+  // 라이프 로그 수정
   @Override
   @Transactional
   public void updateLifeLog(LifeLogDTO lifeLogDTO) {
@@ -171,7 +172,7 @@ public class LifeLogServiceImpl implements LifeLogService{
 
       // 습관 미션 조회
       List<MonthlyHabitMissionsEntity> monthlyHabitMissionsEntities = monthlyHabitMissionsRepository.findByUser_UserUuidAndMonthlyHabitDate(userDTO.getUserUuid(),startDateTime, endDateTime);
-      List<MonthlyHabitMissionsDTO> monthlyHabitMissionsList = monthlyHabitMissionsEntities.stream().map(MonthlyHabitMissionsDTO::new).toList();
+      List<MonthlyHabitMissionsDTO> monthlyHabitMissionsList = monthlyHabitMissionsEntities.stream().map(monthlyHabitMissionsEntity -> MonthlyHabitMissionsDTO.toMonthlyHabitMissionsBuilder().monthlyHabitMissionsEntity(monthlyHabitMissionsEntity).build()).toList();
 
       // 평균 수면 시간 계산
       List<Integer> sleepMinutesList = lifeLogEntities.stream().filter(
