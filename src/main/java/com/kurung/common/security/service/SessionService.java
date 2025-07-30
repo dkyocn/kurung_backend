@@ -3,7 +3,6 @@ package com.kurung.common.security.service;
 import com.kurung.common.util.JWTUtil;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

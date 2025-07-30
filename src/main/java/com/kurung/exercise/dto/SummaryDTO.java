@@ -1,16 +1,16 @@
 package com.kurung.exercise.dto;
 
 
-import com.kurung.common.dto.BaseDTO;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.user.dto.UserDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @NoArgsConstructor
@@ -23,7 +23,7 @@ public class SummaryDTO {
   protected int totalKcal;
   protected int routineCount;
   protected double goalAchievementRate;
-  protected List<SummaryDTO.ExerciseLogDTO> exerciseList;
+  protected List<ExerciseLogDTO> exerciseList;
 
   @Getter
   @Builder

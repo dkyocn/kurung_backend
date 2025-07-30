@@ -4,7 +4,6 @@ import com.kurung.exercise.dto.ExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
-
 import com.kurung.exercise.dto.SummaryDTO.ExerciseLogDTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,9 +15,9 @@ public interface ExerciseService {
 
   void createExerciseLog(ExerciseLogDTO exerciseLogDTO);
 
-  SummaryDTO.ExerciseLogDTO getExerciseLogById(int id);
+  ExerciseLogDTO getExerciseLogById(int id);
 
-  SummaryDTO.ExerciseLogDTO updateExerciseLog(SummaryDTO.ExerciseLogDTO exerciseLogDTO);
+  ExerciseLogDTO updateExerciseLog(ExerciseLogDTO exerciseLogDTO);
 
   void deleteExerciseLog(int id);
 

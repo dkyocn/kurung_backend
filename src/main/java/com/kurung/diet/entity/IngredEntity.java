@@ -1,6 +1,5 @@
 package com.kurung.diet.entity;
 
-import com.kurung.common.entity.BaseEntity;
 import com.kurung.diet.enumeration.INGREDCATEGORY;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

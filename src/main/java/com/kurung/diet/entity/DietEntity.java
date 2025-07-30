@@ -1,23 +1,30 @@
 package com.kurung.diet.entity;
 
-import com.kurung.common.entity.BaseEntity;
 import com.kurung.diet.dto.DietDTO;
 import com.kurung.diet.dto.NutritionDTO;
-import com.kurung.diet.entity.NutritionalEntity.createNutritionalBuilder;
 import com.kurung.diet.enumeration.MEAL;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.sql.Date;
-import java.util.List;
 import org.springframework.util.CollectionUtils;
 
 @Getter
@@ -69,5 +76,4 @@ public class DietEntity {
   public void addNutritional(NutritionDTO nutritionDTO) {
     this.nutritional = NutritionalEntity.createNutritionalBuilder().nutritionDTO(nutritionDTO).diet(this).build();
   }
-
 }

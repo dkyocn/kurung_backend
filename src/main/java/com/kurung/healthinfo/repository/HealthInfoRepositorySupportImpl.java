@@ -1,17 +1,15 @@
 package com.kurung.healthinfo.repository;
 
+import static com.kurung.healthinfo.entity.QHealthInfoEntity.healthInfoEntity;
+
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.healthinfo.entity.HealthInfoEntity;
-import com.kurung.healthinfo.entity.QHealthInfoEntity;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import java.util.List;
-
-import static com.kurung.healthinfo.entity.QHealthInfoEntity.healthInfoEntity;
 
 @Repository
 @RequiredArgsConstructor

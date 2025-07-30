@@ -46,7 +46,6 @@ public enum CustomHttpStatus {
 
   // Medicine
   INTERACTIONS_NOT_FOUND(488, "해당 id의 상호작용 결과가 없습니다."),
-  REC_SUPP_NOT_FOUND(489, "해당 id의 추천 영양제가 없습니다."),
 
   // Favorite
   FAVORITE_NOT_FOUND(491, "해당 id의 즐겨찾기가 없습니다."),

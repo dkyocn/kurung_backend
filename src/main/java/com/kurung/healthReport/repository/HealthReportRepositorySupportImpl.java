@@ -4,7 +4,6 @@ import static com.kurung.healthReport.entity.QHealthReportEntity.healthReportEnt
 
 import com.kurung.healthReport.entity.HealthReportEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

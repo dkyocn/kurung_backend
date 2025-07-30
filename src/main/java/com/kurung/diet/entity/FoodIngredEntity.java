@@ -1,6 +1,5 @@
 package com.kurung.diet.entity;
 
-import com.kurung.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -1,9 +1,6 @@
 package com.kurung.medicine.dto;
 
-import com.kurung.common.dto.BaseDTO;
-import com.kurung.diet.dto.FoodDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

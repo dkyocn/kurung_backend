@@ -4,7 +4,6 @@ import com.kurung.common.dto.BaseDTO;
 import com.kurung.lifeLog.entity.LifeLogEntity;
 import com.kurung.user.dto.UserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

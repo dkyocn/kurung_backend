@@ -1,17 +1,13 @@
 package com.kurung.healthReport.dto;
 
-import com.kurung.common.dto.BaseDTO;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.healthReport.entity.HealthReportEntity;
 import com.kurung.healthinfo.dto.HealthInfoDTO;
-import com.kurung.missions.dto.MissionsDTO;
 import com.kurung.user.dto.UserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

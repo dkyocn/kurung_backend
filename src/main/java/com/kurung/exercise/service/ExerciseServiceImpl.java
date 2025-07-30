@@ -20,17 +20,16 @@ import com.kurung.exercise.repository.ObjectiveRepository;
 import com.kurung.exercise.repository.RoutinesRepository;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.service.UserService;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.temporal.WeekFields;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -68,7 +67,7 @@ public class ExerciseServiceImpl implements ExerciseService {
   // ExerciseLog Updated ---------------------------------
   @Override
   @Transactional
-  public SummaryDTO.ExerciseLogDTO updateExerciseLog(SummaryDTO.ExerciseLogDTO dto) {
+  public ExerciseLogDTO updateExerciseLog(ExerciseLogDTO dto) {
     // 1. 기존 기록 조회
     ExerciseLogEntity entity = exerciseLogRepository.getReferenceById(dto.getExerciseLogsId());
     if (entity == null) {
@@ -94,7 +93,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     }
 
     // 4. 수정된 내용 DTO로 변환 후 반환
-    return SummaryDTO.ExerciseLogDTO.toExerciseLogBuilder()
+    return ExerciseLogDTO.toExerciseLogBuilder()
         .entity(entity)
         .build();
   }
@@ -150,7 +149,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 
   // SummaryMonthly ---------------------------------
   @Override
-  public SummaryDTO.MonthlySummaryDTO getMonthlySummary(YearMonth month) {
+  public MonthlySummaryDTO getMonthlySummary(YearMonth month) {
     UserDTO userDTO = sessionService.getUserFromToken();
 
     LocalDate start = month.atDay(1);
@@ -197,7 +196,7 @@ public class ExerciseServiceImpl implements ExerciseService {
       }
     }
 
-    return SummaryDTO.MonthlySummaryDTO.builder()
+    return MonthlySummaryDTO.builder()
         .totalDuration(totalDuration)
         .totalKcal(totalKcal)
         .routineCount(routineCount)
@@ -234,7 +233,7 @@ public class ExerciseServiceImpl implements ExerciseService {
         .totalKcal(totalKcal)
         .routineCount(routineCount)
         .exerciseList(logs.stream()
-            .map(SummaryDTO.ExerciseLogDTO::new)
+            .map(ExerciseLogDTO::new)
             .collect(Collectors.toList()))
         .build();
   }

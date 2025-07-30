@@ -2,7 +2,6 @@ package com.kurung.common.exception;
 
 import com.kurung.common.enumeration.CustomHttpStatus;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 public class CustomIllegalArgumentException extends IllegalArgumentException {

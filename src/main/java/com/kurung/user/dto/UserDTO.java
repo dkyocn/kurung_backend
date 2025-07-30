@@ -1,15 +1,15 @@
 package com.kurung.user.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.enumeration.Gender;
 import com.kurung.user.enumeration.UserPath;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.sql.Date;
 
 @Getter
 @SuperBuilder

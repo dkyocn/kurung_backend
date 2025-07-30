@@ -5,7 +5,6 @@ import static com.kurung.lifeLog.entity.QLifeLogEntity.lifeLogEntity;
 
 import com.kurung.lifeLog.entity.LifeLogEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

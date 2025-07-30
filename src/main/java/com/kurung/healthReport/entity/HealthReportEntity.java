@@ -1,6 +1,5 @@
 package com.kurung.healthReport.entity;
 
-import com.kurung.common.entity.BaseEntity;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

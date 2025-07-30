@@ -1,8 +1,7 @@
 package com.kurung.common.exception;
 
-import lombok.Getter;
-
 import java.time.Instant;
+import lombok.Getter;
 
 @Getter
 public class ErrorResponse {

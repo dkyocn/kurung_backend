@@ -1,6 +1,5 @@
 package com.kurung.diet.repository;
 
-import com.kurung.diet.dto.FoodDTO;
 import com.kurung.diet.entity.FoodEntity;
 import java.util.List;
 

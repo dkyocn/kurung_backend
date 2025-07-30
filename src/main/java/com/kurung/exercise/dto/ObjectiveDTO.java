@@ -3,7 +3,6 @@ package com.kurung.exercise.dto;
 import com.kurung.common.dto.BaseDTO;
 import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.entity.UserEntity;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

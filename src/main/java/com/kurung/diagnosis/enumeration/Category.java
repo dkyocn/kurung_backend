@@ -1,7 +1,6 @@
 package com.kurung.diagnosis.enumeration;
 
 import lombok.Getter;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @Getter
 public enum Category {

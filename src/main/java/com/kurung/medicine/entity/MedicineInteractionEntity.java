@@ -32,6 +32,8 @@ public class MedicineInteractionEntity {
   private UserEntity user;
   @Column(name = "INTERACTION")
   private String interaction;
+  @Column(name = "REPORT_PDF_PATH")
+  private String reportPdfPath;
 
   @Column(name = "INPUT_MEDICINE")
   @OneToMany(mappedBy = "medicineInteraction", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

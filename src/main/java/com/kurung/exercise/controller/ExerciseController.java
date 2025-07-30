@@ -1,12 +1,9 @@
 package com.kurung.exercise.controller;
 
-import com.kurung.common.enumeration.CustomHttpStatus;
-import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.exercise.dto.ExerciseDTO;
 import com.kurung.exercise.dto.ObjectiveDTO;
 import com.kurung.exercise.dto.RoutinesDTO;
 import com.kurung.exercise.dto.SummaryDTO;
-import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.exercise.service.ExerciseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,7 +20,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,8 +42,8 @@ public class ExerciseController {
   @PostMapping("/log/create")
   @Operation(summary = "운동 기록 저장", description = "운동 기록을 저장하는 API")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "531", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "531", description = "저장 실패", content = @Content(mediaType = "application/json"))
   })
   @Parameter(name = "exerciseLogDTO", description = "운동 기록 저장 데이터")
   public ResponseEntity<HttpStatus> createExerciseLog(
@@ -51,8 +55,8 @@ public class ExerciseController {
   @PostMapping("/log/update")
   @Operation(summary = "운동기록 수정", description = "운동기록을 수정하는 API")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "수정 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "534", description = "수정 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "534", description = "수정 실패", content = @Content(mediaType = "application/json"))
   })
   @Parameter(name = "id", description = "회원 아이디", example = "2025061401")
   public ResponseEntity<SummaryDTO.ExerciseLogDTO> updateExerciseLog(
@@ -77,8 +81,8 @@ public class ExerciseController {
   @GetMapping("/log/select/{id}")
   @Operation(summary = "운동기록 단일 조회", description = "운동요약 entity, dto 연동 확인")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "468", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "468", description = "조회 실패", content = @Content(mediaType = "application/json"))
   })
   @Parameter(name = "id", description = "회원 아이디", example = "2025061401")
   public ResponseEntity<SummaryDTO.ExerciseLogDTO> getExerciseLogById(@PathVariable int id) {
@@ -140,8 +144,8 @@ public class ExerciseController {
   @PostMapping("/objective/created")
   @Operation(summary = "목표 생성", description = "목표 정보를 저장합니다.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "532", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "532", description = "저장 실패", content = @Content(mediaType = "application/json"))
   })
   public ResponseEntity<HttpStatus> createObjective(@RequestBody ObjectiveDTO objectiveDTO) {
     exerciseService.createObjective(objectiveDTO);
@@ -174,8 +178,8 @@ public class ExerciseController {
   @GetMapping("/routines/{id}")
   @Operation(summary = "루틴추천 DB 연동 확인", description = "루틴추천 entity, dto 연동 확인")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "469", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "469", description = "조회 실패", content = @Content(mediaType = "application/json"))
   })
   @Parameter(name = "id", description = "회원 아이디", example = "1")
   public ResponseEntity<RoutinesDTO> getRoutinesById(@PathVariable int id) {
@@ -185,8 +189,8 @@ public class ExerciseController {
   @GetMapping("/routines/list")
   @Operation(summary = "루틴추천 리스트 DB 연동", description = "특정 날짜의 사용자의 모든 추천 루틴을 리스트로 조회합니다.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "469", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "469", description = "조회 실패", content = @Content(mediaType = "application/json"))
   })
   @Parameters({
       @Parameter(name = "date", description = "조회할 날짜", example = "2025-07-22")
@@ -202,8 +206,8 @@ public class ExerciseController {
   @PostMapping("/routines")
   @Operation(summary = "루틴 저장", description = "루틴을 새로 저장합니다.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "469", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "469", description = "저장 실패", content = @Content(mediaType = "application/json"))
   })
   public ResponseEntity<Void> createRoutine(@RequestBody RoutinesDTO routinesDTO) {
     exerciseService.createRoutine(routinesDTO);
@@ -214,8 +218,8 @@ public class ExerciseController {
   @DeleteMapping("/routines/delete/{id}")
   @Operation(summary = "루틴 삭제", description = "루틴을 삭제합니다.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "삭제 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "469", description = "삭제 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "469", description = "삭제 실패", content = @Content(mediaType = "application/json"))
   })
   @Parameter(name = "id", description = "루틴 아이디", example = "1")
   public ResponseEntity<Void> deleteRoutine(@PathVariable int id) {
@@ -228,8 +232,8 @@ public class ExerciseController {
   @GetMapping("/exercise/{id}")
   @Operation(summary = "운동종목 및 url DB 연동 확인", description = "운동종목 및 url entity, dto 연동 확인")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "469", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "469", description = "조회 실패", content = @Content(mediaType = "application/json"))
   })
   @Parameter(name = "id", description = "회원 아이디", example = "1")
   public ResponseEntity<ExerciseDTO> getExerciseById(@PathVariable int id) {
@@ -239,8 +243,8 @@ public class ExerciseController {
   @GetMapping("/list")
   @Operation(summary = "운동종목 및 url DB 연동 확인", description = "운동종목 및 url entity, dto 연동 확인")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "469", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "469", description = "조회 실패", content = @Content(mediaType = "application/json"))
   })
   public ResponseEntity<List<ExerciseDTO>> getAllExercises() {
     return new ResponseEntity<>(exerciseService.getAllExercises(), HttpStatus.OK);

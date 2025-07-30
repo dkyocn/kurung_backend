@@ -3,7 +3,6 @@ package com.kurung.diagnosis.dto;
 import com.kurung.common.dto.BaseDTO;
 import com.kurung.user.dto.UserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

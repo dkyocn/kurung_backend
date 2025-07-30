@@ -1,7 +1,7 @@
 package com.kurung.diagnosis.repository;
 
-import static com.kurung.diagnosis.entity.QHealthQuestionEntity.healthQuestionEntity;
 import static com.kurung.diagnosis.entity.QHealthOptionEntity.healthOptionEntity;
+import static com.kurung.diagnosis.entity.QHealthQuestionEntity.healthQuestionEntity;
 
 import com.kurung.diagnosis.entity.HealthQuestionEntity;
 import com.kurung.diagnosis.enumeration.Category;

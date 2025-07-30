@@ -12,7 +12,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HabitRecDTO {
-
   protected int habitId;
   protected String habitName;
 
@@ -21,4 +20,5 @@ public class HabitRecDTO {
     this.habitId = habitRecEntity.getHabitRecId();
     this.habitName = habitRecEntity.getHabitTitle();
   }
+
 }

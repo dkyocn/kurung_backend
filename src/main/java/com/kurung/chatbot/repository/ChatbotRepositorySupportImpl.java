@@ -4,10 +4,9 @@ import static com.kurung.chatbot.entity.QChatbotEntity.chatbotEntity;
 
 import com.kurung.chatbot.entity.ChatbotEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor

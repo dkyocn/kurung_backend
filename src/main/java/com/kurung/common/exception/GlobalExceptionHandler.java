@@ -1,6 +1,5 @@
 package com.kurung.common.exception;
 
-import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.diet.controller.DietController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;

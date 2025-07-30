@@ -2,17 +2,12 @@ package com.kurung.exercise.repository;
 
 import static com.kurung.exercise.entity.QExerciseLogEntity.exerciseLogEntity;
 
-import com.kurung.exercise.dto.SummaryDTO;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Repository;
-
-import java.sql.Date;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 
 @Repository

@@ -1,13 +1,10 @@
 package com.kurung.exercise.repository;
 
-import static com.kurung.diet.entity.QDietScoreEntity.dietScoreEntity;
 import static com.kurung.exercise.entity.QObjectiveEntity.objectiveEntity;
 
 import com.kurung.exercise.entity.ObjectiveEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -2,12 +2,13 @@ package com.kurung.chatbot.dto;
 
 import com.kurung.chatbot.entity.ChatbotEntity;
 import com.kurung.user.dto.UserDTO;
-import com.kurung.user.dto.UserDTO.toUserBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder

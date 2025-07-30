@@ -14,19 +14,17 @@ import com.kurung.lifeLog.entity.MonthlyLifeLogEntity;
 import com.kurung.lifeLog.repository.LifeLogRepository;
 import com.kurung.lifeLog.repository.MonthlyHabitMissionsRepository;
 import com.kurung.lifeLog.repository.MonthlyLifeLogRepository;
+import com.kurung.user.dto.UserDTO;
+import com.kurung.user.entity.UserEntity;
+import com.kurung.user.service.UserService;
 import java.sql.Date;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Year;
 import java.time.YearMonth;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import com.kurung.user.dto.UserDTO;
-import com.kurung.user.entity.UserEntity;
-import com.kurung.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,7 +109,6 @@ public class LifeLogServiceImpl implements LifeLogService{
     }
   }
 
-  // 라이프 로그 수정
   @Override
   @Transactional
   public void updateLifeLog(LifeLogDTO lifeLogDTO) {
@@ -172,7 +169,7 @@ public class LifeLogServiceImpl implements LifeLogService{
 
       // 습관 미션 조회
       List<MonthlyHabitMissionsEntity> monthlyHabitMissionsEntities = monthlyHabitMissionsRepository.findByUser_UserUuidAndMonthlyHabitDate(userDTO.getUserUuid(),startDateTime, endDateTime);
-      List<MonthlyHabitMissionsDTO> monthlyHabitMissionsList = monthlyHabitMissionsEntities.stream().map(monthlyHabitMissionsEntity -> MonthlyHabitMissionsDTO.toMonthlyHabitMissionsBuilder().monthlyHabitMissionsEntity(monthlyHabitMissionsEntity).build()).toList();
+      List<MonthlyHabitMissionsDTO> monthlyHabitMissionsList = monthlyHabitMissionsEntities.stream().map(MonthlyHabitMissionsDTO::new).toList();
 
       // 평균 수면 시간 계산
       List<Integer> sleepMinutesList = lifeLogEntities.stream().filter(

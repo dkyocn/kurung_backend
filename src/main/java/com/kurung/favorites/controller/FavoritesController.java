@@ -35,8 +35,8 @@ public class FavoritesController {
   @PostMapping("/create")
   @Operation(summary = "즐겨찾기 저장", description = "새 즐겨찾기를 등록할 때 사용하는 API")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "556", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "저장 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "556", description = "저장 실패", content = @Content(mediaType = "application/json"))
   })
   public ResponseEntity<FavoritesDTO> createFavorite(@RequestBody FavoritesDTO favoritesDTO) {
     return new ResponseEntity<>(favoritesService.createFavorite(favoritesDTO),HttpStatus.OK);
@@ -53,9 +53,9 @@ public class FavoritesController {
   @DeleteMapping("/{id}")
   @Operation(summary = "즐겨찾기 삭제", description = "즐겨찾기 항목을 삭제할 때 사용하는 API")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "삭제 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "491", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-      @ApiResponse(responseCode = "557", description = "삭제 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+      @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "491", description = "조회 실패", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "557", description = "삭제 실패", content = @Content(mediaType = "application/json"))
   })
   @Parameter(name = "id", description = "삭제할 즐겨찾기 ID", example = "1")
   public ResponseEntity<HttpStatus> deleteFavorite(@PathVariable int id) {

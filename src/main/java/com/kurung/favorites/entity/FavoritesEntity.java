@@ -1,20 +1,22 @@
 package com.kurung.favorites.entity;
 
 import com.kurung.community.entity.CommunityEntity;
-import com.kurung.diet.entity.FoodEntity;
 import com.kurung.diet.entity.RecipeEntity;
 import com.kurung.exercise.entity.RoutinesEntity;
 import com.kurung.favorites.dto.FavoritesDTO;
-import com.kurung.healthinfo.dto.HealthInfoDTO;
 import com.kurung.stressrelief.entity.StressReliefEntity;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
-import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Builder;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -39,8 +41,12 @@ public class FavoritesEntity {
   private RoutinesEntity routines;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "FOOD_ID")
-  private FoodEntity foods;
+  @JoinColumn(name = "RECIPE_ID")
+  private RecipeEntity recipe;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "STRESS_RELIEF_ID")
+  private StressReliefEntity stressRelief;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "COMMUNITY_ID")
@@ -52,16 +58,24 @@ public class FavoritesEntity {
 
     this.user = UserEntity.createUserBuilder().userDTO(userDTO).build();
 
-    this.routines = favoritesDTO.getRoutinesDTO() != null
-        ? RoutinesEntity.createRoutinesBuilder().routinesDTO(favoritesDTO.getRoutinesDTO()).build()
+    this.routines = favoritesDTO.getRoutinesId() != null
+        ? RoutinesEntity.builder().routinesId(favoritesDTO.getRoutinesId()).build()
         : null;
 
-    this.foods = favoritesDTO.getFoodDTO() != null
-        ? FoodEntity.builder().foodId(favoritesDTO.getFoodDTO().getFoodId()).foodName(favoritesDTO.getFoodDTO().getFoodName()).foodPhoto(favoritesDTO.getFoodDTO().getFoodPhoto()).build()
+    this.recipe = favoritesDTO.getRecipeId() != null
+        ? RecipeEntity.builder().recipeId(favoritesDTO.getRecipeId()).build()
         : null;
 
-    this.community = favoritesDTO.getCommunityDTO() != null
-        ? CommunityEntity.toCommunityBuilder().communityDTO(favoritesDTO.getCommunityDTO()).build()
+    this.stressRelief = favoritesDTO.getStressReliefId() != null
+        ? StressReliefEntity.builder().stressReliefId(favoritesDTO.getStressReliefId()).build()
         : null;
+
+    this.community = favoritesDTO.getCommunityId() != null
+        ? CommunityEntity.builder().communityId(favoritesDTO.getCommunityId()).build()
+        : null;
+
+
   }
+
+
 }

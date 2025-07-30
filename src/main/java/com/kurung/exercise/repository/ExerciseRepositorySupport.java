@@ -1,7 +1,6 @@
 package com.kurung.exercise.repository;
 
 import com.kurung.exercise.entity.ExerciseEntity;
-import com.kurung.exercise.entity.RoutinesEntity;
 import java.util.List;
 
 public interface ExerciseRepositorySupport {

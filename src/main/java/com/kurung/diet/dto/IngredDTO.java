@@ -1,10 +1,7 @@
 package com.kurung.diet.dto;
 
-import com.kurung.common.dto.BaseDTO;
-import com.kurung.diet.entity.DietScoreEntity;
 import com.kurung.diet.entity.IngredEntity;
 import com.kurung.diet.enumeration.INGREDCATEGORY;
-import com.kurung.user.dto.UserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

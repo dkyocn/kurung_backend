@@ -1,10 +1,6 @@
 package com.kurung.exercise.dto;
 
 import com.kurung.exercise.entity.ExerciseEntity;
-import com.kurung.exercise.entity.ObjectiveEntity;
-import com.kurung.user.dto.UserDTO;
-import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

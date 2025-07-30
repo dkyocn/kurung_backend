@@ -2,7 +2,6 @@ package com.kurung.exercise.repository;
 
 import static com.kurung.exercise.entity.QRoutinesEntity.routinesEntity;
 
-import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.exercise.entity.RoutinesEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;

@@ -1,6 +1,5 @@
 package com.kurung.medicine.dto;
 
-import com.kurung.common.dto.BaseDTO;
 import com.kurung.medicine.enumeration.MEDICINE;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

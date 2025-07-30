@@ -7,26 +7,35 @@ import com.kurung.community.entity.CommunityEntity;
 import com.kurung.diagnosis.entity.HealthAnswerEntity;
 import com.kurung.diagnosis.entity.HealthDiagnosisEntity;
 import com.kurung.diet.entity.DietEntity;
+import com.kurung.diet.entity.DietScoreEntity;
 import com.kurung.exercise.entity.ExerciseLogEntity;
 import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.exercise.entity.RoutinesEntity;
 import com.kurung.favorites.entity.FavoritesEntity;
-import com.kurung.diet.entity.DietScoreEntity;
-import com.kurung.lifeLog.entity.MonthlyHabitMissionsEntity;
-import com.kurung.medicine.entity.MedicineInteractionEntity;
 import com.kurung.healthReport.entity.HealthReportEntity;
 import com.kurung.lifeLog.entity.LifeLogEntity;
+import com.kurung.lifeLog.entity.MonthlyHabitMissionsEntity;
 import com.kurung.lifeLog.entity.MonthlyLifeLogEntity;
+import com.kurung.medicine.entity.MedicineInteractionEntity;
 import com.kurung.missions.entity.MissionsEntity;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.enumeration.Gender;
 import com.kurung.user.enumeration.UserPath;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
-import lombok.*;
-
-import java.sql.Date;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder

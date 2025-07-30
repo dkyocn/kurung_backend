@@ -1,7 +1,6 @@
 package com.kurung.exercise.repository;
 
 import com.kurung.exercise.entity.ExerciseLogEntity;
-
 import java.time.LocalDateTime;
 import java.util.List;
 

@@ -19,5 +19,4 @@ public class InteractionRepositorySupportImpl implements InteractionRepositorySu
         .where(medicineInteractionEntity.user.userUuid.eq(userUuid))
         .fetch();
   }
-
 }

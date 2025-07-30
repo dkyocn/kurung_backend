@@ -1,20 +1,17 @@
 package com.kurung.diet.dto;
 
-import com.kurung.common.dto.BaseDTO;
 import com.kurung.diet.entity.DietEntity;
 import com.kurung.diet.enumeration.MEAL;
 import com.kurung.user.dto.UserDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.util.CollectionUtils;
-
-import java.sql.Date;
-import java.util.List;
 
 @Getter
 @SuperBuilder
