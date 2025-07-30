@@ -27,6 +27,13 @@ public interface UserService {
     void sendVerificationCode(UserDTO request);
     boolean confirmVerificationCode(UserDTO request);
     UserDTO resetPasswordByEmail(UserDTO request);
+
+    // 로그아웃 관련 메서드 추가
+    void clearRefreshToken(String userUuid);
+
+    // 로그인 인증 메서드 추가
+    UserDTO authenticateUser(String userId, String password);
+
+    // 이메일 중복 체크 메서드 추가
+    boolean checkEmailDuplicate(String email);
 }
-
-

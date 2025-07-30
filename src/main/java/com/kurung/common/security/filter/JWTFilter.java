@@ -26,6 +26,7 @@ public class JWTFilter extends OncePerRequestFilter {
             url.equals("/api/v1/kurung/user/login") ||
             url.equals("/api/v1/kurung/user/signup") ||
             url.equals("/api/v1/kurung/user/check-userid") ||
+            url.equals("/api/v1/kurung/user/check-email-duplicate") ||
             url.equals("/api/v1/kurung/user/send-verification-code") ||
             url.equals("/api/v1/kurung/user/confirm-verification-code") ||
             url.equals("/api/v1/kurung/user/reset-password-by-email") ||
@@ -40,6 +41,7 @@ public class JWTFilter extends OncePerRequestFilter {
             url.startsWith("/js/") ||
             url.startsWith("/css/") ||
             url.startsWith("/api/personality-test/") ||
+            url.equals("/user/login") ||
             url.startsWith("/api/psychological-test/");
     }
 
@@ -49,6 +51,11 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String requestURI = request.getRequestURI();
 
+        // 디버그용 로그 추가
+        log.info("=== JWT 필터 진입 ===");
+        log.info("요청 URL: {}", requestURI);
+        log.info("제외 목록 체크 결과: {}", isExcludedUrl(requestURI));
+
         // 로그인, 회원가입 등은 필터 검사 없이 바로 통과
         if (isExcludedUrl(requestURI)) {
             log.info("토큰 검사 없이 통과됨: {}", requestURI);
@@ -56,7 +63,9 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 토큰 추출
+        log.info("제외 목록에 없음 - 토큰 검증 시작");
+
+        // 제외 목록이 아닌 경우에만 토큰 추출 및 검증
         String accessToken = request.getHeader("Authorization");
         String refreshToken = request.getHeader("RefreshToken");
 

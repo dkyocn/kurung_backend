@@ -1,6 +1,7 @@
 package com.kurung.user.controller;
 
 import com.kurung.common.security.service.SessionService;
+import com.kurung.common.util.JWTUtil;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.enumeration.UserPath;
 import com.kurung.user.service.UserService;
@@ -21,38 +22,131 @@ public class UserController {
 
     private final UserService userService;
     private final SessionService sessionService;
+    private final JWTUtil jwtUtil;
 
     @GetMapping("/tokenuser")
     public ResponseEntity<UserDTO> getMyInfo() {
         return new ResponseEntity<>(sessionService.getUserFromToken(), HttpStatus.OK);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO> login(@RequestBody UserDTO request) {
+        try {
+            log.info("로그인 요청 - 사용자 ID: {}", request.getUserId());
+
+            // 사용자 인증
+            UserDTO userDTO = userService.authenticateUser(request.getUserId(), request.getUserPwd());
+
+            if (userDTO != null) {
+                // JWT 토큰 생성
+                String accessToken = jwtUtil.generateToken(userDTO, "access");
+                String refreshToken = jwtUtil.generateToken(userDTO, "refresh");
+
+                // refresh token을 DB에 저장
+                userService.updateRefresh(userDTO, refreshToken);
+
+                // 새로운 UserDTO 객체를 생성하여 토큰 포함
+                UserDTO responseDTO = UserDTO.builder()
+                    .userUuid(userDTO.getUserUuid())
+                    .userId(userDTO.getUserId())
+                    .userNick(userDTO.getUserNick())
+                    .userPath(userDTO.getUserPath())
+                    .profileImg(userDTO.getProfileImg())
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build();
+
+                log.info("로그인 성공 - 사용자 ID: {}", request.getUserId());
+                return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+            } else {
+                log.warn("로그인 실패 - 잘못된 인증 정보 - 사용자 ID: {}", request.getUserId());
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            log.error("로그인 처리 중 오류 발생", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDTO) {
         return new ResponseEntity<>(userService.registerUserWithResponse(userDTO), HttpStatus.OK);
     }
+
     @GetMapping("/check-userid")
     public ResponseEntity<Boolean> checkuserId(@RequestParam String userId) {
         return new ResponseEntity<>(userService.checkUserIdAvailability(userId), HttpStatus.OK);
     }
+
+    @PostMapping("/check-email-duplicate")
+    public ResponseEntity<Boolean> checkEmailDuplicate(@RequestBody UserDTO request) {
+        try {
+            log.info("이메일 중복 체크 요청 - 이메일: {}", request.getEmail());
+
+            boolean isDuplicate = userService.checkEmailDuplicate(request.getEmail());
+
+            log.info("이메일 중복 체크 결과 - 이메일: {}, 중복: {}", request.getEmail(), isDuplicate);
+            return new ResponseEntity<>(isDuplicate, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("이메일 중복 체크 중 오류 발생", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/kakao/login")
     public ResponseEntity<UserDTO> kakaoLogin(@RequestBody UserDTO request) {
         return new ResponseEntity<>(userService.socialLoginWithResponse(request.getSocialToken(), UserPath.KAKAO), HttpStatus.OK);
     }
+
     @PostMapping("/naver/login")
     public ResponseEntity<UserDTO> naverLogin(@RequestBody UserDTO request) {
         return new ResponseEntity<>(userService.socialLoginWithResponse(request.getSocialToken(), UserPath.NAVER), HttpStatus.OK);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        try {
+            log.info("로그아웃 요청 시작");
+
+            // JWT 토큰에서 사용자 정보 추출 (메서드명 수정)
+            String userUuid = jwtUtil.getUserUuidFromToken(token.replace("Bearer ", ""));
+
+            // DB에서 refresh token 삭제
+            userService.clearRefreshToken(userUuid);
+
+            // 소셜 로그인인 경우 토큰 해제 (선택사항)
+            UserDTO userInfo = userService.getUserByUuid(userUuid);
+            if (userInfo.getUserPath() == UserPath.KAKAO) {
+                log.info("카카오 사용자 로그아웃 - 토큰 해제 생략");
+                // 카카오 토큰 해제 (선택사항)
+                // kakaoOAuthClient.revokeToken(accessToken);
+            } else if (userInfo.getUserPath() == UserPath.NAVER) {
+                log.info("네이버 사용자 로그아웃 - 토큰 해제 생략");
+                // 네이버 토큰 해제 (선택사항)
+                // naverOAuthClient.revokeToken(accessToken);
+            }
+
+            log.info("로그아웃 완료 - 사용자: {}", userUuid);
+            return new ResponseEntity<>("로그아웃이 완료되었습니다.", HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("로그아웃 처리 중 오류 발생", e);
+            return new ResponseEntity<>("로그아웃 처리 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/send-verification-code")
     public ResponseEntity<String> sendVerificationCode(@RequestBody UserDTO request) {
         userService.sendVerificationCode(request);
         return new ResponseEntity<>("인증번호가 발송되었습니다.", HttpStatus.OK);
     }
+
     @PostMapping("/confirm-verification-code")
     public ResponseEntity<String> confirmVerificationCode(@RequestBody UserDTO request) {
         boolean isValid = userService.confirmVerificationCode(request);
         return new ResponseEntity<>(isValid ? "인증번호가 확인되었습니다." : "인증번호가 일치하지 않습니다.",
             isValid ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
     }
+
     @PostMapping("/reset-password-by-email")
     public ResponseEntity<UserDTO> resetPasswordByEmail(@RequestBody UserDTO request) {
         return new ResponseEntity<>(userService.resetPasswordByEmail(request), HttpStatus.OK);

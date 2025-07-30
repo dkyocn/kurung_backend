@@ -17,7 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kurung.user.social.client.KakaoOAuthClient;
+import com.kurung.user.social.client.NaverOAuthClient;
 import com.kurung.user.social.dto.KakaoUserInfo;
+import com.kurung.user.social.dto.NaverUserInfo;
 import com.kurung.common.util.JWTUtil;
 
 @Slf4j
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final KakaoOAuthClient kakaoOAuthClient;
+    private final NaverOAuthClient naverOAuthClient;
     private final JWTUtil jwtUtil;
 
     //회원가입시 아이디 체크
@@ -43,8 +46,22 @@ public class UserServiceImpl implements UserService {
         String encodedPassword = passwordEncoder.encode(user.getUserPwd());
         log.info("회원가입 - 사용자 ID: {}, 비밀번호 암호화 완료", user.getUserId());
 
-        user.assignUserUuid(generateUuid()); // 또는 Builder 내부에서 uuid 설정되도록
-        userRepository.save(user);
+        // 새로운 UserEntity를 생성하여 암호화된 비밀번호로 설정
+        UserEntity userToSave = UserEntity.builder()
+            .userUuid(generateUuid())
+            .userId(user.getUserId())
+            .userPwd(encodedPassword)  // 암호화된 비밀번호 사용
+            .userNick(user.getUserNick())
+            .userGender(user.getUserGender())
+            .userPath(user.getUserPath())
+            .profileImg(user.getProfileImg())
+            .userKey(user.getUserKey())
+            .isActive(user.isActive())
+            .adminYN(user.isAdminYN())
+            .userFaceLoginYN(user.isUserFaceLoginYN())
+            .build();
+
+        userRepository.save(userToSave);
         return true;
     }
 
@@ -53,6 +70,24 @@ public class UserServiceImpl implements UserService {
     public boolean checkUserIdAvailability(String userId) {
         return !userRepository.existsByUserId(userId);
     }
+
+    //이메일 중복 체크 메서드 추가
+    @Override
+    public boolean checkEmailDuplicate(String email) {
+        try {
+            log.info("이메일 중복 체크 시작 - 이메일: {}", email);
+
+            UserEntity existingUser = userRepository.getByUserId(email);
+            boolean isDuplicate = existingUser != null;
+
+            log.info("이메일 중복 체크 완료 - 이메일: {}, 중복: {}", email, isDuplicate);
+            return isDuplicate;
+        } catch (Exception e) {
+            log.error("이메일 중복 체크 중 오류 발생", e);
+            return false;
+        }
+    }
+
     //중복 유저 검사 메소드!
     public boolean validateUser(UserEntity user) {
         return userRepository.existsByUserId(user.getUserId());
@@ -105,16 +140,16 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserByUserId(String userId) {
         log.info("=== getUserByUserId 시작 ===");
         log.info("조회 요청 userId: {}", userId);
-        
+
         UserEntity userEntity = userRepository.getByUserId(userId);
         if (userEntity == null) {
             log.warn("사용자를 찾을 수 없습니다: {}", userId);
             throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
         }
-        
+
         log.info("조회된 사용자: {}", userEntity);
         log.info("=== getUserByUserId 완료 ===");
-        
+
         return UserDTO.toUserBuilder()
             .userEntity(userEntity)
             .build();
@@ -131,6 +166,55 @@ public class UserServiceImpl implements UserService {
         if ((userEntity.getUserRefreshToken() == null) || (!userEntity.getUserRefreshToken()
             .equals(refreshToken))) {
             userEntity.updateRefresh(refreshToken);
+        }
+    }
+
+    // 로그아웃 - Refresh Token 삭제 메소드!
+    @Override
+    @Transactional
+    public void clearRefreshToken(String userUuid) {
+        UserEntity userEntity = userRepository.getUserByUuid(userUuid);
+        if (userEntity != null) {
+            userEntity.updateRefresh(null); // refresh token을 null로 설정
+            log.info("사용자 refresh token 삭제 완료 - 사용자: {}", userUuid);
+        } else {
+            log.warn("사용자를 찾을 수 없습니다 - 사용자: {}", userUuid);
+        }
+    }
+
+    // 로그인 인증 메소드!
+    @Override
+    public UserDTO authenticateUser(String userId, String password) {
+        try {
+            log.info("사용자 인증 시작 - 사용자 ID: {}", userId);
+
+            // 사용자 조회
+            UserEntity userEntity = userRepository.getByUserId(userId);
+            if (userEntity == null) {
+                log.warn("존재하지 않는 사용자 - 사용자 ID: {}", userId);
+                return null;
+            }
+
+            // 비밀번호 검증
+            if (!passwordEncoder.matches(password, userEntity.getUserPwd())) {
+                log.warn("비밀번호 불일치 - 사용자 ID: {}", userId);
+                return null;
+            }
+
+            // 활성 사용자 확인
+            if (!userEntity.isActive()) {
+                log.warn("비활성 사용자 - 사용자 ID: {}", userId);
+                return null;
+            }
+
+            log.info("사용자 인증 성공 - 사용자 ID: {}", userId);
+
+            return UserDTO.toUserBuilder()
+                .userEntity(userEntity)
+                .build();
+        } catch (Exception e) {
+            log.error("사용자 인증 중 오류 발생", e);
+            return null;
         }
     }
 
@@ -189,10 +273,10 @@ public class UserServiceImpl implements UserService {
                     .build();
             }
 
-            // UserDTO를 UserEntity로 변환
+            // UserDTO를 UserEntity로 변환 (비밀번호 암호화 포함)
             UserEntity user = UserEntity.builder()
                 .userId(userDTO.getUserId())
-                .userPwd(userDTO.getUserPwd())
+                .userPwd(passwordEncoder.encode(userDTO.getUserPwd()))
                 .userNick(userDTO.getUserNick())
                 .userGender(userDTO.getUserGender() != null ? userDTO.getUserGender() : Gender.MALE)
                 .userPath(userDTO.getUserPath() != null ? userDTO.getUserPath() : UserPath.NORMAL)
@@ -253,10 +337,16 @@ public class UserServiceImpl implements UserService {
     /**
      * 카카오 로그인 처리
      */
-    private UserDTO processKakaoLogin(String socialToken) {
+    private UserDTO processKakaoLogin(String code) {
         try {
-            // 카카오 사용자 정보 조회
-            KakaoUserInfo kakaoUserInfo = kakaoOAuthClient.getUserInfo(socialToken);
+            log.info("카카오 로그인 시작 - 인증 코드: {}", code);
+
+            // 1. 인증 코드로 액세스 토큰 교환
+            String accessToken = kakaoOAuthClient.exchangeCodeForToken(code);
+            log.info("카카오 액세스 토큰 획득 완료");
+
+            // 2. 액세스 토큰으로 사용자 정보 조회
+            KakaoUserInfo kakaoUserInfo = kakaoOAuthClient.getUserInfo(accessToken);
 
             if (kakaoUserInfo == null || kakaoUserInfo.getId() == null) {
                 return UserDTO.builder()
@@ -275,6 +365,8 @@ public class UserServiceImpl implements UserService {
             String profileImage = kakaoUserInfo.getProperties() != null ?
                 kakaoUserInfo.getProperties().getProfileImage() : null;
 
+            log.info("카카오 사용자 정보 조회 완료 - ID: {}, 닉네임: {}", socialUserId, nickname);
+
             // 기존 사용자 확인
             UserEntity existingUser = userRepository.findByUserPathAndUserKey(UserPath.KAKAO, socialUserId);
 
@@ -287,13 +379,12 @@ public class UserServiceImpl implements UserService {
                 log.info("카카오 기존 사용자 로그인 성공 - 사용자ID: {}", existingUser.getUserId());
 
                 // JWT 토큰 생성
-                String accessToken = jwtUtil.generateToken(userDTO, "access");
-                String refreshToken = jwtUtil.generateToken(userDTO, "refresh");
+                String jwtAccessToken = jwtUtil.generateToken(userDTO, "access");
+                String jwtRefreshToken = jwtUtil.generateToken(userDTO, "refresh");
 
                 // 리프레시 토큰 업데이트
-                updateRefresh(userDTO, refreshToken);
+                updateRefresh(userDTO, jwtRefreshToken);
 
-                // UserDTO 빌더로 응답 정보 설정
                 return UserDTO.builder()
                     .userUuid(userDTO.getUserUuid())
                     .userId(userDTO.getUserId())
@@ -302,8 +393,8 @@ public class UserServiceImpl implements UserService {
                     .profileImg(userDTO.getProfileImg())
                     .message("카카오 로그인 성공")
                     .isNewUser(false)
-                    .accessToken(accessToken)
-                    .refreshToken(refreshToken)
+                    .accessToken(jwtAccessToken)
+                    .refreshToken(jwtRefreshToken)
                     .build();
             } else {
                 // 신규 사용자 회원가입
@@ -318,13 +409,12 @@ public class UserServiceImpl implements UserService {
                     log.info("카카오 신규 사용자 회원가입 및 로그인 성공 - 사용자ID: {}", newUser.getUserId());
 
                     // JWT 토큰 생성
-                    String accessToken = jwtUtil.generateToken(userDTO, "access");
-                    String refreshToken = jwtUtil.generateToken(userDTO, "refresh");
+                    String jwtAccessToken = jwtUtil.generateToken(userDTO, "access");
+                    String jwtRefreshToken = jwtUtil.generateToken(userDTO, "refresh");
 
                     // 리프레시 토큰 업데이트
-                    updateRefresh(userDTO, refreshToken);
+                    updateRefresh(userDTO, jwtRefreshToken);
 
-                    // UserDTO 빌더로 응답 정보 설정
                     return UserDTO.builder()
                         .userUuid(userDTO.getUserUuid())
                         .userId(userDTO.getUserId())
@@ -333,8 +423,8 @@ public class UserServiceImpl implements UserService {
                         .profileImg(userDTO.getProfileImg())
                         .message("카카오 회원가입 및 로그인 성공")
                         .isNewUser(true)
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
+                        .accessToken(jwtAccessToken)
+                        .refreshToken(jwtRefreshToken)
                         .build();
                 } else {
                     return UserDTO.builder()
@@ -345,6 +435,7 @@ public class UserServiceImpl implements UserService {
                         .build();
                 }
             }
+
         } catch (Exception e) {
             log.error("카카오 로그인 처리 중 오류 발생", e);
             return UserDTO.builder()
@@ -357,15 +448,114 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 네이버 로그인 처리 (향후 구현)
+     * 네이버 로그인 처리
      */
-    private UserDTO processNaverLogin(String socialToken) {
-        return UserDTO.builder()
-            .message("네이버 로그인은 아직 구현되지 않았습니다.")
-            .isNewUser(false)
-            .accessToken(null)
-            .refreshToken(null)
-            .build();
+    private UserDTO processNaverLogin(String code) {
+        try {
+            log.info("네이버 로그인 시작 - 인증 코드: {}", code);
+
+            // 1. 인증 코드로 액세스 토큰 교환
+            String accessToken = naverOAuthClient.exchangeCodeForToken(code);
+            log.info("네이버 액세스 토큰 획득 완료");
+
+            // 2. 액세스 토큰으로 사용자 정보 조회
+            NaverUserInfo naverUserInfo = naverOAuthClient.getUserInfo(accessToken);
+
+            if (naverUserInfo == null || naverUserInfo.getResponse() == null || naverUserInfo.getResponse().getId() == null) {
+                return UserDTO.builder()
+                    .message("네이버 사용자 정보를 가져올 수 없습니다.")
+                    .isNewUser(false)
+                    .accessToken(null)
+                    .refreshToken(null)
+                    .build();
+            }
+
+            NaverUserInfo.NaverResponse response = naverUserInfo.getResponse();
+            String socialUserId = response.getId();
+            String email = response.getEmail();
+            String nickname = response.getNickname() != null ? response.getNickname() : "네이버사용자";
+            String profileImage = response.getProfileImage();
+
+            log.info("네이버 사용자 정보 조회 완료 - ID: {}, 닉네임: {}", socialUserId, nickname);
+
+            // 기존 사용자 확인
+            UserEntity existingUser = userRepository.findByUserPathAndUserKey(UserPath.NAVER, socialUserId);
+
+            if (existingUser != null) {
+                // 기존 사용자 로그인
+                UserDTO userDTO = UserDTO.toUserBuilder()
+                    .userEntity(existingUser)
+                    .build();
+
+                log.info("네이버 기존 사용자 로그인 성공 - 사용자ID: {}", existingUser.getUserId());
+
+                // JWT 토큰 생성
+                String jwtAccessToken = jwtUtil.generateToken(userDTO, "access");
+                String jwtRefreshToken = jwtUtil.generateToken(userDTO, "refresh");
+
+                // 리프레시 토큰 업데이트
+                updateRefresh(userDTO, jwtRefreshToken);
+
+                return UserDTO.builder()
+                    .userUuid(userDTO.getUserUuid())
+                    .userId(userDTO.getUserId())
+                    .userNick(userDTO.getUserNick())
+                    .userPath(userDTO.getUserPath())
+                    .profileImg(userDTO.getProfileImg())
+                    .message("네이버 로그인 성공")
+                    .isNewUser(false)
+                    .accessToken(jwtAccessToken)
+                    .refreshToken(jwtRefreshToken)
+                    .build();
+            } else {
+                // 신규 사용자 회원가입
+                boolean signupResult = registerNaverUser(socialUserId, email, nickname, profileImage);
+
+                if (signupResult) {
+                    UserEntity newUser = userRepository.findByUserPathAndUserKey(UserPath.NAVER, socialUserId);
+                    UserDTO userDTO = UserDTO.toUserBuilder()
+                        .userEntity(newUser)
+                        .build();
+
+                    log.info("네이버 신규 사용자 회원가입 및 로그인 성공 - 사용자ID: {}", newUser.getUserId());
+
+                    // JWT 토큰 생성
+                    String jwtAccessToken = jwtUtil.generateToken(userDTO, "access");
+                    String jwtRefreshToken = jwtUtil.generateToken(userDTO, "refresh");
+
+                    // 리프레시 토큰 업데이트
+                    updateRefresh(userDTO, jwtRefreshToken);
+
+                    return UserDTO.builder()
+                        .userUuid(userDTO.getUserUuid())
+                        .userId(userDTO.getUserId())
+                        .userNick(userDTO.getUserNick())
+                        .userPath(userDTO.getUserPath())
+                        .profileImg(userDTO.getProfileImg())
+                        .message("네이버 회원가입 및 로그인 성공")
+                        .isNewUser(true)
+                        .accessToken(jwtAccessToken)
+                        .refreshToken(jwtRefreshToken)
+                        .build();
+                } else {
+                    return UserDTO.builder()
+                        .message("네이버 회원가입에 실패했습니다.")
+                        .isNewUser(true)
+                        .accessToken(null)
+                        .refreshToken(null)
+                        .build();
+                }
+            }
+
+        } catch (Exception e) {
+            log.error("네이버 로그인 처리 중 오류 발생", e);
+            return UserDTO.builder()
+                .message("네이버 로그인 처리 중 오류가 발생했습니다: " + e.getMessage())
+                .isNewUser(false)
+                .accessToken(null)
+                .refreshToken(null)
+                .build();
+        }
     }
 
     /**
@@ -403,6 +593,45 @@ public class UserServiceImpl implements UserService {
             return true;
         } catch (Exception e) {
             log.error("카카오 사용자 회원가입 실패", e);
+            return false;
+        }
+    }
+
+    /**
+     * 네이버 사용자 회원가입
+     */
+    private boolean registerNaverUser(String socialUserId, String email, String nickname, String profileImage) {
+        try {
+            log.info("네이버 사용자 회원가입 시작 - 소셜ID: {}", socialUserId);
+
+            // UUID 생성
+            String uuid = generateUuid();
+
+            // 기본 비밀번호 생성 (소셜 로그인은 비밀번호가 필요없지만 시스템상 필요)
+            String defaultPassword = "naver_" + System.currentTimeMillis();
+            String encodedPassword = passwordEncoder.encode(defaultPassword);
+
+            // 사용자 ID 설정 (이메일이 있으면 이메일, 없으면 네이버_ID)
+            String userId = email != null ? email : "naver_" + socialUserId;
+
+            UserEntity userEntity = UserEntity.builder()
+                .userUuid(uuid)
+                .userId(userId)
+                .userPwd(encodedPassword)
+                .userNick(nickname != null ? nickname : "네이버사용자")
+                .userKey(socialUserId)
+                .userPath(UserPath.NAVER)
+                .profileImg(profileImage)
+                .isActive(true)
+                .adminYN(false)
+                .userFaceLoginYN(false)
+                .build();
+
+            userRepository.save(userEntity);
+            log.info("네이버 사용자 회원가입 완료 - 사용자ID: {}", userId);
+            return true;
+        } catch (Exception e) {
+            log.error("네이버 사용자 회원가입 실패", e);
             return false;
         }
     }
@@ -462,45 +691,12 @@ public class UserServiceImpl implements UserService {
                     .build();
             }
 
-            // 비밀번호 업데이트
+            // 비밀번호만 업데이트 (관계는 건드리지 않음)
             String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
             log.info("새 비밀번호 암호화 완료 - 이메일: {}", email);
-            
-            // 기존 엔티티의 비밀번호만 업데이트 (컬렉션 참조 유지)
-            userEntity = UserEntity.builder()
-                .userUuid(userEntity.getUserUuid())
-                .userId(userEntity.getUserId())
-                .userFaceLoginYN(userEntity.isUserFaceLoginYN())
-                .userFaceLoginRef(userEntity.getUserFaceLoginRef())
-                .userPwd(encodedNewPassword)
-                .userNick(userEntity.getUserNick())
-                .userGender(userEntity.getUserGender())
-                .userAge(userEntity.getUserAge())
-                .userKey(userEntity.getUserKey())
-                .userPath(userEntity.getUserPath())
-                .profileImg(userEntity.getProfileImg())
-                .isActive(userEntity.isActive())
-                .adminYN(userEntity.isAdminYN())
-                .userRefreshToken(userEntity.getUserRefreshToken())
-                .diet(userEntity.getDiet())
-                .exerciseLogs(userEntity.getExerciseLogs())
-                .objectiveList(userEntity.getObjectiveList())
-                .routine(userEntity.getRoutine())
-                .missions(userEntity.getMissions())
-                .favorites(userEntity.getFavorites())
-                .chatbotList(userEntity.getChatbotList())
-                .dietScore(userEntity.getDietScore())
-                .community(userEntity.getCommunity())
-                .comment(userEntity.getComment())
-                .medicineInteraction(userEntity.getMedicineInteraction())
-                .lifelog(userEntity.getLifelog())
-                .monthlyLifelog(userEntity.getMonthlyLifelog())
-                .healthDiagnosis(userEntity.getHealthDiagnosis())
-                .healthAnswer(userEntity.getHealthAnswer())
-                .healthReport(userEntity.getHealthReport())
-                .build();
-            userRepository.save(userEntity);
-            log.info("사용자 정보 업데이트 완료 - 이메일: {}", email);
+
+            // UserRepository의 updatePasswordByEmail 사용
+            userRepository.updatePasswordByEmail(email, encodedNewPassword);
 
             log.info("비밀번호 재설정 완료 - 이메일: {}", email);
 
@@ -515,7 +711,3 @@ public class UserServiceImpl implements UserService {
         }
     }
 }
-
-
-
-
