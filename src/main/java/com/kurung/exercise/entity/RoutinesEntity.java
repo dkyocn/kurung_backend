@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @NoArgsConstructor
@@ -37,7 +38,8 @@ public class RoutinesEntity {
   @Column(name = "VIDEO_URL")
   private String videoUrl;
 
-  @Column(name = "SAVED_DATE", nullable = false)
+  @CreationTimestamp  // ✅ 엔티티 생성 시 자동 저장
+  @Column(name = "SAVED_DATE", nullable = false, updatable = false)
   private LocalDateTime savedDate;
 
   @ManyToOne(fetch = FetchType.LAZY)
