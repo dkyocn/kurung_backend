@@ -1,6 +1,7 @@
 package com.kurung.favorites.entity;
 
 import com.kurung.community.entity.CommunityEntity;
+import com.kurung.diet.entity.FoodEntity;
 import com.kurung.diet.entity.RecipeEntity;
 import com.kurung.exercise.entity.RoutinesEntity;
 import com.kurung.favorites.dto.FavoritesDTO;
@@ -38,12 +39,8 @@ public class FavoritesEntity {
   private RoutinesEntity routines;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "RECIPE_ID")
-  private RecipeEntity recipe;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "STRESS_RELIEF_ID")
-  private StressReliefEntity stressRelief;
+  @JoinColumn(name = "FOOD_ID")
+  private FoodEntity foods;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "COMMUNITY_ID")
@@ -55,24 +52,16 @@ public class FavoritesEntity {
 
     this.user = UserEntity.createUserBuilder().userDTO(userDTO).build();
 
-    this.routines = favoritesDTO.getRoutinesId() != null
-        ? RoutinesEntity.builder().routinesId(favoritesDTO.getRoutinesId()).build()
+    this.routines = favoritesDTO.getRoutinesDTO() != null
+        ? RoutinesEntity.createRoutinesBuilder().routinesDTO(favoritesDTO.getRoutinesDTO()).build()
         : null;
 
-    this.recipe = favoritesDTO.getRecipeId() != null
-        ? RecipeEntity.builder().recipeId(favoritesDTO.getRecipeId()).build()
+    this.foods = favoritesDTO.getFoodDTO() != null
+        ? FoodEntity.builder().foodId(favoritesDTO.getFoodDTO().getFoodId()).foodName(favoritesDTO.getFoodDTO().getFoodName()).foodPhoto(favoritesDTO.getFoodDTO().getFoodPhoto()).build()
         : null;
 
-    this.stressRelief = favoritesDTO.getStressReliefId() != null
-        ? StressReliefEntity.builder().stressReliefId(favoritesDTO.getStressReliefId()).build()
+    this.community = favoritesDTO.getCommunityDTO() != null
+        ? CommunityEntity.toCommunityBuilder().communityDTO(favoritesDTO.getCommunityDTO()).build()
         : null;
-
-    this.community = favoritesDTO.getCommunityId() != null
-        ? CommunityEntity.builder().communityId(favoritesDTO.getCommunityId()).build()
-        : null;
-
-
   }
-
-
 }
