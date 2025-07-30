@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -50,21 +51,20 @@ public class MissionsServiceImpl implements MissionsService {
   }
 
   @Override
-  public List<MissionsDTO> getTodayMissions(String userUuid) {
+  public List<MissionsDTO> getTodayMissions() {
 
-    UserDTO userByUuid = userService.getUserByUuid(userUuid);
+    UserDTO userDTO = sessionService.getUserFromToken();
 
     LocalDate today = LocalDate.now();
     LocalDateTime startOfDay = today.atStartOfDay();         // 00:00:00
     LocalDate localDate = startOfDay.toLocalDate();
 
-    List<MissionsEntity> missionList = missionsRepository.getMissionList(userUuid, localDate);
+    List<MissionsEntity> missionList = missionsRepository.getTodayMissions(userDTO.getUserUuid(), localDate);
 
     return missionList.stream()
         .map(MissionsDTO::new)
         .collect(Collectors.toList());
   }
-
 
   @Override
   public List<MissionsDTO> getMissionMonthList(LocalDate currentDate, HealthType displayType) {
@@ -82,6 +82,26 @@ public class MissionsServiceImpl implements MissionsService {
         .map(missionsEntity -> MissionsDTO.toMissionBuilder().missionEntity(missionsEntity).build())
         .collect(Collectors.toList());
   }
+
+  @Override
+  @Transactional
+  public void updateMissions(MissionsDTO missionsDTO) {
+
+    MissionsEntity entity = missionsRepository.getById(missionsDTO.getMissionId());
+
+    if (entity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.MISSIONS_NOT_FOUND);
+
+    }
+
+    try{
+      entity.updateMissions(missionsDTO);
+    } catch (Exception e) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.MISSIONS_NOT_FOUND);
+    }
+
+  }
+
 
   // 습관 미션 1개 랜덤 저장
   @Transactional
