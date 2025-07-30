@@ -42,6 +42,9 @@ public class HealthInfoEntity extends BaseEntity {
   @Column(name = "BODY_FAT_PERCENT")
   private float bodyfatpercent;
 
+  @Column(name = "MUSCLE_MASS")
+  private float musclemass;
+
   @Column(name = "BMI")
   private float bmi;
 
@@ -54,6 +57,7 @@ public class HealthInfoEntity extends BaseEntity {
     this.weight = healthInfoDTO.getWeight();
     this.bmi = healthInfoDTO.getBmi();
     this.bodyfatpercent = healthInfoDTO.getBodyfatpercent();
+    this.musclemass = healthInfoDTO.getMusclemass();
     this.memo = healthInfoDTO.getMemo();
     this.user = UserEntity.createUserBuilder().userDTO(userDTO).build();
   }
@@ -63,6 +67,7 @@ public class HealthInfoEntity extends BaseEntity {
     this.height = healthInfoDTO.getHeight();
     this.weight = healthInfoDTO.getWeight();
     this.bodyfatpercent = healthInfoDTO.getBodyfatpercent();
+    this.musclemass = healthInfoDTO.getMusclemass();
     this.bmi = healthInfoDTO.getBmi();
     this.memo = healthInfoDTO.getMemo();
   }

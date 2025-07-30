@@ -12,6 +12,7 @@ import com.kurung.exercise.entity.ObjectiveEntity;
 import com.kurung.exercise.entity.RoutinesEntity;
 import com.kurung.favorites.entity.FavoritesEntity;
 import com.kurung.diet.entity.DietScoreEntity;
+import com.kurung.lifeLog.entity.MonthlyHabitMissionsEntity;
 import com.kurung.medicine.entity.MedicineInteractionEntity;
 import com.kurung.healthReport.entity.HealthReportEntity;
 import com.kurung.lifeLog.entity.LifeLogEntity;
@@ -114,6 +115,8 @@ public class UserEntity {
   private List<HealthAnswerEntity> healthAnswer;
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private List<HealthReportEntity> healthReport;
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  private List<MonthlyHabitMissionsEntity> monthlyHabitMissions;
 
   @Builder(builderMethodName = "createUserBuilder", builderClassName = "createUserBuilder")
   public UserEntity(UserDTO userDTO) {

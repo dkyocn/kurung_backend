@@ -1,5 +1,6 @@
 package com.kurung.lifeLog.entity;
 
+import com.kurung.missions.entity.HabitRecEntity;
 import com.kurung.user.entity.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,31 +10,33 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @Builder
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
-@Entity(name = "TB_Monthly_LifeLog")
-public class MonthlyLifeLogEntity {
+@NoArgsConstructor
+@Entity(name = "TB_MONTHLY_HABIT")
+public class MonthlyHabitMissionsEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "MONTHLY_LIFELOG_ID")
-  private int monthlyLifeLogId;
+  @Column(name = "MONTHLY_HABIT_ID")
+  private int monthlyHabitId;
 
-  @Column(name = "REPORT_MONTH", nullable = false)
-  private String month;
+  @Column(name = "MONTHLY_HABIT_DATE")
+  private LocalDateTime monthlyHabitDate;
 
-  @Column(name = "MONTHLY_SUMMARY", length = 1000, nullable = false)
-  private String monthlySummary;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "HABIT_REC_ID")
+  private HabitRecEntity habitRecId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_UUID", nullable = false)
   private UserEntity user;
-
 
 }

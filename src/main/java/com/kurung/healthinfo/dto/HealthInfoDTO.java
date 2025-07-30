@@ -26,6 +26,8 @@ public class HealthInfoDTO extends BaseDTO {
   protected float   weight;
   @Schema(description = "체지방률 (%)", example = "18.5")
   protected float   bodyfatpercent;
+  @Schema(description = "근육량 (kg)", example = "20.5")
+  protected float   musclemass;
   @Schema(description = "BMI", example = "22.3")
   protected float   bmi;
   @Schema(description = "메모", example = "건강 회복")
@@ -39,6 +41,7 @@ public class HealthInfoDTO extends BaseDTO {
     this.height = entity.getHeight();
     this.weight = entity.getWeight();
     this.bodyfatpercent = entity.getBodyfatpercent();
+    this.musclemass = entity.getMusclemass();
     this.bmi = entity.getBmi();
     this.memo = entity.getMemo();
     this.createdAt = entity.getCreatedAt();

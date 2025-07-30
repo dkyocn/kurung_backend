@@ -16,7 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -47,4 +50,26 @@ public class MedicineController {
   public ResponseEntity<List<SubstanceDTO>> getRecSupplements() {
     return new ResponseEntity<>(medicineService.getRecSupplements(), HttpStatus.OK);
   }
+
+  @GetMapping("/medicines")
+  @Operation(summary = "약물 리스트 조회", description = "약물 리스트를 조회할 때 사용하는 API")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "490", description = "조회 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  })
+  @Parameter(name = "keyword", description = "검색어", example = "타이레놀")
+  public ResponseEntity<List<SubstanceDTO>> getMedicineList(@RequestParam(required = false) String keyword){
+    return new ResponseEntity<>(medicineService.getMedicineList(keyword), HttpStatus.OK);
+  }
+
+//  @PostMapping("/inputMedi")
+//  @Operation(summary = "입력 약물 저장", description = "입력한 약물을 저장할 때 사용하는 API")
+//  @ApiResponses(value = {
+//      @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
+//      @ApiResponse(responseCode = "551", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+//  })
+//  public ResponseEntity<HttpStatus> createMedicineList(@RequestBody List<SubstanceDTO> mediList){
+//    medicineService.createMedicineList(mediList);
+//    return new ResponseEntity<>(HttpStatus.OK);
+//  }
 }

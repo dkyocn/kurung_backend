@@ -6,10 +6,13 @@ import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.exception.CustomRunTimeException;
 import com.kurung.common.security.service.SessionService;
 import com.kurung.lifeLog.dto.LifeLogDTO;
+import com.kurung.lifeLog.dto.MonthlyHabitMissionsDTO;
 import com.kurung.lifeLog.dto.MonthlyLifeLogDTO;
 import com.kurung.lifeLog.entity.LifeLogEntity;
+import com.kurung.lifeLog.entity.MonthlyHabitMissionsEntity;
 import com.kurung.lifeLog.entity.MonthlyLifeLogEntity;
 import com.kurung.lifeLog.repository.LifeLogRepository;
+import com.kurung.lifeLog.repository.MonthlyHabitMissionsRepository;
 import com.kurung.lifeLog.repository.MonthlyLifeLogRepository;
 import java.sql.Date;
 import java.time.Duration;
@@ -36,6 +39,7 @@ public class LifeLogServiceImpl implements LifeLogService{
   private final MonthlyLifeLogRepository monthlyLifeLogRepository;
   private final UserService userService;
   private final SessionService sessionService;
+  private final MonthlyHabitMissionsRepository monthlyHabitMissionsRepository;
 
   // 라이프 로그 단일 조회
   @Override
@@ -107,6 +111,7 @@ public class LifeLogServiceImpl implements LifeLogService{
     }
   }
 
+  // 라이프 로그 수정
   @Override
   @Transactional
   public void updateLifeLog(LifeLogDTO lifeLogDTO) {
@@ -165,6 +170,10 @@ public class LifeLogServiceImpl implements LifeLogService{
 
       List<LifeLogDTO> lifeLogList = lifeLogEntities.stream().map(LifeLogDTO::new).toList();
 
+      // 습관 미션 조회
+      List<MonthlyHabitMissionsEntity> monthlyHabitMissionsEntities = monthlyHabitMissionsRepository.findByUser_UserUuidAndMonthlyHabitDate(userDTO.getUserUuid(),startDateTime, endDateTime);
+      List<MonthlyHabitMissionsDTO> monthlyHabitMissionsList = monthlyHabitMissionsEntities.stream().map(monthlyHabitMissionsEntity -> MonthlyHabitMissionsDTO.toMonthlyHabitMissionsBuilder().monthlyHabitMissionsEntity(monthlyHabitMissionsEntity).build()).toList();
+
       // 평균 수면 시간 계산
       List<Integer> sleepMinutesList = lifeLogEntities.stream().filter(
               lifeLogEntity -> lifeLogEntity.getBedTime() != null
@@ -181,10 +190,6 @@ public class LifeLogServiceImpl implements LifeLogService{
 
       double avgSleepMinutes = Math.round(avgSleepMinute * 10) / 10.0;
 
-
-
-
-
       // 라이프 로그 갯수 카운트
       int countLifeLog = lifeLogEntities.size();
 
@@ -197,6 +202,7 @@ public class LifeLogServiceImpl implements LifeLogService{
           .month(monthlyLifeLogEntity.getMonth())
           .monthlySummary(monthlyLifeLogEntity.getMonthlySummary())
           .lifeLogList(lifeLogList)
+          .habitMissions(monthlyHabitMissionsList)
           .user(userDTO)
           .avgSleepTime(avgSleepMinutes)
           .countLifeLog(countLifeLog)
