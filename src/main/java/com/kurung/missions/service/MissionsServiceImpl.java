@@ -17,7 +17,6 @@ import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.repository.UserRepository;
 import com.kurung.user.service.UserService;
-import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.sql.Date;
