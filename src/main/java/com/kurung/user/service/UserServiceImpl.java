@@ -9,6 +9,7 @@ import com.kurung.user.enumeration.UserPath;
 import com.kurung.user.repository.UserRepository;
 import com.kurung.common.email.service.EmailService;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,12 @@ import com.kurung.user.social.client.NaverOAuthClient;
 import com.kurung.user.social.dto.KakaoUserInfo;
 import com.kurung.user.social.dto.NaverUserInfo;
 import com.kurung.common.util.JWTUtil;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Slf4j
 @Service
@@ -85,6 +92,102 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             log.error("이메일 중복 체크 중 오류 발생", e);
             return false;
+        }
+    }
+
+    // 닉네임 중복 확인 메서드 추가
+    @Override
+    public boolean checkNicknameAvailability(String userNick) {
+        try {
+            log.info("닉네임 중복 확인 시작 - 닉네임: {}", userNick);
+
+            boolean isAvailable = !userRepository.existsByUserNick(userNick);
+
+            log.info("닉네임 중복 확인 완료 - 닉네임: {}, 사용가능: {}", userNick, isAvailable);
+            return isAvailable;
+        } catch (Exception e) {
+            log.error("닉네임 중복 확인 중 오류 발생", e);
+            return false;
+        }
+    }
+
+    // 프로필 업데이트 메서드 추가
+    @Override
+    @Transactional
+    public UserDTO updateUserProfile(UserDTO updateDTO) {
+        try {
+            log.info("프로필 업데이트 시작 - 사용자 UUID: {}", updateDTO.getUserUuid());
+
+            // 기존 사용자 정보 조회
+            UserEntity existingUser = userRepository.getUserByUuid(updateDTO.getUserUuid());
+            if (existingUser == null) {
+                log.error("사용자를 찾을 수 없습니다 - UUID: {}", updateDTO.getUserUuid());
+                throw new CustomIllegalArgumentException(CustomHttpStatus.USER_NOT_FOUND);
+            }
+
+            // 닉네임 길이 검증 및 제한
+            String userNick = updateDTO.getUserNick();
+            if (userNick != null && userNick.length() > 20) {
+                log.warn("닉네임 길이 초과 - 원본: {}, 길이: {}, 20자로 제한", userNick, userNick.length());
+                userNick = userNick.substring(0, 20);
+            }
+
+            // 기존 엔티티를 직접 수정 (관계 유지)
+            existingUser.updateUserDTO(UserDTO.builder()
+                .userNick(userNick) // 길이 제한된 닉네임 사용
+                .userAge(updateDTO.getUserAge())
+                .userGender(updateDTO.getUserGender())
+                .profileImg(updateDTO.getProfileImg())
+                .build());
+
+            // DB 저장
+            UserEntity savedUser = userRepository.save(existingUser);
+
+            log.info("프로필 업데이트 완료 - 사용자 ID: {}", savedUser.getUserId());
+
+            // UserDTO로 변환하여 반환
+            return UserDTO.toUserBuilder()
+                .userEntity(savedUser)
+                .build();
+        } catch (Exception e) {
+            log.error("프로필 업데이트 중 오류 발생", e);
+            throw new RuntimeException("프로필 업데이트에 실패했습니다.", e);
+        }
+    }
+
+    // 프로필 이미지 업로드 메서드 추가
+    @Override
+    public String uploadProfileImage(MultipartFile file) {
+        try {
+            log.info("프로필 이미지 업로드 시작 - 파일명: {}", file.getOriginalFilename());
+
+            // 파일 저장 경로 설정 (절대 경로 사용)
+            String uploadDir = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "profile";
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            String filePath = uploadDir + File.separator + fileName;
+
+            log.info("업로드 디렉토리: {}", uploadDir);
+            log.info("파일 경로: {}", filePath);
+
+            // 디렉토리 생성 (부모 디렉토리까지 모두 생성)
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+                log.info("업로드 디렉토리 생성 완료: {}", uploadDir);
+            }
+
+            // 파일 저장
+            File dest = new File(filePath);
+            file.transferTo(dest);
+
+            // URL 반환 (실제 서버 URL로 변경 필요)
+            String imageUrl = "/api/v1/kurung/user/profile/image/" + fileName;
+
+            log.info("프로필 이미지 업로드 완료 - URL: {}", imageUrl);
+            return imageUrl;
+        } catch (IOException e) {
+            log.error("프로필 이미지 업로드 실패", e);
+            throw new RuntimeException("프로필 이미지 업로드에 실패했습니다.", e);
         }
     }
 

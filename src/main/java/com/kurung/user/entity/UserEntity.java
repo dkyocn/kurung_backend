@@ -137,7 +137,6 @@ public class UserEntity {
 
   // update용 메서드 추가
   public void updateUserDTO(UserDTO userDTO) {
-    this.userPwd = userDTO.getUserPwd();
     this.userNick = userDTO.getUserNick();
     this.userGender = userDTO.getUserGender();
     this.userAge = userDTO.getUserAge();

@@ -3,6 +3,7 @@ package com.kurung.user.service;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.enumeration.UserPath;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
@@ -36,4 +37,9 @@ public interface UserService {
 
     // 이메일 중복 체크 메서드 추가
     boolean checkEmailDuplicate(String email);
+
+    // 프로필 관련 메서드 추가
+    boolean checkNicknameAvailability(String userNick);
+    UserDTO updateUserProfile(UserDTO updateDTO);
+    String uploadProfileImage(MultipartFile file);
 }
