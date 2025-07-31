@@ -23,6 +23,9 @@ public class OptionDTO extends BaseDTO {
   protected String optionText;
   @Schema(description = "서술형 여부", example = "0")
   protected int textOption;
+  @Schema(description = "선지 점수", example = "1")
+  protected int rawScore;
+
 
   @Builder(builderMethodName = "toOptionBuilder", builderClassName = "toOptionBuilder")
   public OptionDTO(HealthOptionEntity healthOptionEntity) {
@@ -30,5 +33,6 @@ public class OptionDTO extends BaseDTO {
     this.optionCode = healthOptionEntity.getOptionCode();
     this.optionText = healthOptionEntity.getOptionText();
     this.textOption = healthOptionEntity.getTextOption();
+    this.rawScore = healthOptionEntity.getRawScore();
   }
 }

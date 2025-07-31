@@ -36,6 +36,8 @@ public class HealthOptionEntity {
   private HealthQuestionEntity question;
   @Column(name = "TEXT_OPTION")
   private int textOption;
+  @Column(name = "RAW_SCORE")
+  private int rawScore;
   @Column(name = "HEALTH_ANSWER")
   @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   private List<HealthAnswerEntity> answers;
