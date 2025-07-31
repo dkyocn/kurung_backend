@@ -1,6 +1,8 @@
 package com.kurung.common.security.filter;
 
 import com.kurung.common.util.JWTUtil;
+import com.kurung.user.dto.UserDTO;
+import com.kurung.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,9 +16,11 @@ import java.io.IOException;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
+    private final UserService userService; // 추가
 
-    public JWTFilter(JWTUtil jwtUtil) {
+    public JWTFilter(JWTUtil jwtUtil, UserService userService) { // 생성자 수정
         this.jwtUtil = jwtUtil;
+        this.userService = userService; // 추가
     }
 
     // 토큰 검사를 생략할 URL 목록 정의
@@ -83,9 +87,20 @@ public class JWTFilter extends OncePerRequestFilter {
                 boolean isAccessExpired = jwtUtil.isTokenExpired(accessToken);
                 boolean isRefreshExpired = jwtUtil.isTokenExpired(refreshToken);
 
-                // 경우별 판단
+                // 토큰 시간 만료시 세션 아웃
                 if (!isAccessExpired && isRefreshExpired) {
-                    log.warn("AccessToken 유효, RefreshToken 만료");
+                    log.warn("AccessToken 유효, RefreshToken 만료 - 강제 로그아웃 처리");
+                    
+                    // 데이터베이스에서 refresh token 삭제하여 강제 로그아웃
+                    try {
+                        String userUuid = jwtUtil.getUserUuidFromToken(accessToken);
+                        UserDTO userDTO = userService.getUserByUuid(userUuid);
+                        userService.updateRefresh(userDTO, ""); // 빈 문자열로 설정하여 로그아웃
+                        log.info("Refresh Token 만료로 인한 강제 로그아웃 처리 완료 - userId: {}", userUuid);
+                    } catch (Exception e) {
+                        log.error("강제 로그아웃 처리 중 오류 발생", e);
+                    }
+                    
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setHeader("token-expired", "RefreshToken");
                     response.getWriter().write("{\"error\":\"RefreshToken expired\"}");

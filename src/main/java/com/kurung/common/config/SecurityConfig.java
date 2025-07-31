@@ -110,7 +110,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         )
 
         // JWT 인증 필터 먼저 실행
-        .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(new JWTFilter(jwtUtil, userService), UsernamePasswordAuthenticationFilter.class)
 
         // 예외 처리 설정
         .exceptionHandling(ex -> ex

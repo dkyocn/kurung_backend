@@ -51,6 +51,7 @@ public class UserController {
 
             // 프로필 정보만 반환 (민감한 정보 제외)
             UserDTO profileDTO = UserDTO.builder()
+                .userId(currentUser.getUserId())
                 .userNick(currentUser.getUserNick())
                 .userAge(currentUser.getUserAge())
                 .userGender(currentUser.getUserGender())
@@ -252,40 +253,12 @@ public class UserController {
     }
 
     @PostMapping("/naver/login")
-    public ResponseEntity<UserDTO> naverLogin(@RequestBody UserDTO request) {
-        return new ResponseEntity<>(userService.socialLoginWithResponse(request.getSocialToken(), UserPath.NAVER), HttpStatus.OK);
+    public ResponseEntity<?> naverLogin(@RequestBody UserDTO request) {
+        return new ResponseEntity<>(userService.socialLogin
+            (request.getSocialToken(), UserPath.NAVER), HttpStatus.OK);
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
-        try {
-            log.info("로그아웃 요청 시작");
-
-            // JWT 토큰에서 사용자 정보 추출 (메서드명 수정)
-            String userUuid = jwtUtil.getUserUuidFromToken(token.replace("Bearer ", ""));
-
-            // DB에서 refresh token 삭제
-            userService.clearRefreshToken(userUuid);
-
-            // 소셜 로그인인 경우 토큰 해제 (선택사항)
-            UserDTO userInfo = userService.getUserByUuid(userUuid);
-            if (userInfo.getUserPath() == UserPath.KAKAO) {
-                log.info("카카오 사용자 로그아웃 - 토큰 해제 생략");
-                // 카카오 토큰 해제 (선택사항)
-                // kakaoOAuthClient.revokeToken(accessToken);
-            } else if (userInfo.getUserPath() == UserPath.NAVER) {
-                log.info("네이버 사용자 로그아웃 - 토큰 해제 생략");
-                // 네이버 토큰 해제 (선택사항)
-                // naverOAuthClient.revokeToken(accessToken);
-            }
-
-            log.info("로그아웃 완료 - 사용자: {}", userUuid);
-            return new ResponseEntity<>("로그아웃이 완료되었습니다.", HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("로그아웃 처리 중 오류 발생", e);
-            return new ResponseEntity<>("로그아웃 처리 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    // 로그아웃 메서드 제거 - SecurityConfig의 /logout 사용
 
     @PostMapping("/send-verification-code")
     public ResponseEntity<String> sendVerificationCode(@RequestBody UserDTO request) {
