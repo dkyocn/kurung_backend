@@ -37,17 +37,17 @@ public class EmailServiceImpl implements EmailService {
   @Override
   public void sendVerificationEmail(String toEmail) throws MessagingException {
     log.info("이메일 전송 시작 - 수신자: {}", toEmail);
-    
+
     // 이메일 주소 유효성 검사
     if (toEmail == null || toEmail.trim().isEmpty()) {
       throw new IllegalArgumentException("이메일 주소가 비어있습니다.");
     }
-    
+
     // 기본적인 이메일 형식 검사
     if (!toEmail.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
       throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다: " + toEmail);
     }
-    
+
     try {
       String code = createVerificationCode();
       emailCodeMap.put(toEmail, code);
@@ -70,7 +70,7 @@ public class EmailServiceImpl implements EmailService {
       log.info("MimeMessage 생성 완료, 전송 시작...");
       mailSender.send(message);
       log.info("이메일 전송 성공! - 수신자: {}, 인증 코드: {}", toEmail, code);
-      
+
     } catch (MessagingException e) {
       log.error("이메일 전송 실패 - 수신자: {}, 오류: {}", toEmail, e.getMessage(), e);
       throw e;
@@ -83,6 +83,8 @@ public class EmailServiceImpl implements EmailService {
   @Override
   public boolean verifyCode(String email, String inputCode) {
     String savedCode = emailCodeMap.get(email);
-    return inputCode != null && inputCode.equals(savedCode);
+    boolean isValid = inputCode != null && inputCode.equals(savedCode);
+    log.info("인증번호 확인 - 이메일: {}, 입력코드: {}, 저장코드: {}, 결과: {}", email, inputCode, savedCode, isValid);
+    return isValid;
   }
 }

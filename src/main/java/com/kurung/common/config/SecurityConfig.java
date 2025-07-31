@@ -20,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Configuration
@@ -30,11 +31,7 @@ public class SecurityConfig implements WebMvcConfigurer {
   private final JWTUtil jwtUtil;
   private final CustomUserDetailsService userDetailsService;
   private final UserService userService;
-
-  @Bean
-  public CustomLogoutHandler customLogoutHandler() {
-    return new CustomLogoutHandler(jwtUtil, userService);
-  }
+  private final CustomLogoutHandler customLogoutHandler;
 
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -51,6 +48,8 @@ public class SecurityConfig implements WebMvcConfigurer {
         .exposedHeaders("token-expired", "Authorization", "RefreshToken")
         .allowCredentials(true);
   }
+
+  // RestTemplate 빈은 RestTemplateConfig에서 관리
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
@@ -73,6 +72,12 @@ public class SecurityConfig implements WebMvcConfigurer {
                 "/api/v1/kurung/reissue",
                 "/api/v1/kurung/user/send-verification-email",
                 "/api/v1/kurung/user/verify-code",
+                "/api/v1/kurung/user/send-verification-code",
+                "/api/v1/kurung/user/confirm-verification-code",
+                "/api/v1/kurung/user/reset-password-by-email",
+                "/api/v1/kurung/user/kakao/**",  // 카카오 소셜 로그인 경로 허용
+                "/api/v1/kurung/user/naver/**",  // 네이버 소셜 로그인 경로 허용
+                "/api/v1/kurung/test/social/**",  // 소셜 로그인 테스트 경로 허용
                 "/user/signup",
                 "/user/idchk",
                 "/notice/ntop3",
@@ -105,7 +110,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         )
 
         // JWT 인증 필터 먼저 실행
-        .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(new JWTFilter(jwtUtil, userService), UsernamePasswordAuthenticationFilter.class)
 
         // 예외 처리 설정
         .exceptionHandling(ex -> ex
@@ -123,7 +128,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         // 로그아웃 설정
         .logout(logout -> logout
             .logoutUrl("/logout")
-            .addLogoutHandler(customLogoutHandler())
+            .addLogoutHandler(customLogoutHandler)
             .logoutSuccessHandler((request, response, authentication) -> {
               response.setStatus(HttpServletResponse.SC_OK);
               response.getWriter().write("로그아웃 성공");

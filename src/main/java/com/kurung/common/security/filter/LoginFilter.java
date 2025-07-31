@@ -27,8 +27,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final ObjectMapper objectMapper = new ObjectMapper();  // 재사용 가능
 
     public LoginFilter(AuthenticationManager authenticationManager,
-                       JWTUtil jwtUtil,
-                       UserService userService) {
+        JWTUtil jwtUtil,
+        UserService userService) {
         this.setAuthenticationManager(authenticationManager);
         this.jwtUtil = jwtUtil;
         this.userService = userService;
@@ -39,7 +39,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+        throws AuthenticationException {
         String userId = null;
         String userPwd = null;
 
@@ -59,13 +59,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("로그인 시도 - userId: {}, userPwd 길이: {}", userId, userPwd.length());
 
         return this.getAuthenticationManager()
-                .authenticate(new UsernamePasswordAuthenticationToken(userId, userPwd));
+            .authenticate(new UsernamePasswordAuthenticationToken(userId, userPwd));
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain filterChain, Authentication authentication)
-            throws IOException, ServletException {
+        FilterChain filterChain, Authentication authentication)
+        throws IOException, ServletException {
         log.info("로그인 성공 로직 실행");
 
         String userId = authentication.getName();
@@ -85,17 +85,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String refreshToken = jwtUtil.generateToken(user, "refresh");
 
         log.info("토큰 발급 완료 - accessToken 만료: {}, refreshToken 만료: {}",
-                new Date(System.currentTimeMillis() + jwtUtil.getAccessExpiration()),
-                new Date(System.currentTimeMillis() + jwtUtil.getRefreshExpiration()));
+            new Date(System.currentTimeMillis() + jwtUtil.getAccessExpiration()),
+            new Date(System.currentTimeMillis() + jwtUtil.getRefreshExpiration()));
 //        userService.saveRefresh(new RefreshToken(UUID.randomUUID().toString(), userId, refreshToken));
         userService.updateRefresh(user, refreshToken);
 
         Map<String, Object> responseBody = Map.of(
-                "accessToken", accessToken,
-                "refreshToken", refreshToken,
-                "userId", userId,
-                "userName", user.getUserId(),
-                "role", user.isAdminYN() ? "ADMIN" : "USER"
+            "accessToken", accessToken,
+            "refreshToken", refreshToken,
+            "userId", userId,
+            "userName", user.getUserId(),
+            "role", user.isAdminYN() ? "ADMIN" : "USER"
         );
 
         response.setContentType("application/json; charset=utf-8");
@@ -104,22 +104,31 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                              AuthenticationException failed) throws IOException {
+        AuthenticationException failed) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json; charset=utf-8");
 
-        log.error("로그인 실패 - 예외 타입: {}", failed.getClass().getSimpleName());
-        log.error("로그인 실패 - 메시지: {}", failed.getMessage());
+        log.error("=== 로그인 실패 상세 분석 ===");
+        log.error("예외 타입: {}", failed.getClass().getSimpleName());
+        log.error("예외 메시지: {}", failed.getMessage());
+        log.error("예외 스택 트레이스:", failed);
 
         String errorMessage;
         if (failed.getMessage().contains("Bad credentials")) {
             errorMessage = "아이디와 비밀번호를 다시 확인해 주세요.";
+            log.error("원인: 비밀번호 불일치");
         } else if (failed.getMessage().contains("사용자를 찾을 수 없습니다")) {
             errorMessage = "존재하지 않는 사용자입니다.";
+            log.error("원인: 사용자 조회 실패");
+        } else if (failed.getMessage().contains("AccountExpiredException")) {
+            errorMessage = "비활성화된 계정입니다.";
+            log.error("원인: 계정 비활성화");
         } else {
             errorMessage = "로그인 실패: 서버 내부 오류.";
+            log.error("원인: 기타 오류");
         }
 
+        log.error("=== 로그인 실패 분석 완료 ===");
         objectMapper.writeValue(response.getWriter(), Map.of("error", errorMessage));
     }
 }

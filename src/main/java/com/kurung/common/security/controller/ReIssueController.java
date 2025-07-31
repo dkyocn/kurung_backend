@@ -27,23 +27,15 @@ public class ReIssueController {
     public ResponseEntity<?> reissueToken(HttpServletRequest request, HttpServletResponse response) {
         log.info("ReissueController 실행");
 
-        String accessTokenHeader = request.getHeader("Authorization");
-        String refreshTokenHeader = request.getHeader("RefreshToken");
+        String accessToken = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("RefreshToken");
         String extendLogin = request.getHeader("ExtendLogin");
 
-        log.info("accessTokenHeader: {}", accessTokenHeader);
-        log.info("refreshTokenHeader: {}", refreshTokenHeader);
+        log.info("accessToken: {}", accessToken);
+        log.info("refreshToken: {}", refreshToken);
         log.info("extendLogin: {}", extendLogin);
 
         try {
-            String accessToken = (accessTokenHeader != null && accessTokenHeader.startsWith("Bearer "))
-                    ? accessTokenHeader.substring("Bearer ".length()).trim()
-                    : null;
-
-            String refreshToken = (refreshTokenHeader != null && refreshTokenHeader.startsWith("Bearer "))
-                    ? refreshTokenHeader.substring("Bearer ".length()).trim()
-                    : null;
-
             if (accessToken == null || refreshToken == null) {
                 log.warn("RefreshToken 또는 AccessToken이 제공되지 않았습니다.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid tokens");
