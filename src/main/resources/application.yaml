@@ -63,7 +63,7 @@ springdoc:
 jwt:
   secret: vrDt6Hhffv9gPPEEHDBVhxY4W+gf//bxDgVljRr/+8z1ZxqEdgTmDDZ/UIquJuWQdZmJ8mz/DuzLF/pmcMFaqw==
   access_expiration: 1800000
-  refresh_expiration: 8460000
+  refresh_expiration: 84600000
 
 # 소셜 로그인 API 설정
 social:
