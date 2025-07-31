@@ -38,8 +38,6 @@ public class HealthDiagnosisEntity {
   private String diagnosisSummary;
   @Column(name = "SCORE")
   private int score;
-  @Column(name = "REPORT_PDF_PATH")
-  private String reportPdfPath;
   @Column(name = "CREATED_AT")
   private LocalDateTime createdAt;
   @OneToMany(mappedBy = "healthDiagnosis", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
