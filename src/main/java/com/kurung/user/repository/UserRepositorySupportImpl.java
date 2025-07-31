@@ -3,22 +3,21 @@ package com.kurung.user.repository;
 import static com.kurung.user.entity.QUserEntity.userEntity;
 
 import com.kurung.user.entity.UserEntity;
+import com.kurung.user.enumeration.Gender;
+import com.kurung.user.enumeration.UserPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Repository
 @RequiredArgsConstructor
 public class UserRepositorySupportImpl implements UserRepositorySupport {
 
-    @PersistenceContext
-    private final EntityManager em;
     private final JPAQueryFactory jpaQueryFactory;
 
-    //Uuid를 기준으로 사용자 정보 조회
     @Override
     public UserEntity getUserByUuid(String userUuid) {
         return jpaQueryFactory
@@ -27,31 +26,84 @@ public class UserRepositorySupportImpl implements UserRepositorySupport {
             .fetchOne();
     }
 
-    //Id를 사용자 정보 조회
     @Override
-    public UserEntity getByUserId(String userId) {
+    public UserEntity getByUserId(String userid) {
         return jpaQueryFactory
             .selectFrom(userEntity)
-            .where(userEntity.userId.eq(userId))
+            .where(userEntity.userId.eq(userid))
             .fetchOne();
     }
 
-    //UserId가 db에 존재하는지 확인
     @Override
-    public boolean existsByUserId(String userId) {
-        String jpql = "SELECT COUNT(u) > 0 FROM TB_USER u WHERE u.userId = :userId";
-        Boolean exists = em.createQuery(jpql, Boolean.class)
-            .setParameter("userId", userId)
-            .getSingleResult();
-        return exists;
+    public boolean existsByUserId(String userid) {
+        return jpaQueryFactory
+            .selectOne()
+            .from(userEntity)
+            .where(userEntity.userId.eq(userid))
+            .fetchFirst() != null;
     }
 
-    //가입한 날짜 + 순번 형식의 UUID
+    @Override
+    public boolean existsByUserNick(String userNick) {
+        return jpaQueryFactory
+            .selectOne()
+            .from(userEntity)
+            .where(userEntity.userNick.eq(userNick))
+            .fetchFirst() != null;
+    }
+
     @Override
     public long countByUuidStartingWith(String datePrefix) {
-        String jpql = "SELECT COUNT(u) FROM TB_USER u WHERE u.userUuid LIKE :prefix";
-        TypedQuery<Long> query = em.createQuery(jpql, Long.class);
-        query.setParameter("prefix", datePrefix + "%");
-        return query.getSingleResult();
+        return jpaQueryFactory
+            .selectFrom(userEntity)
+            .where(userEntity.userUuid.startsWith(datePrefix))
+            .fetchCount();
+    }
+
+    @Override
+    public UserEntity findByUserPathAndUserKey(UserPath userPath, String userKey) {
+        return jpaQueryFactory
+            .selectFrom(userEntity)
+            .where(userEntity.userPath.eq(userPath)
+                .and(userEntity.userKey.eq(userKey)))
+            .fetchOne();
+    }
+
+    @Override
+    @Transactional
+    public void updatePasswordByEmail(String email, String newPassword) {
+        jpaQueryFactory
+            .update(userEntity)
+            .set(userEntity.userPwd, newPassword)
+            .where(userEntity.userId.eq(email))
+            .execute();
+    }
+
+    @Override
+    @Transactional
+    public void updateRefreshToken(String userUuid, String refreshToken) {
+        jpaQueryFactory
+            .update(userEntity)
+            .set(userEntity.userRefreshToken, refreshToken)
+            .where(userEntity.userUuid.eq(userUuid))
+            .execute();
+    }
+
+    @Override
+    public boolean checkNicknameAvailability(String userNick) {
+        return !existsByUserNick(userNick);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserProfile(String userUuid, String userNick, LocalDateTime userAge, Gender userGender, String profileImg) {
+        jpaQueryFactory
+            .update(userEntity)
+            .set(userEntity.userNick, userNick)
+            .set(userEntity.userAge, userAge)
+            .set(userEntity.userGender, userGender)
+            .set(userEntity.profileImg, profileImg)
+            .where(userEntity.userUuid.eq(userUuid))
+            .execute();
     }
 }

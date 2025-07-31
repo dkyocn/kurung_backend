@@ -24,16 +24,16 @@ public class JWTUtil {
     // UserEntity 기반 토큰 생성
     public String generateToken(UserDTO user, String category) {
         return Jwts.builder()
-                .setSubject(user.getUserId()) // 사용자 식별자
-                .claim("userUuid", user.getUserUuid())
-                .claim("category", category) // access or refresh
-                .claim("name", user.getUserNick()) // 닉네임
-                .claim("role", user.isAdminYN() ? "ADMIN" : "USER") // 권한
-                .setExpiration(new Date(
-                        System.currentTimeMillis() +
-                                (category.equals("access") ? accessExpiration : refreshExpiration)))
-                .signWith(SignatureAlgorithm.HS512, secretKey.getBytes()) // .getBytes() 중요!
-                .compact();
+            .setSubject(user.getUserId()) // 사용자 식별자
+            .claim("userUuid", user.getUserUuid())
+            .claim("category", category) // access or refresh
+            .claim("name", user.getUserNick()) // 닉네임
+            .claim("role", user.isAdminYN() ? "ADMIN" : "USER") // 권한
+            .setExpiration(new Date(
+                System.currentTimeMillis() +
+                    (category.equals("access") ? accessExpiration : refreshExpiration)))
+            .signWith(SignatureAlgorithm.HS512, secretKey.getBytes()) // .getBytes() 중요!
+            .compact();
     }
 
     // 토큰에서 Claims 추출
@@ -45,10 +45,10 @@ public class JWTUtil {
 
         try {
             return Jwts.parserBuilder() // 최신 방식
-                    .setSigningKey(secretKey.getBytes()) // 바이트 배열로 넘겨야 함
-                    .build()
-                    .parseClaimsJws(token.trim())
-                    .getBody();
+                .setSigningKey(secretKey.getBytes()) // 바이트 배열로 넘겨야 함
+                .build()
+                .parseClaimsJws(token.trim())
+                .getBody();
         } catch (ExpiredJwtException e) {
             log.warn("만료된 토큰입니다.");
             return e.getClaims();
@@ -94,13 +94,13 @@ public class JWTUtil {
     // 얼굴 인증 토큰 생성 (단기 access 용)
     public String generateFaceAuthToken(UserDTO user) {
         return Jwts.builder()
-                .setSubject(user.getUserId())
-                .claim("category", "face_auth")
-                .claim("authType", "FACE")
-                .claim("name", user.getUserNick())
-                .claim("role", user.isAdminYN() ? "ADMIN" : "USER")
-                .setExpiration(new Date(System.currentTimeMillis() + accessExpiration))
-                .signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
-                .compact();
+            .setSubject(user.getUserId())
+            .claim("category", "face_auth")
+            .claim("authType", "FACE")
+            .claim("name", user.getUserNick())
+            .claim("role", user.isAdminYN() ? "ADMIN" : "USER")
+            .setExpiration(new Date(System.currentTimeMillis() + accessExpiration))
+            .signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
+            .compact();
     }
 }

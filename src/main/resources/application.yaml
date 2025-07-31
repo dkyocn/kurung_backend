@@ -47,6 +47,9 @@ spring:
           auth: true
           starttls:
             enable: true
+          timeout: 10000
+          connectiontimeout: 10000
+          writetimeout: 10000
 
 springdoc:
   swagger-ui:
@@ -61,3 +64,16 @@ jwt:
   secret: vrDt6Hhffv9gPPEEHDBVhxY4W+gf//bxDgVljRr/+8z1ZxqEdgTmDDZ/UIquJuWQdZmJ8mz/DuzLF/pmcMFaqw==
   access_expiration: 1800000
   refresh_expiration: 84600000
+
+# 소셜 로그인 API 설정
+social:
+  kakao:
+    api-url: https://kapi.kakao.com
+    client-id: ${KAKAO_CLIENT_ID:e0ccd9a1366d275242dc304128c7ef03}
+    client-secret: ${KAKAO_CLIENT_SECRET:58969640d74f895c291eee6cb53cfa89}
+    redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:3000/auth/kakao/callback}
+  naver:
+    api-url: https://openapi.naver.com
+    client-id: ${NAVER_CLIENT_ID:3Os7CSY9u41ugvx8VLkz}
+    client-secret: ${NAVER_CLIENT_SECRET:7M07I61M9m}
+    redirect-uri: ${NAVER_REDIRECT_URI:http://localhost:3000/auth/naver/callback}
