@@ -62,14 +62,4 @@ public class MedicineController {
     return new ResponseEntity<>(medicineService.getMedicineList(keyword), HttpStatus.OK);
   }
 
-//  @PostMapping("/inputMedi")
-//  @Operation(summary = "입력 약물 저장", description = "입력한 약물을 저장할 때 사용하는 API")
-//  @ApiResponses(value = {
-//      @ApiResponse(responseCode = "200", description = "저장 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")),
-//      @ApiResponse(responseCode = "551", description = "저장 실패", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
-//  })
-//  public ResponseEntity<HttpStatus> createMedicineList(@RequestBody List<SubstanceDTO> mediList){
-//    medicineService.createMedicineList(mediList);
-//    return new ResponseEntity<>(HttpStatus.OK);
-//  }
 }

@@ -20,8 +20,6 @@ public class DiagnosisDTO extends BaseDTO {
   protected String dianosisSummary;
   @Schema(description = "건강점수", example = "85")
   protected int score;
-  @Schema(description = "pdf 경로", example = "/diareports/report_1.pdf")
-  protected String reportPdfPath;
   @Schema(description = "목표")
   protected List<GoalDTO> goalDTOList;
   @Schema(description = "사용자 정보")
