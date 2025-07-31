@@ -1,7 +1,9 @@
 package com.kurung.missions.service;
 
 import com.kurung.common.enumeration.HealthType;
+import com.kurung.missions.dto.MissionsBadgeDTO;
 import com.kurung.missions.dto.MissionsDTO;
+import com.kurung.missions.entity.MissionsBadgeEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,8 +17,9 @@ public interface MissionsService {
   List<MissionsDTO> getMissionMonthList(LocalDate currentDate, HealthType displayType);
 
   void updateMissions(MissionsDTO missionsDTO);
-}
 
   // 매일 00시 00분 습관 미션 저장
   void createMission();
+
+  MissionsBadgeDTO checkTodayAllCompleted();
 }

@@ -4,6 +4,7 @@ import com.kurung.common.enumeration.HealthType;
 import com.kurung.common.security.service.SessionService;
 import com.kurung.diet.dto.DietScoreDTO;
 import com.kurung.healthinfo.dto.HealthInfoDTO;
+import com.kurung.missions.dto.MissionsBadgeDTO;
 import com.kurung.missions.dto.MissionsDTO;
 import com.kurung.missions.service.MissionsService;
 import com.kurung.user.dto.UserDTO;
@@ -73,7 +74,8 @@ public class MissionsController {
       @RequestParam LocalDate currentDate,
       @RequestParam HealthType displayType
   ) {
-    return new ResponseEntity<>(missionsService.getMissionMonthList(currentDate, displayType), HttpStatus.OK);
+    return new ResponseEntity<>(missionsService.getMissionMonthList(currentDate, displayType),
+        HttpStatus.OK);
   }
 
   @PostMapping("/update")
@@ -89,5 +91,13 @@ public class MissionsController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-
+  @GetMapping("/checkComplete")
+  @Operation(summary = "오늘 미션 완료 체크", description = "오늘 미션이 모두 완료되면 뱃지를 발급")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "처리 성공", content = @Content(mediaType = "application/json")),
+      @ApiResponse(responseCode = "418", description = "처리 실패", content = @Content(mediaType = "application/json"))
+  })
+  public ResponseEntity<MissionsBadgeDTO> checkMissionComplete() {
+    return new ResponseEntity<>(missionsService.checkTodayAllCompleted(), HttpStatus.OK);
+  }
 }
