@@ -24,6 +24,13 @@ public class DietScoreRepositorySupportImpl implements DietScoreRepositorySuppor
   }
 
   @Override
+  public DietScoreEntity getDietScoreByDate(LocalDateTime startDate, LocalDateTime endDate, String userUuid) {
+    return queryFactory.selectFrom(dietScoreEntity)
+        .where(dietScoreEntity.date.between(startDate, endDate), dietScoreEntity.user.userUuid.eq(userUuid))
+        .fetchOne();
+  }
+
+  @Override
   public List<DietScoreEntity> getDietScoreMonthList(LocalDateTime startDate,
       LocalDateTime endDate, String userUuid) {
     return queryFactory.selectFrom(dietScoreEntity)

@@ -22,6 +22,8 @@ public class DietScoreDTO {
   protected LocalDateTime dietDate;
   @Schema(description = "식단 점수", example = "58.9")
   protected float dietScore;
+  @Schema(description = "식단 요약", example = "한줄 요약")
+  protected String dietSummary;
   @Schema(description = "사용자 정보")
   protected UserDTO user;
 

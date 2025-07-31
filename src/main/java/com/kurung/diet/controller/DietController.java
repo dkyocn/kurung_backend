@@ -72,6 +72,16 @@ public class DietController {
     return new ResponseEntity<>(dietService.getDietScoreMonthList(currentDate), HttpStatus.OK);
   }
 
+  @GetMapping("/score/date")
+  @Operation(summary = "식단 점수 조회", description = "현재 날짜로 식단 점수를 조회할 때 사용하는 API")
+  @ApiResponse(responseCode = "200", description = "조회 성공", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
+  @Parameters({
+      @Parameter(name = "currentDate", description = "현재 날짜", example = "2025-05-19T00:00:00"),
+  })
+  public ResponseEntity<DietScoreDTO> getDietScoreByDate(LocalDateTime currentDate) {
+    return new ResponseEntity<>(dietService.getDietScoreByDate(currentDate), HttpStatus.OK);
+  }
+
   @PostMapping("")
   @Operation(summary = "식단 저장", description = "식단을 저장할 때 사용하는 API")
   @ApiResponses(value = {

@@ -229,6 +229,22 @@ public class DietServiceImpl implements DietService {
   }
 
   @Override
+  public DietScoreDTO getDietScoreByDate(LocalDateTime currentDate) {
+
+    UserDTO userDTO = sessionService.getUserFromToken();
+
+    DietScoreEntity dietScoreEntity = dietScoreRepository.getDietScoreByDate(
+        currentDate.withHour(0).withMinute(0).withSecond(0),
+        currentDate.withHour(23).withMinute(59).withSecond(59), userDTO.getUserUuid());
+
+    if (dietScoreEntity == null) {
+      throw new CustomIllegalArgumentException(CustomHttpStatus.SCORE_NOT_FOUND);
+    }
+
+    return DietScoreDTO.toDietScoreBuilder().dietScoreEntity(dietScoreEntity).build();
+  }
+
+  @Override
   public List<DietScoreDTO> getDietScoreMonthList(LocalDateTime currentDate) {
     UserDTO userDTO = sessionService.getUserFromToken();
 

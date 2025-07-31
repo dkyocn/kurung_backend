@@ -30,6 +30,8 @@ public class DietScoreEntity {
   private LocalDateTime date;
   @Column(name = "DIET_SCORE")
   private float dietScore;
+  @Column(name = "DIET_SUMMARY")
+  private String summary;
   @JoinColumn(name = "USER_UUID")
   @ManyToOne(fetch = FetchType.LAZY)
   private UserEntity user;

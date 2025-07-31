@@ -15,6 +15,7 @@ public interface DietService {
     DietDTO getCurrentDiet(LocalDateTime currentDate, MEAL meal);
     // 식단 점수 조회
     DietScoreDTO getDietScoreById(int id);
+    DietScoreDTO getDietScoreByDate(LocalDateTime currentDate);
     List<DietScoreDTO> getDietScoreMonthList(LocalDateTime currentDate);
     // 식단 저장
     void createDiet(DietDTO dietDTO);
