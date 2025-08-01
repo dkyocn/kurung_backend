@@ -2,6 +2,7 @@ package com.kurung.user.service;
 
 import com.kurung.common.enumeration.CustomHttpStatus;
 import com.kurung.common.exception.CustomIllegalArgumentException;
+import com.kurung.common.security.service.SessionService;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
 import com.kurung.user.enumeration.Gender;
@@ -324,7 +325,6 @@ public class UserServiceImpl implements UserService {
     // 소셜 로그인 관련 메서드 구현
     @Override
     public UserDTO socialLogin(String socialToken, UserPath userPath) {
-        // TODO: 소셜 토큰 검증 및 사용자 정보 조회 로직 구현
         // 현재는 기본 구조만 제공
         log.info("소셜 로그인 시도 - 경로: {}", userPath);
         return null;
@@ -388,19 +388,12 @@ public class UserServiceImpl implements UserService {
                 .userFaceLoginYN(false)
                 .build();
 
-            boolean registerUserResult = registerUser(user);
+           userRepository.save(user);
             log.info("회원 가입 요청 - 사용자 ID: {}", userDTO.getUserId());
-            log.info("회원 가입 성공 여부: {}", registerUserResult);
 
-            if (registerUserResult) {
-                return UserDTO.builder()
-                    .message("회원가입이 성공적으로 완료되었습니다.")
-                    .build();
-            } else {
-                return UserDTO.builder()
-                    .message("이미 존재하는 이메일입니다.")
-                    .build();
-            }
+          return UserDTO.builder()
+              .message("회원가입이 성공적으로 완료되었습니다.")
+              .build();
         } catch (Exception e) {
             log.error("회원가입 중 오류 발생", e);
             return UserDTO.builder()
