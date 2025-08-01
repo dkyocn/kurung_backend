@@ -6,6 +6,8 @@ import com.kurung.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -18,6 +20,7 @@ public class SessionService {
 
     private final JWTUtil jwtUtil;
     private final UserService userService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     //사용자 Uuid를 추출해서 정보를 가져오기
     public UserDTO getUserFromToken(){
@@ -40,6 +43,11 @@ public class SessionService {
             return null;
         }
     }
+
+    public void checkUserPwd(String userPwd) {
+        UserDTO userDTO = getUserFromToken();
+        if(!(passwordEncoder.matches(userDTO.getUserPwd(), passwordEncoder.encode(userPwd)))) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
 }
-
-

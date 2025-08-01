@@ -277,4 +277,10 @@ public class UserController {
     public ResponseEntity<UserDTO> resetPasswordByEmail(@RequestBody UserDTO request) {
         return new ResponseEntity<>(userService.resetPasswordByEmail(request), HttpStatus.OK);
     }
+
+    @PostMapping("/verify-password")
+    public ResponseEntity<HttpStatus> checkPwd(@RequestBody UserDTO userDTO) {
+        sessionService.checkUserPwd(userDTO.getUserPwd());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
