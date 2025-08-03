@@ -6,8 +6,12 @@ import com.kurung.common.exception.CustomIllegalArgumentException;
 import com.kurung.common.security.service.SessionService;
 import com.kurung.lifeLog.entity.MonthlyHabitMissionsEntity;
 import com.kurung.lifeLog.repository.MonthlyHabitMissionsRepository;
+import com.kurung.missions.dto.MissionsBadgeDTO;
 import com.kurung.missions.dto.MissionsDTO;
+import com.kurung.missions.entity.MissionsBadgeEntity;
 import com.kurung.missions.entity.MissionsEntity;
+import com.kurung.missions.repository.MissionsBadgeRepository;
+import com.kurung.missions.repository.MissionsBadgeRepositorySupport;
 import com.kurung.missions.repository.MissionsRepository;
 import com.kurung.user.dto.UserDTO;
 import com.kurung.user.entity.UserEntity;
@@ -34,6 +38,7 @@ public class MissionsServiceImpl implements MissionsService {
   private final UserService userService;
   private final SessionService sessionService;
   private final MonthlyHabitMissionsRepository monthlyHabitMissionsRepository;
+  private final MissionsBadgeRepository missionsBadgeRepository;
   private final UserRepository userRepository;
 
   @Override
@@ -108,9 +113,10 @@ public class MissionsServiceImpl implements MissionsService {
   public void createMission() {
     LocalDate now = LocalDate.now();
     LocalDate firstDayOfLastMonth = now.minusMonths(1).withDayOfMonth(1);
-    LocalDate lastDayOfLastMonth = firstDayOfLastMonth.withDayOfMonth(firstDayOfLastMonth.lengthOfMonth());
+    LocalDate lastDayOfLastMonth = firstDayOfLastMonth.withDayOfMonth(
+        firstDayOfLastMonth.lengthOfMonth());
 
-    LocalDateTime  startDate = firstDayOfLastMonth.atStartOfDay();
+    LocalDateTime startDate = firstDayOfLastMonth.atStartOfDay();
     LocalDateTime endDate = lastDayOfLastMonth.atTime(LocalTime.MAX);
 
     // 모든 유저 가져오기
@@ -123,18 +129,20 @@ public class MissionsServiceImpl implements MissionsService {
           user.getUserUuid(), startDate, endDate
       );
 
-      if (monthlyHabitMissions.isEmpty()){
+      if (monthlyHabitMissions.isEmpty()) {
         continue;
       }
 
       // 중복 저장 방지 : 해당 날짜에 이미 저장된 미션이 있는지 확인
-      List<MissionsEntity> alreadyExists = missionsRepository.getMissionList(user.getUserUuid(),now);
-      if(!alreadyExists.isEmpty()){
+      List<MissionsEntity> alreadyExists = missionsRepository.getMissionList(user.getUserUuid(),
+          now);
+      if (!alreadyExists.isEmpty()) {
 //        continue;
       }
 
       // 랜덤 1개 선택
-      MonthlyHabitMissionsEntity selectedHabit = monthlyHabitMissions.get(new Random().nextInt(monthlyHabitMissions.size()));
+      MonthlyHabitMissionsEntity selectedHabit = monthlyHabitMissions.get(
+          new Random().nextInt(monthlyHabitMissions.size()));
 
       // 미션 저장
       MissionsEntity mission = MissionsEntity.builder()
@@ -146,8 +154,32 @@ public class MissionsServiceImpl implements MissionsService {
           .habitRec(selectedHabit.getHabitRecId())
           .build();
 
-      log.info("미션 저장: user={}, habitRecId={}", user.getUserUuid(), selectedHabit.getHabitRecId().getHabitRecId());
+      log.info("미션 저장: user={}, habitRecId={}", user.getUserUuid(),
+          selectedHabit.getHabitRecId().getHabitRecId());
       missionsRepository.save(mission);
     }
   }
+
+    @Override
+    @Transactional
+    public MissionsBadgeDTO checkTodayAllCompleted() {
+      LocalDate today = LocalDate.now();
+
+      UserDTO userDTO = sessionService.getUserFromToken();
+      MissionsBadgeEntity missionsBadgeEntity = missionsBadgeRepository.todayMissionBadge(
+          userDTO.getUserUuid(), today);
+
+      List<MissionsEntity> missionList = missionsRepository.getMissionList(userDTO.getUserUuid(),
+          today);
+
+      if (missionList.stream().allMatch(MissionsEntity::isComplete)) {
+        missionsBadgeEntity.updateBadge();
+      }
+
+
+
+      // ✅ 모든 미션 완료 여부 확인
+      return MissionsBadgeDTO.toMissionsBadgeCuilder().missionsBadgeEntity(missionsBadgeEntity).build();
+    }
+
 }

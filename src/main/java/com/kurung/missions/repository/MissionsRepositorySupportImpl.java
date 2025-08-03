@@ -2,6 +2,7 @@ package com.kurung.missions.repository;
 
 import com.kurung.common.enumeration.HealthType;
 import com.kurung.diet.entity.DietScoreEntity;
+import com.kurung.missions.entity.MissionsBadgeEntity;
 import com.kurung.missions.entity.MissionsEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.sql.Date;
@@ -89,4 +90,5 @@ public class MissionsRepositorySupportImpl implements MissionsRepositorySupport 
         )
         .fetch();
   }
+
 }
